@@ -1,3 +1,5 @@
+@use "sass:meta";
+@use "sass:string";
 // Foundation for Sites
 // https://get.foundation
 // Licensed under MIT Open Source
@@ -24,22 +26,22 @@
   $gutter-type: if($negative, 'margin', $gutter-type);
 
   // Output our margin gutters.
-  @if (type-of($gutters) == 'map') {
+  @if (meta.type-of($gutters) == 'map') {
     @include -exo-breakpoint-value(auto, $gutters) {
       $gutter: rem-calc($-exo-bp-value) * 0.5;
 
       // Loop through each gutter position
       @each $value in $gutter-position {
-        #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+        #{$gutter-type}-#{$value}: string.unquote("#{$operator}#{$gutter}");
       }
     }
   }
-  @else if (type-of($gutters) == 'number') {
+  @else if (meta.type-of($gutters) == 'number') {
     $gutter: rem-calc($gutters) * 0.5;
 
     // Loop through each gutter position
     @each $value in $gutter-position {
-      #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+      #{$gutter-type}-#{$value}: string.unquote("#{$operator}#{$gutter}");
     }
   }
 }

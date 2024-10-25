@@ -1,3 +1,5 @@
+@use "sass:list";
+@use "sass:meta";
 @use "sass:math";
 
 $global-font-size: 100% !default;
@@ -19,7 +21,7 @@ $global-font-size: 100% !default;
 /// @returns {List} A list of converted values.
 @function rem-calc($values, $base: null) {
   $rem-values: ();
-  $count: length($values);
+  $count: list.length($values);
 
   // If no base is defined, defer to the global font size
   @if $base == null {
@@ -28,12 +30,12 @@ $global-font-size: 100% !default;
 
   // If the base font size is a %, then multiply it by 16px
   // This is because 100% font size = 16px in most all browsers
-  @if unit($base) == '%' {
+  @if math.unit($base) == '%' {
     $base: math.div($base, 100%) * 16px;
   }
 
   // Using rem as base allows correct scaling
-  @if unit($base) == 'rem' {
+  @if math.unit($base) == 'rem' {
     $base: strip-unit($base) * 16px;
   }
 
@@ -42,7 +44,7 @@ $global-font-size: 100% !default;
   }
 
   @for $i from 1 through $count {
-    $rem-values: append($rem-values, -exo-to-rem(nth($values, $i), $base));
+    $rem-values: list.append($rem-values, -exo-to-rem(list.nth($values, $i), $base));
   }
 
   @return $rem-values;
@@ -51,7 +53,7 @@ $global-font-size: 100% !default;
 // Converts a unitless, pixel, or rem value to em, for use in breakpoints.
 @function -exo-bp-to-em($value) {
   // Pixel and unitless values are converted to rems
-  @if unit($value) == 'px' or unitless($value) {
+  @if math.unit($value) == 'px' or math.is-unitless($value) {
     $value: rem-calc($value, $base: 16px);
   }
 
@@ -68,18 +70,18 @@ $global-font-size: 100% !default;
 /// @returns {Number} A number in rems, calculated based on the given value and the base pixel value. rem values are passed through as is.
 @function -exo-to-rem($value, $base: null) {
   // Check if the value is a number
-  @if type-of($value) != 'number' {
-    @warn inspect($value) + ' was passed to rem-calc(), which is not a number.';
+  @if meta.type-of($value) != 'number' {
+    @warn meta.inspect($value) + ' was passed to rem-calc(), which is not a number.';
     @return $value;
   }
 
   // Transform em into rem if someone hands over 'em's
-  @if unit($value) == 'em' {
+  @if math.unit($value) == 'em' {
     $value: strip-unit($value) * 1rem;
   }
 
   // Calculate rem if units for $value is not rem or em
-  @if unit($value) != 'rem' {
+  @if math.unit($value) != 'rem' {
     $value: math.div(strip-unit($value), strip-unit($base)) * 1rem;
   }
 
@@ -98,15 +100,15 @@ $global-font-size: 100% !default;
 ///
 /// @returns {List} Depending on the flag, returns either $keys or $values or both.
 @function map-to-list($map, $keep: 'both') {
-  $keep: if(index('keys' 'values', $keep), $keep, 'both');
+  $keep: if(list.index('keys' 'values', $keep), $keep, 'both');
 
-  @if type-of($map) == 'map' {
+  @if meta.type-of($map) == 'map' {
     $keys: ();
     $values: ();
 
     @each $key, $val in $map {
-      $keys: append($keys, $key);
-      $values: append($values, $val);
+      $keys: list.append($keys, $key);
+      $values: list.append($values, $val);
     }
 
     @if $keep == 'keys' {
@@ -116,10 +118,10 @@ $global-font-size: 100% !default;
       @return $values;
     }
     @else {
-      @return zip($keys, $values);
+      @return list.zip($keys, $values);
     }
   }
 
-  @return if(type-of($map) != 'list', ($value,), $map);
+  @return if(meta.type-of($map) != 'list', ($value,), $map);
 
 }

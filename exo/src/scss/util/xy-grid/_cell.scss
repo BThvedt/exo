@@ -1,3 +1,6 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:meta";
 // Foundation for Sites
 // https://get.foundation
 // Licensed under MIT Open Source
@@ -96,12 +99,12 @@
 
   // Calculate the cell CSS size including gutters (string)
   // If the cell has responsive margin gutters, return a responsive map of sizes.
-  @if type-of($margin-gutter) == 'map' {
+  @if meta.type-of($margin-gutter) == 'map' {
     $responsive-css-sizes: ();
 
     @each $bp, $mg in $margin-gutter {
       $size-css: if($mg == 0, $size-raw, calc(#{$size-raw} - #{rem-calc($mg)}));
-      $responsive-css-sizes: map-merge($responsive-css-sizes, ($bp: $size-css));
+      $responsive-css-sizes: map.merge($responsive-css-sizes, ($bp: $size-css));
     }
 
     @return $responsive-css-sizes;
@@ -156,7 +159,7 @@
   $sizes: xy-cell-size-css($size, $gutters, $gutter-type, $breakpoint);
   $direction: if($vertical == true, height, width);
 
-  @if (type-of($sizes) == 'map') {
+  @if (meta.type-of($sizes) == 'map') {
     @include -exo-breakpoint-value(auto, $sizes) {
       #{$direction}: $-exo-bp-value;
     }
@@ -224,13 +227,13 @@
     }
   }
 
-  @if (index($output, base)) {
+  @if (list.index($output, base)) {
     @include xy-cell-base($size);
   }
-  @if (index($output, size)) {
+  @if (list.index($output, size)) {
     @include xy-cell-size($size, $gutters, $gutter-type, $breakpoint, $vertical);
   }
-  @if (index($output, gutters)) {
+  @if (list.index($output, gutters)) {
     @include xy-cell-gutters($gutters, $gutter-type, $gutter-position, $breakpoint, $vertical);
   }
 }

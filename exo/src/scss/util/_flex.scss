@@ -1,3 +1,4 @@
+@use "sass:map";
 @function -exo-flex-justify($text-direction) {
   $-exo-flex-justify: (
     'left': if($text-direction == rtl, flex-end, flex-start),
@@ -38,16 +39,16 @@ $-exo-flex-direction: (
 /// @param {Keyword} $y [null] - Vertical alignment to use. Can be `top`, `bottom`, `middle`, `baseline`, or `stretch`. Or, set it to `null` (the default) to not set vertical alignment.
 @mixin flex-align($x: null, $y: null) {
   @if $x {
-    @if map-has-key($-exo-flex-justify, $x) {
-      $x: map-get($-exo-flex-justify, $x);
+    @if map.has-key($-exo-flex-justify, $x) {
+      $x: map.get($-exo-flex-justify, $x);
     }
     @else {
       @warn 'flex-grid-row-align(): #{$x} is not a valid value for horizontal alignment. Use left, right, center, justify, or spaced.';
     }
   }
   @if $y {
-    @if map-has-key($-exo-flex-align, $y) {
-      $y: map-get($-exo-flex-align, $y);
+    @if map.has-key($-exo-flex-align, $y) {
+      $y: map.get($-exo-flex-align, $y);
     }
     @else {
       @warn 'flex-grid-row-align(): #{$y} is not a valid value for vertical alignment. Use top, bottom, middle, or stretch.';
@@ -65,8 +66,8 @@ $-exo-flex-direction: (
 /// @param {Keyword} $y [null] - Vertical alignment to use. Can be `top`, `bottom`, `middle`, or `stretch`. Or, set it to `null` (the default) to not set vertical alignment.
 @mixin flex-align-self($y: null) {
   @if $y {
-    @if map-has-key($-exo-flex-align, $y) {
-      $y: map-get($-exo-flex-align, $y);
+    @if map.has-key($-exo-flex-align, $y) {
+      $y: map.get($-exo-flex-align, $y);
     }
     @else {
       @warn 'flex-grid-column-align(): #{$y} is not a valid value for alignment. Use top, bottom, middle, or stretch.';

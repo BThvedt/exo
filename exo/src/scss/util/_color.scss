@@ -1,3 +1,6 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:meta";
 @use "sass:math";
 @use 'sass:color';
 
@@ -9,29 +12,29 @@
     @debug 'Color: ' $color; // sass-lint:disable-line no-debug
     @debug 'Palette: ' $palette; // sass-lint:disable-line no-debug
   }
-  $palette: map-merge($global-colors, $palette);
-  $base: nth($color, 1);
+  $palette: map.merge($global-colors, $palette);
+  $base: list.nth($color, 1);
   @if $base == 'inherit' {
     @return $base;
   }
-  $adjust: if(length($color) > 1, nth($color, 2), ());
-  @if (length($adjust) > 0) {
+  $adjust: if(list.length($color) > 1, list.nth($color, 2), ());
+  @if (list.length($adjust) > 0) {
     @return color-with-adjustments($color, $debug: $debug);
   }
   // Correctly set $color variable:
-  @if map-has-key($palette, $color) {
+  @if map.has-key($palette, $color) {
     // $color is in $palette, set variable = map-value
-    $color: map-get($palette, $color);
-    $base: nth($color, 1);
-    $adjust: if(length($color) > 1, nth($color, 2), ());
+    $color: map.get($palette, $color);
+    $base: list.nth($color, 1);
+    $adjust: if(list.length($color) > 1, list.nth($color, 2), ());
     // Recursive check
-    $color: if(map-has-key($palette, $base), color($base), $base);
+    $color: if(map.has-key($palette, $base), color($base), $base);
     // Adjustments
     $color: color-process-adjustments($color, $adjust);
     @return $color;
   }
   @else {
-    @if type-of($color) != color {
+    @if meta.type-of($color) != color {
       // $color is not in $color and $color is not a color
       @error 'Invalid color "#{$color}".';
     }
@@ -39,13 +42,13 @@
 }
 
 @function color-with-adjustments($color-with-adjustments, $debug: false) {
-  $color: color(nth($color-with-adjustments, 1));
-  $adjust: if(length($color-with-adjustments) > 1, nth($color-with-adjustments, 2), ());
+  $color: color(list.nth($color-with-adjustments, 1));
+  $adjust: if(list.length($color-with-adjustments) > 1, list.nth($color-with-adjustments, 2), ());
   $color: color-process-adjustments($color, $adjust, $debug: $debug);
   @if $debug == true {
     @debug '--------'; // sass-lint:disable-line no-debug
     @debug 'Color with adjustments: ' $color-with-adjustments; // sass-lint:disable-line no-debug
-    @debug 'Color: ' nth($color-with-adjustments, 1); // sass-lint:disable-line no-debug
+    @debug 'Color: ' list.nth($color-with-adjustments, 1); // sass-lint:disable-line no-debug
     @debug 'Adjust: ' $adjust; // sass-lint:disable-line no-debug
   }
   @return $color;
@@ -61,13 +64,13 @@
       @debug 'Value: ' $value; // sass-lint:disable-line no-debug
       @debug 'Color: ' $color; // sass-lint:disable-line no-debug
     }
-    @if function-exists($function) {
-      $function: get-function($function);
+    @if meta.function-exists($function) {
+      $function: meta.get-function($function);
       @if $value != '' {
-        $color: call($function, $color, $value...);
+        $color: meta.call($function, $color, $value...);
       }
       @else {
-        $color: call($function, $color);
+        $color: meta.call($function, $color);
       }
       @if $debug == true {
         @debug 'Color adjusted: ' $color; // sass-lint:disable-line no-debug
@@ -86,14 +89,14 @@
   @if $color == 'inherit' {
     @return $color;
   }
-  @if type-of($color) != 'color' {
+  @if meta.type-of($color) != 'color' {
     $color: color($color);
   }
   @return rgba($color, $amount);
 }
 
 @function gray($num) {
-  @return lighten(#000, percentage(math.div((100 - $num), 100)));
+  @return lighten(#000, math.percentage(math.div((100 - $num), 100)));
 }
 
 @function grey($num) {
@@ -106,9 +109,9 @@
 
 @function lighten($color, $amount) {
   $adjusted-color: color.adjust($color, $lightness: $amount);
-  $red: round(color.channel($adjusted-color, 'red'));
-  $green: round(color.channel($adjusted-color, 'green'));
-  $blue: round(color.channel($adjusted-color, 'blue'));
+  $red: math.round(color.channel($adjusted-color, 'red'));
+  $green: math.round(color.channel($adjusted-color, 'green'));
+  $blue: math.round(color.channel($adjusted-color, 'blue'));
 
   @return rgb($red, $green, $blue);
   // @return color.adjust($color, $lightness: $amount);
@@ -117,9 +120,9 @@
 @function darken($color, $amount) {
   // @return color.adjust($color, $lightness: -$amount);
   $adjusted-color: color.adjust($color, $lightness: -$amount);
-  $red: round(color.channel($adjusted-color, 'red'));
-  $green: round(color.channel($adjusted-color, 'green'));
-  $blue: round(color.channel($adjusted-color, 'blue'));
+  $red: math.round(color.channel($adjusted-color, 'red'));
+  $green: math.round(color.channel($adjusted-color, 'green'));
+  $blue: math.round(color.channel($adjusted-color, 'blue'));
   @return rgb($red, $green, $blue);
 }
 
@@ -157,7 +160,7 @@
     @if $current-saturation > 1 {
       $current-saturation: -$current-scale;
     }
-    $color2: scale-color($color2, $lightness: $current-scale, $saturation: $current-saturation);
+    $color2: color.scale($color2, $lightness: $current-scale, $saturation: $current-saturation);
     $current-contrast: color-contrast($color1, $color2);
     $scale: $scale + $scale-amount;
   }
@@ -178,13 +181,13 @@
   $rgba2: ();
 
   @for $i from 1 through 3 {
-    $rgb: nth($rgba, $i);
+    $rgb: list.nth($rgba, $i);
     $rgb: math.div($rgb, 255);
     $rgb: if($rgb < 0.03928, math.div($rgb, 12.92), pow(math.div($rgb + 0.055, 1.055), 2.4));
-    $rgba2: append($rgba2, $rgb);
+    $rgba2: list.append($rgba2, $rgb);
   }
 
-  @return 0.2126 * nth($rgba2, 1) + 0.7152 * nth($rgba2, 2) + 0.0722 * nth($rgba2, 3);
+  @return 0.2126 * list.nth($rgba2, 1) + 0.7152 * list.nth($rgba2, 2) + 0.0722 * list.nth($rgba2, 3);
 }
 
 /// Checks the contrast ratio of two colors.
@@ -204,7 +207,7 @@
     $ratio: math.div(1, $ratio);
   }
 
-  $ratio: round($ratio * 10) * 0.1;
+  $ratio: math.round($ratio * 10) * 0.1;
 
   @return $ratio;
 }
@@ -217,17 +220,17 @@
 ///
 /// @returns {Color} the color from `$colors` (list of colors) that has the most contrast.
 @function color-pick-contrast($base, $colors: (color(theme-white), color(theme-black)), $tolerance: $global-color-pick-contrast-tolerance) {
-  @if type-of($base) != 'color' {
+  @if meta.type-of($base) != 'color' {
     $base: color($base);
   }
-  $contrast: color-contrast($base, nth($colors, 1));
-  $best: nth($colors, 1);
+  $contrast: color-contrast($base, list.nth($colors, 1));
+  $best: list.nth($colors, 1);
 
-  @for $i from 2 through length($colors) {
-    $current-contrast: color-contrast($base, nth($colors, $i));
+  @for $i from 2 through list.length($colors) {
+    $current-contrast: color-contrast($base, list.nth($colors, $i));
     @if ($current-contrast - $contrast > $tolerance) {
-      $contrast: color-contrast($base, nth($colors, $i));
-      $best: nth($colors, $i);
+      $contrast: color-contrast($base, list.nth($colors, $i));
+      $best: list.nth($colors, $i);
     }
   }
 
@@ -251,16 +254,16 @@
 ///
 /// @returns {Color} A scaled color.
 @function color-scale-inverse($color, $scale: 5%, $threshold: 60%) {
-  @if type-of($color) != 'color' {
+  @if meta.type-of($color) != 'color' {
     $color: color($color);
   }
   @if color.channel(color.to-space($color, hsl), 'lightness') > $threshold {
     $scale: -$scale;
   }
-  $adjusted-color: color.to-space(adjust-color($color, $lightness: $scale), rgb);
-  $red: round(color.channel($adjusted-color, 'red'));
-  $green: round(color.channel($adjusted-color, 'green'));
-  $blue: round(color.channel($adjusted-color, 'blue'));
+  $adjusted-color: color.to-space(color.adjust($color, $lightness: $scale), rgb);
+  $red: math.round(color.channel($adjusted-color, 'red'));
+  $green: math.round(color.channel($adjusted-color, 'green'));
+  $blue: math.round(color.channel($adjusted-color, 'blue'));
   @return rgb($red, $green, $blue);
 }
 
@@ -272,16 +275,16 @@
 ///
 /// @returns {Color} A scaled color.
 @function color-scale-direct($color, $scale: 5%, $threshold: 60%) {
-  @if type-of($color) != 'color' {
+  @if meta.type-of($color) != 'color' {
     $color: color($color);
   }
   @if color.channel(color.to-space($color, hsl), 'lightness') < $threshold {
     $scale: -$scale;
   }
 
-  $adjusted-color: adjust-color($color, $lightness: $scale);
-  $red: round(color.channel($adjusted-color, 'red'));
-  $green: round(color.channel($adjusted-color, 'green'));
-  $blue: round(color.channel($adjusted-color, 'blue'));
+  $adjusted-color: color.adjust($color, $lightness: $scale);
+  $red: math.round(color.channel($adjusted-color, 'red'));
+  $green: math.round(color.channel($adjusted-color, 'green'));
+  $blue: math.round(color.channel($adjusted-color, 'blue'));
   @return rgb($red, $green, $blue);
 }

@@ -1,3 +1,5 @@
+@use "sass:list";
+@use "sass:meta";
 // Foundation for Sites by ZURB
 // foundation.zurb.com
 // Licensed under MIT Open Source
@@ -20,7 +22,7 @@
     @return gcd($b, $a % $b);
   }
   @else {
-    @return abs($a);
+    @return math.abs($a);
   }
 }
 
@@ -31,9 +33,9 @@
 ///
 /// @returns {Number} The product of the exponentiation.
 @function pow($base, $exponent, $prec: 16) {
-  @if (floor($exponent) != $exponent) {
+  @if (math.floor($exponent) != $exponent) {
     $prec2: pow(10, $prec);
-    $exponent: round($exponent * $prec2);
+    $exponent: math.round($exponent * $prec2);
     $denominator: gcd($exponent, $prec2);
     @return nth-root(pow($base, math.div($exponent, $denominator)), math.div($prec2, $denominator), $prec);
   }
@@ -68,8 +70,8 @@
 /// @param {List} $ratio - Ratio to use to calculate the height, formatted as `x by y`.
 /// @return {Number} A percentage value for the height relative to the width of a responsive container.
 @function ratio-to-percentage($ratio) {
-  $w: nth($ratio, 1);
-  $h: nth($ratio, 3);
+  $w: list.nth($ratio, 1);
+  $h: list.nth($ratio, 3);
   @return math.div($h, $w) * 100%;
 }
 
@@ -81,12 +83,12 @@
 /// @return {List} List of parsed values with numerator at first position and denumerator as second. These values may be null.
 @function exo-parse-fraction($fraction) {
 
-  @if type-of($fraction) == 'number' {
+  @if meta.type-of($fraction) == 'number' {
     // "50%"
-    @if unit($fraction) == '%' {
+    @if math.unit($fraction) == '%' {
       @return (strip-unit($fraction), 100);
     }
-    @else if (unit($fraction) == '') {
+    @else if (math.unit($fraction) == '') {
       // "0.5"
       @if $fraction < 1 {
         @return ($fraction * 100, 100);
@@ -98,12 +100,12 @@
     }
   }
 
-  @else if type-of($fraction) == 'list' {
+  @else if meta.type-of($fraction) == 'list' {
     // "50 of 100", "50/100"...
-    @if length($fraction) == 3
-      and type-of(nth($fraction, 1) == 'number')
-      and type-of(nth($fraction, 3) == 'number') {
-      @return (nth($fraction, 1), nth($fraction, 3));
+    @if list.length($fraction) == 3
+      and meta.type-of(list.nth($fraction, 1) == 'number')
+      and meta.type-of(list.nth($fraction, 3) == 'number') {
+      @return (list.nth($fraction, 1), list.nth($fraction, 3));
     }
   }
 
@@ -120,14 +122,14 @@
   $denominator: null
 ) {
   $parsed: exo-parse-fraction($fraction);
-  $parsed-nominator: nth($parsed, 1);
-  $parsed-denominator: nth($parsed, 2);
+  $parsed-nominator: list.nth($parsed, 1);
+  $parsed-denominator: list.nth($parsed, 2);
 
   @if $parsed-nominator == null {
     @error 'Wrong syntax for "fraction-to-percentage()". Use a number, decimal, percentage, or "n of n" / "n/n".';
   }
   @if $parsed-denominator == null {
-    @if type-of($denominator) == 'number' {
+    @if meta.type-of($denominator) == 'number' {
       $parsed-denominator: $denominator;
     }
     @else {
@@ -135,5 +137,5 @@
     }
   }
 
-  @return percentage(math.div($parsed-nominator, $parsed-denominator));
+  @return math.percentage(math.div($parsed-nominator, $parsed-denominator));
 }

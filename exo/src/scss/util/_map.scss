@@ -1,18 +1,21 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:meta";
 /// Get value from $theme map.
 @function theme-val($theme, $key, $as-color: false, $debug: false) {
   @if $debug == true {
     @debug '----------------'; // sass-lint:disable-line no-debug
   }
-  @if variable-exists(themes-global) {
-    $theme: map-merge($themes-global, $theme);
+  @if meta.variable-exists(themes-global) {
+    $theme: map.merge($themes-global, $theme);
   }
   @return theme-val-iterator($theme, $key, $as-color, $debug);
 }
 
 /// Interate over all values and store adjustments.
 @function theme-val-iterator($map, $key, $as-color: false, $debug: false, $adjustments: ()) {
-  $base: nth($key, 1);
-  $adjustment: if(length($key) > 1, nth($key, 2), ());
+  $base: list.nth($key, 1);
+  $adjustment: if(list.length($key) > 1, list.nth($key, 2), ());
 
   @if $debug == true {
     @debug '--------'; // sass-lint:disable-line no-debug
@@ -21,14 +24,14 @@
     @debug 'Base: ' $base; // sass-lint:disable-line no-debug
   }
 
-  @if (length($adjustment) > 0) {
-    @if type-of($adjustment) == 'map' {
+  @if (list.length($adjustment) > 0) {
+    @if meta.type-of($adjustment) == 'map' {
       @if $debug == true {
         @debug 'Adjustment: ' $adjustment; // sass-lint:disable-line no-debug
-        @debug 'Adjustment type: ' type-of($adjustment); // sass-lint:disable-line no-debug
+        @debug 'Adjustment type: ' meta.type-of($adjustment); // sass-lint:disable-line no-debug
       }
       @each $function, $value in $adjustment {
-        $adjustments: map-merge($adjustments, ($function: $value));
+        $adjustments: map.merge($adjustments, ($function: $value));
       }
     }
   }
@@ -38,17 +41,17 @@
   }
 
   // Keep looping till we don't have a key in the array map.
-  @if map-has-key($map, $base) {
+  @if map.has-key($map, $base) {
     @if $debug == true {
       @debug 'Found: ' $base ' in map'; // sass-lint:disable-line no-debug
-      @debug 'New value: ' map-get($map, $base); // sass-lint:disable-line no-debug
+      @debug 'New value: ' map.get($map, $base); // sass-lint:disable-line no-debug
     }
-    @return theme-val-iterator($map, map-get($map, $base), $as-color, $debug, $adjustments);
+    @return theme-val-iterator($map, map.get($map, $base), $as-color, $debug, $adjustments);
   }
 
   $value: $key;
   @if ($as-color == true) {
-    @if (length($adjustments) > 0) {
+    @if (list.length($adjustments) > 0) {
       $value: $value $adjustments;
     }
     @if $debug == true {

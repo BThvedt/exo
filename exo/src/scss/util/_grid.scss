@@ -1,3 +1,6 @@
+@use "sass:list";
+@use "sass:meta";
+@use "sass:string";
 @use "sass:math";
 
 /////////////////////
@@ -61,7 +64,7 @@ $exo-block-grid-max: 8 !default;
 
   @if ($breakpoint == null) {
     // If `$bp-size` is available then use this, otherwise revert to the smallest bp.
-    @if(variable-exists(-exo-size) and type-of($-exo-size) != 'number') and $-exo-size != null {
+    @if(meta.variable-exists(-exo-size) and meta.type-of($-exo-size) != 'number') and $-exo-size != null {
       $breakpoint: $-exo-size;
     }
     @else {
@@ -98,7 +101,7 @@ $exo-block-grid-max: 8 !default;
   $gutter-type: if($negative, 'margin', $gutter-type);
 
   // Output our margin gutters.
-  @if (type-of($gutters) == 'map') {
+  @if (meta.type-of($gutters) == 'map') {
     @include -exo-breakpoint-value(auto, $gutters) {
       $gutter: rem-calc($-exo-bp-value) * 0.5;
 
@@ -106,19 +109,19 @@ $exo-block-grid-max: 8 !default;
       @each $value in $gutter-position {
 
         & {
-          #{$gutter-type}-#{$value}: unquote('#{$operator}#{$gutter}');
+          #{$gutter-type}-#{$value}: string.unquote('#{$operator}#{$gutter}');
         }
       }
     }
   }
-  @else if (type-of($gutters) == 'number') {
+  @else if (meta.type-of($gutters) == 'number') {
     $gutter: math.div(rem-calc($gutters), 2);
 
     // Loop through each gutter position
     @each $value in $gutter-position {
 
       & {
-        #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+        #{$gutter-type}-#{$value}: string.unquote("#{$operator}#{$gutter}");
       }
     }
   }
@@ -190,25 +193,25 @@ $exo-block-grid-max: 8 !default;
   $size: $grid-columns
 ) {
   // Parsing percents, decimals, n of n and number counts
-  @if type-of($size) == 'number' {
-    @if unit($size) == '%' {
+  @if meta.type-of($size) == 'number' {
+    @if math.unit($size) == '%' {
       $size: $size;
     }
     @else if $size < 1 {
-      $size: percentage($size);
+      $size: math.percentage($size);
     }
     @else {
-      $size: percentage(math.div($size, $grid-columns));
+      $size: math.percentage(math.div($size, $grid-columns));
     }
   }
 
   // Parsing "n of n" or "n/n" expressions
-  @else if type-of($size) == 'list' {
-    @if length($size) != 3 {
+  @else if meta.type-of($size) == 'list' {
+    @if list.length($size) != 3 {
       @error 'Wrong syntax for exo-cell-size(). Use the format "n of n" or "n/n".';
     }
     @else {
-      $size: percentage(math.div(nth($size, 1), nth($size, 3)));
+      $size: math.percentage(math.div(list.nth($size, 1), list.nth($size, 3)));
     }
   }
   // Anything else is incorrect
@@ -387,7 +390,7 @@ $exo-block-grid-max: 8 !default;
     align-items: stretch;
   }
 
-  @if $breakpoint == null and type-of($gutters) == 'map' {
+  @if $breakpoint == null and meta.type-of($gutters) == 'map' {
     @include -exo-each-breakpoint() {
       @include exo-grid-frame($vertical, $nested, $gutters, $-exo-size, false);
     }
@@ -503,7 +506,7 @@ $exo-block-grid-max: 8 !default;
   $breakpoint: null,
   $vertical: false
 ) {
-  $size: percentage(math.div(1, $n));
+  $size: math.percentage(math.div(1, $n));
 
   & > #{$selector} {
     @include exo-cell($size, $gutter-output, $gutters, $gutter-type, $gutter-position, $breakpoint, $vertical);
