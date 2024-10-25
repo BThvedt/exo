@@ -140,6 +140,10 @@ class Link extends ExoComponentFieldFieldableBase {
         $default->setValue(['options', 'attributes', 'data-icon'], $icon);
         $default->unsetValue('icon');
       }
+      if ($class = $default->getValue('class')) {
+        $default->setValue(['options', 'attributes', 'class'], $class);
+        $default->unsetValue('class');
+      }
     }
   }
 
