@@ -175,11 +175,8 @@ $exo-block-grid-max: 8 !default;
 ) {
   $direction: if($direction == 'horizontal', row, column);
   $wrap: if($wrap, wrap, nowrap);
-
-  & {
-    display: flex;
-    flex-flow: $direction $wrap;
-  }
+  display: flex;
+  flex-flow: $direction $wrap;
 }
 
 /////////////////////

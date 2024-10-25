@@ -3,6 +3,7 @@
 // Generates the proper font styles from a linked font file(s)
 // ---------
 @use "sass:math";
+@use "sass:string";
 
 @mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
   $src: null;
@@ -36,7 +37,7 @@
 // Use icon
 
 @function add-backslash($character) {
-  @return unquote('"') + unquote(str-insert($character, '\\', 1)) + unquote('"');
+  @return string.unquote('"') + string.unquote(string.insert($character, '\\', 1)) + string.unquote('"');
 }
 
 @mixin exo-icon($package, $hex, $position: before) {
