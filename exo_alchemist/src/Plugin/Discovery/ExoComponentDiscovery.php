@@ -169,6 +169,8 @@ class ExoComponentDiscovery implements DiscoveryInterface {
               $definition['fields'][$field_id]['extend_id'] = $content['extend_id'];
             }
           }
+          // Order fields by extended field order.
+          $definition['fields'] = array_merge($content['fields'], $definition['fields']);
           $all[$provider][$definition['id']] = $definition;
         }
       }
