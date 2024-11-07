@@ -10,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\exo\ExoNestedEntityFormInterface;
 
-
 /**
  * Provides a helper to for nesting entity forms.
  *
@@ -64,12 +63,15 @@ trait ExoNestedEntityFormTrait {
     else {
       $entity = $this->getEntityTypeManager()->getStorage($entity_type_id)->create($data);
     }
+    $innerForm = $this->getEntityTypeManager()->getFormObject($entity->getEntityTypeId(), $form_handler)->setEntity($entity);
     $this->innerForms[$key] = $this->getEntityTypeManager()->getFormObject($entity->getEntityTypeId(), $form_handler)->setEntity($entity);
-    if ($this->innerForms[$key] instanceof ExoNestedEntityFormInterface) {
-      $this->setInnerFormKey($key);
-      $this->setInnerFormParents($key, $parents);
+    if ($innerForm instanceof ExoNestedEntityFormInterface) {
+      $innerForm->setInnerFormKey($key);
+      $innerForm->setInnerFormParents($key, $parents);
+      $this->innerForms[$key] = $innerForm;
+      return $this->getInnerForm($parents);
     }
-    return $this->getInnerForm($parents);
+    return [];
   }
 
   /**
@@ -228,6 +230,7 @@ trait ExoNestedEntityFormTrait {
    */
   public function validateInnerForm(array $form, FormStateInterface $form_state) {
     if ($entity_form = $this->getInnerForm($form['#parents'])) {
+      ksm('validate');
       /** @var \Drupal\Core\Form\FormValidatorInterface $form_validator */
       $form_validator = \Drupal::service('form_validator');
       $inner_form_state = static::getInnerFormState($form['#parents'], $form_state);
@@ -358,34 +361,6 @@ trait ExoNestedEntityFormTrait {
     }
 
     return $this->entityTypeManager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getInnerFormKey($key) {
-    return $this->innerForms[$key]->innerFormKey;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getInnerFormParents($key) {
-    return $this->innerForms[$key]->innerFormParents;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setInnerFormKey($key) {
-    $this->innerForms[$key]->innerFormKey = $key;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setInnerFormParents($key, $parents) {
-    $this->innerForms[$key]->innerFormParents = $parents;
   }
 
 }
