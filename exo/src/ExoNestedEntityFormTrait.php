@@ -230,7 +230,6 @@ trait ExoNestedEntityFormTrait {
    */
   public function validateInnerForm(array $form, FormStateInterface $form_state) {
     if ($entity_form = $this->getInnerForm($form['#parents'])) {
-      ksm('validate');
       /** @var \Drupal\Core\Form\FormValidatorInterface $form_validator */
       $form_validator = \Drupal::service('form_validator');
       $inner_form_state = static::getInnerFormState($form['#parents'], $form_state);
