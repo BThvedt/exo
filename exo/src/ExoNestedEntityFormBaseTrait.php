@@ -11,22 +11,50 @@ trait ExoNestedEntityFormBaseTrait {
 
   /**
    * The inner form key.
-   * 
+   *
    * Used by ExoNestedEntityFormTrait. Should be applied to base form.
-   * 
-   * @param string
+   *
+   * @var string
    *   The inner form key.
    */
   public $innerFormKey = '';
 
   /**
    * The inner form parents.
-   * 
+   *
    * Used by ExoNestedEntityFormTrait. Should be applied to base form.
-   * 
-   * @param array
+   *
+   * @var array
    *   The inner form parents.
    */
   public $innerFormParents = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInnerFormKey($key) {
+    return $this->innerFormKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInnerFormParents($key) {
+    return $this->innerFormParents;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInnerFormKey($key) {
+    $this->innerFormKey = $key;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInnerFormParents($key, $parents) {
+    $this->innerFormParents = $parents;
+  }
 
 }
