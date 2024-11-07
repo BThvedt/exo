@@ -131,7 +131,10 @@ function exo_form_process_form(&$element) {
     }
     $theme = !empty($element['#exo_theme']) ? $element['#exo_theme'] : NULL;
     $classes = exo_form_classes($theme, TRUE);
-    $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $classes);
+    if (isset($element['#attributes']['class']) && is_string($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = [$element['#attributes']['class']];
+    }
+    $element['#attributes']['class'] = array_merge($element['#attributes']['class'] ?? [], $classes);
     $element['#attached']['drupalSettings']['exoForm']['classes'] = $classes;
   }
 }
