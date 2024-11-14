@@ -30,13 +30,13 @@ trait ExoModalResponseTrait {
    */
   protected function buildModalResponse(Request $request, $build, $settings = []) {
     $response = new AjaxResponse();
-    $from_modal = !empty($request->query->get('from_modal'));
+    $parameters = $request->query->all();
     // This request has been requested from an existing modal.
-    if ($from_modal) {
+    if (!empty($parameters['from_modal'])) {
       $response->addCommand(new ExoModalContentCommand($build));
       return $response;
     }
-    $settings = NestedArray::mergeDeep($settings, $request->query->get('modal') ?: []);
+    $settings = NestedArray::mergeDeep($settings, $parameters['modal'] ?: []);
     $modal = $this->exoModalGenerator()->generate('exo_modal_' . time(), NestedArray::mergeDeep([
       'modal' => [
         'autoOpen' => TRUE,
