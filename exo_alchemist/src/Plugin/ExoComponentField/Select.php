@@ -3,7 +3,6 @@
 namespace Drupal\exo_alchemist\Plugin\ExoComponentField;
 
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\exo_alchemist\Plugin\ExoComponentFieldFieldableBase;
 
@@ -43,7 +42,7 @@ class Select extends ExoComponentFieldFieldableBase {
    */
   public function propertyInfo() {
     return [
-      'value' => $this->t('The string value.'),
+      'value' => $this->t('The select value.'),
     ];
   }
 
@@ -62,15 +61,14 @@ class Select extends ExoComponentFieldFieldableBase {
   /**
    * {@inheritdoc}
    */
-  public function widgetAlter(WidgetInterface $widget, FormStateInterface $form_state) {
-    $options = $this->getFieldDefinition()->getAdditionalValue('options');
-    ksm($options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function formAlter(array &$form, FormStateInterface $form_state) {
+    $field = $this->getFieldDefinition();
+    $options = $field->getAdditionalValue('options');
+    $form['widget'][0]['value']['#type'] = 'select';
+    $form['widget'][0]['value']['#options'] = $options;
+    if (!$this->isRequired()) {
+      $form['widget'][0]['value']['#empty_option'] = $this->t('- Select -');
+    }
   }
 
   /**
