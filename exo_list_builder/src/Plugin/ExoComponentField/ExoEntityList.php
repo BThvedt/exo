@@ -110,6 +110,10 @@ class ExoEntityList extends ExoComponentFieldComputedBase implements ContainerFa
         }
       }
 
+      if ($limit = $field->getAdditionalValue('exo_entity_list_limit')) {
+        $handler->setLimit((int) $limit);
+      }
+
       if ($this->isPreview($contexts)) {
         if (!$handler->getLimit()) {
           $handler->setLimit(40);
