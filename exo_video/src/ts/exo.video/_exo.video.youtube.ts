@@ -49,6 +49,14 @@ class ExoVideoYoutube extends ExoVideoBase {
               this.videoRewind();
               this.videoMute();
               this.videoPlay();
+            } else if (e.data === 0) {
+              // I need a consistant way to tell if the video is over
+              const videoOverEvent = new CustomEvent('videoOverEvent', {
+                detail: {
+                  iFrameId: this.getId() + '-video'
+                }
+              });
+              document.dispatchEvent(videoOverEvent);
             }
           }
         }
