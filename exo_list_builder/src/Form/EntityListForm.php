@@ -463,6 +463,13 @@ class EntityListForm extends EntityForm {
       '#default_value' => $exo_entity_list->getSetting('cache_status'),
     ];
 
+    $form['settings']['autosubmit'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Autosubmit'),
+      '#description' => $this->t('If checked, the form will autosubmit when a filter is changed.'),
+      '#default_value' => $exo_entity_list->getSetting('autosubmit'),
+    ];
+
     $form['settings']['item_wrapper_status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Wrap each item in a DIV'),
