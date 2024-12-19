@@ -4,6 +4,7 @@ namespace Drupal\exo_breadcrumbs\Breadcrumb;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteObjectInterface as RoutingRouteObjectInterface;
@@ -23,7 +24,7 @@ class BreadcrumbFormatter extends PathBasedBreadcrumbBuilder {
   /**
    * {@inheritdoc}
    */
-  public function applies(RouteMatchInterface $attributes) {
+  public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
     // Determine if it is not an admin route.
     if (!exo_is_admin()) {
       return TRUE;
