@@ -2143,6 +2143,10 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
       ];
       if ($this->getEntityList()->getSetting('autosubmit')) {
         $form['inline']['actions']['submit']['#attributes']['data-exo-auto-submit-click'] = '';
+
+        if ($this->getEntityList()->getSetting('autosubmit_hide')) {
+          $form['inline']['actions']['submit']['#attributes']['class'][] = 'js-hide';
+        }
       }
     }
     if ($show_sidebar) {

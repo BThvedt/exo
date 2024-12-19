@@ -470,6 +470,18 @@ class EntityListForm extends EntityForm {
       '#default_value' => $exo_entity_list->getSetting('autosubmit'),
     ];
 
+    $form['settings']['autosubmit_hide'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide submit button'),
+      '#description' => $this->t('Hide submit button if javascript is enabled.'),
+      '#default_value' => $exo_entity_list->getSetting('autosubmit_hide'),
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[autosubmit]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     $form['settings']['item_wrapper_status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Wrap each item in a DIV'),
