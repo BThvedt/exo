@@ -134,8 +134,10 @@ class ExportCsv extends ExoListActionBase {
    */
   public function execute($entity_id, EntityListInterface $entity_list, $selected, array &$context) {
     $data = $this->temp->get($context['results']['csv_file_uri']) ?? [];
-    $data[] = $this->getCsvRow($entity_id, $entity_list, $selected, $context);
-    $this->temp->set($context['results']['csv_file_uri'], $data);
+    if ($value = $this->getCsvRow($entity_id, $entity_list, $selected, $context)) {
+      $data[] = $value;
+      $this->temp->set($context['results']['csv_file_uri'], $data);
+    }
   }
 
   /**
