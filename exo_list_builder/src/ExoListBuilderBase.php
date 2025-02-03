@@ -1087,6 +1087,11 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
       \Drupal::cache()->set($cid, $build, Cache::PERMANENT, $this->getCacheTags());
     }
 
+    if ($this->getEntityList()->getSetting('autosubmit')) {
+      $build['#attributes']['data-exo-auto-submit-full-form'] = '';
+      $build['#attached']['library'][] = 'exo/auto_submit';
+    }
+
     return $build;
   }
 
@@ -2136,6 +2141,13 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
         '#value' => $this->getEntityList()->getSetting('submit_label', $this->t('Apply')),
         '#name' => 'exo_filter_submit',
       ];
+      if ($this->getEntityList()->getSetting('autosubmit')) {
+        $form['inline']['actions']['submit']['#attributes']['data-exo-auto-submit-click'] = '';
+
+        if ($this->getEntityList()->getSetting('autosubmit_hide')) {
+          $form['inline']['actions']['submit']['#attributes']['class'][] = 'js-hide';
+        }
+      }
     }
     if ($show_sidebar) {
       $form['sidebar'] = [

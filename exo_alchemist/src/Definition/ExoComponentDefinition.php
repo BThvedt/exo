@@ -204,7 +204,10 @@ class ExoComponentDefinition extends PluginDefinition implements ContextAwarePlu
     if ($entity_type_id = $this->definition['entity_type']) {
       $context_definition = EntityContextDefinition::fromEntityTypeId($entity_type_id)->setLabel('Entity');
       if ($bundle = $this->definition['bundle']) {
-        $context_definition->addConstraint('Bundle', [$bundle]);
+        if (!is_array($bundle)) {
+          $bundle = [$bundle];
+        }
+        $context_definition->addConstraint('Bundle', $bundle);
       }
       $this->addContextDefinition('entity', $context_definition);
       $this->addContextDefinition('view_mode', new ContextDefinition('string'));

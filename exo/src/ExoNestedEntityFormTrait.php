@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\exo\ExoNestedEntityFormInterface;
 
 /**
  * Provides a helper to for nesting entity forms.
