@@ -60,9 +60,6 @@
       if ($trail.length) {
         this.hideActive(false).then(status => this.show($trail, true));
       }
-      else {
-        this.setWrapHeight();
-      }
       this.resize();
     }
 
@@ -184,7 +181,6 @@
           else {
             resolve(true);
           }
-          this.setWrapHeight($submenu);
         }
       });
     }
@@ -207,28 +203,17 @@
               $submenu.off(Drupal.Exo.animationEvent + '.exo.menu.hide');
               $submenu.removeClass('exo-animate-' + this.get('transitionOut'));
               $submenu.find('.expand').removeClass('expand');
-              this.setWrapHeight($submenu);
               this.resize();
               resolve(true);
             });
           }
           else {
             $item.removeClass('expand');
-            this.setWrapHeight($submenu);
             this.resize();
             resolve(true);
           }
         }
       });
-    }
-
-    protected setWrapHeight($submenu?:JQuery):void {
-      // Slight timeout to allow display hide/show to not affect height calculations.
-      setTimeout(() => {
-        var level0Height = this.$element.find('.level-0').outerHeight();
-        var submenuHeight = $submenu ? $submenu.outerHeight() : 0;
-        this.$element.height(Math.max(level0Height, submenuHeight));
-      }, 10);
     }
   }
 
