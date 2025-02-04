@@ -446,6 +446,7 @@
   }
 
   .exo-modal-wrap {
+    display: flex;
     width: 100%;
     flex-grow: 1;
     position: relative;
@@ -459,6 +460,7 @@
   }
 
   .exo-modal-content {
+    display: flex;
     flex-grow: 1;
     zoom: 1;
     width: 100%;
