@@ -4,7 +4,6 @@ namespace Drupal\exo_list_builder\Plugin\ExoList\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
-use Drupal\Core\Render\Markup;
 use Drupal\exo_icon\ExoIconTranslationTrait;
 use Drupal\exo_list_builder\EntityListInterface;
 use Drupal\exo_list_builder\Plugin\ExoListFieldPropertyInterface;
@@ -31,6 +30,7 @@ class Links extends ExoListWidgetBase implements ExoListWidgetValuesInterface {
     return [
       'group' => NULL,
       'total' => FALSE,
+      'all' => FALSE,
       'limit' => 50,
       'reset' => TRUE,
     ] + parent::defaultConfiguration();
@@ -52,6 +52,11 @@ class Links extends ExoListWidgetBase implements ExoListWidgetValuesInterface {
       '#type' => 'checkbox',
       '#title' => $this->t('Show total in link'),
       '#default_value' => $configuration['total'],
+    ];
+    $form['all'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show "All" option as first item'),
+      '#default_value' => $configuration['all'],
     ];
     if ($filter instanceof ExoListFieldPropertyInterface) {
       $properties = ['' => $this->t('- None -')] + $filter->getPropertyOptions($field['definition']);
@@ -132,6 +137,22 @@ class Links extends ExoListWidgetBase implements ExoListWidgetValuesInterface {
   protected function buildLinks(EntityListInterface $entity_list, ExoListFilterInterface $filter, array $field, $values, $current, $multiple, $total) {
     $items = [];
     $configuration = $this->getConfiguration();
+    if ($configuration['all']) {
+      $is_active_all = empty($current);
+      $items[] = [
+        '#type' => 'link',
+        '#value' => $this->t('All'),
+        '#title' => [
+          '#type' => 'inline_template',
+          '#template' => '<span class="value{% if active %} is-active{% endif %}">{{ value }}</span>',
+          '#context' => [
+            'value' => $this->t('All'),
+            'active' => $is_active_all ? 'is-active' : NULL,
+          ],
+        ],
+        '#url' => $entity_list->toFilteredUrl([]),
+      ];
+    }
     foreach ($values as $value) {
       $value_total = !empty($configuration['total']) ? $filter->getOptionTotal(array_unique(array_merge($current, [$value])), $entity_list, $field) : 0;
       $is_current = in_array($value, $current);
