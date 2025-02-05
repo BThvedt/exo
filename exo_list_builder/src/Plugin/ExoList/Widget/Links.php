@@ -155,7 +155,7 @@ class Links extends ExoListWidgetBase implements ExoListWidgetValuesInterface {
         '#value' => $value,
         '#title' => [
           '#type' => 'inline_template',
-          '#template' => '<span class="value">{{ value }}{% if total %} <span class="total">({{ total }})</span>{% endif %}</span>{% if remove %} <span class="remove">{{ remove }}</span>{% endif %}',
+          '#template' => '<span class="value{% if remove %} is-active{% endif %}">{{ value }}{% if total %} <span class="total">({{ total }})</span>{% endif %}</span>{% if remove %} <span class="remove">{{ remove }}</span>{% endif %}',
           '#context' => [
             'value' => $value,
             'remove' => !$is_current ? NULL : $this->icon('Remove')->setIcon('regular-times')->setIconOnly(),
