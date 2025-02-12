@@ -366,8 +366,8 @@ trait ExoListContentTrait {
       if (!empty($field['reference_field'])) {
         $this->alterAvailableFieldValuesQueryByReference($query, $entity_list, $field['reference_field'], $cacheable_metadata);
       }
-      if ($bundle_key = $entity_list->getTargetEntityType()->getKey('bundle')) {
-        $query->condition($query->getMetaData('base_alias') . '.' . $bundle_key, $entity_list->getTargetBundleIds(), 'IN');
+      elseif (($target_bundle_ids = $entity_list->getTargetBundleIds()) && ($bundle_key = $entity_list->getTargetEntityType()->getKey('bundle'))) {
+        $query->condition($query->getMetaData('base_alias') . '.' . $target_bundle_ids, 'IN');
       }
       return $query;
     }
@@ -399,6 +399,22 @@ trait ExoListContentTrait {
       $table_mapping = $storage->getTableMapping();
       $base_table = $table_mapping->getDataTable() ?: $table_mapping->getBaseTable();
       $field_table = $table_mapping->getFieldTableName($field_name);
+      $ref_field_id_key = NULL;
+      if ($field_table !== $base_table) {
+        // There is likely a better way to pull this off. We need the "id"
+        // column of the field so that it can be joined. We are assuming it is
+        // the first column but this may not always be the case.
+        $field_columns = $table_mapping->getAllColumns($field_table);
+        if (in_array('id', $field_columns)) {
+          $ref_field_id_key = 'id';
+        }
+        elseif (in_array('entity_id', $field_columns)) {
+          $ref_field_id_key = 'entity_id';
+        }
+        else {
+          $ref_field_id_key = reset($field_columns);
+        }
+      }
       $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id)[$field_name];
       $field_column = $table_mapping->getFieldColumnName($field_storage_definitions, $property);
       $field_alias = str_replace(':', '_', $reference_field);
@@ -406,27 +422,14 @@ trait ExoListContentTrait {
       if (!empty($field['reference_field'])) {
         // We have made it to the base query level.
         $query->addMetaData('base_alias', $field_alias);
-        $query->addMetaData('base_id_key', $base_id_key);
+        $query->addMetaData('base_id_key', $ref_field_id_key ?? $base_id_key);
         $this->alterAvailableFieldValuesQueryByReference($query, $entity_list, $field['reference_field'], $cacheable_metadata);
       }
       else {
-        if ($field_table !== $base_table) {
-          // There is likely a better way to pull this off. We need the "id"
-          // column of the field so that it can be joined. We are assuming it is
-          // the first column but this may not always be the case.
-          $field_columns = $table_mapping->getAllColumns($field_table);
-          if (in_array('id', $field_columns)) {
-            $field_id_key = 'id';
-          }
-          elseif (in_array('entity_id', $field_columns)) {
-            $field_id_key = 'entity_id';
-          }
-          else {
-            $field_id_key = reset($field_columns);
-          }
+        if ($ref_field_id_key) {
           // If we are fetching from a non-base table, we need to join the base.
           $base_alias = 'base_' . $field_alias;
-          $query->join($base_table, $base_alias, $base_alias . '.' . $base_id_key . ' = ' . $field_alias . '.' . $field_id_key);
+          $query->join($base_table, $base_alias, $base_alias . '.' . $base_id_key . ' = ' . $field_alias . '.' . $ref_field_id_key);
         }
         // We have made it to the base query level.
         $query->addMetaData('base_alias', $base_alias);
