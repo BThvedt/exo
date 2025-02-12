@@ -23,7 +23,8 @@
   // Allow tooltip to function.
   pointer-events: none;
 
-  .exo-form-select-dropdown & {
+  .exo-form-select-dropdown &,
+  .webform-results-table & {
     pointer-events: auto;
   }
 
