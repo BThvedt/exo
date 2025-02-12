@@ -677,7 +677,15 @@ class EntityList extends ConfigEntityBase implements EntityListInterface {
             $reference_field['id'] = $reference_field_id . ':' . $reference_field['id'];
             $reference_field['label'] = $parent_field['label'] . ' (' . $reference_field['label'] . ')';
             $reference_field['reference_field'] = $reference_field_id;
-            // Disable sorting on referenced fields.
+            /** @var \Drupal\Core\Field\FieldDefinitionInterface $definition */
+            $definition = $reference_field['definition'];
+            $parts = explode(':', $reference_field_id);
+            if (count($parts) > 1) {
+              // When nesting deep, we need to come up with magic that removes
+              // the last part and adds the target entity type id.
+              array_pop($parts);
+              $reference_field['reference_field_query'] = implode(':', $parts) . '.entity:' . $definition->getTargetEntityTypeId();
+            }
             $reference_field['sort_field'] = NULL;
             if (!empty($reference_field['definition']) && !$reference_field['definition']->isComputed()) {
               $field_storage = $reference_field['definition']->getFieldStorageDefinition();
@@ -687,7 +695,15 @@ class EntityList extends ConfigEntityBase implements EntityListInterface {
                 $property_names = $field_storage->getPropertyNames();
                 $property_name = reset($property_names);
               }
-              $reference_field['sort_field'] = str_replace(':', '.entity.', $reference_field['id']) . '.' . $property_name;
+              if (!empty($reference_field['reference_field_query'])) {
+                // This is gross.
+                $parts = explode(':', $reference_field['id']);
+                $prop = end($parts);
+                $reference_field['sort_field'] = $reference_field['reference_field_query'] . '.' . $prop. '.' . $property_name;
+              }
+              else {
+                $reference_field['sort_field'] = str_replace(':', '.entity.', $reference_field['id']) . '.' . $property_name;
+              }
             }
             $fields[$reference_field['id']] = $reference_field;
           }

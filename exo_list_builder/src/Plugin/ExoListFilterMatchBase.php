@@ -143,7 +143,7 @@ abstract class ExoListFilterMatchBase extends ExoListFilterBase implements ExoLi
     if ($query instanceof QueryInterface || $query instanceof ConditionInterface) {
       if (!empty($field['reference_field'])) {
         // Support reference field.
-        $field_id = str_replace(':', '.entity.', $field['reference_field']) . '.entity.' . $field_id;
+        $field_id = ($field['reference_field_query'] ?? str_replace(':', '.entity.', $field['reference_field']) . '.entity') . '.' . $field_id;
       }
       if ($match_operator === 'IS NULL EMPTY') {
         $group = $query->orConditionGroup();
