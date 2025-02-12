@@ -367,7 +367,7 @@ trait ExoListContentTrait {
         $this->alterAvailableFieldValuesQueryByReference($query, $entity_list, $field['reference_field'], $cacheable_metadata);
       }
       elseif (($target_bundle_ids = $entity_list->getTargetBundleIds()) && ($bundle_key = $entity_list->getTargetEntityType()->getKey('bundle'))) {
-        $query->condition($query->getMetaData('base_alias') . '.' . $target_bundle_ids, 'IN');
+        $query->condition($query->getMetaData('base_alias') . '.' . $bundle_key, $entity_list->getTargetBundleIds(), 'IN');
       }
       return $query;
     }
