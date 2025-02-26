@@ -10,3 +10,7 @@ _icon:
 _link:
   label: Entity Link
   display_label: Link
+_commerce_product_sales:
+  label: Quantity Sold
+  entity_type:
+    - commerce_product

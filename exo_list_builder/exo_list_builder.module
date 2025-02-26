@@ -148,6 +148,63 @@ function exo_list_builder_query_exo_list_query_alter(AlterableInterface $query) 
 }
 
 /**
+ * Add relationship to query from product to order.
+ */
+function exo_list_build_query_product_order_joins(AlterableInterface $query) {
+  if ($query instanceof SelectInterface) {
+    $tables = $query->getTables();
+    if (!isset($tables['coi'])) {
+      $query->innerJoin('commerce_product_variation_field_data', 'cpvd', 'cpvd.product_id = base_table.product_id');
+      $query->innerJoin('commerce_order_item', 'coi', 'coi.purchased_entity = cpvd.variation_id');
+      $query->innerJoin('commerce_order__order_items', 'cooi', 'cooi.order_items_target_id = coi.order_item_id');
+      $query->innerJoin('commerce_order', 'co', 'co.order_id = cooi.entity_id AND co.state != :state', [
+        ':state' => 'canceled',
+      ]);
+    }
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function exo_list_builder_query_exo_entity_list_commerce_product_sales_sort_alter(AlterableInterface $query) {
+  if ($query instanceof SelectInterface) {
+    $original_entity_type_id = $query->getMetaData('entity_type');
+    if ($original_entity_type_id === 'commerce_product') {
+      exo_list_build_query_product_order_joins($query);
+      $direction = $query->getMetaData('exo_entity_list_commerce_product_sales_sort_direction');
+      $query->addExpression('SUM(coi.quantity)', 'count_sold');
+      $query->condition('co.placed', NULL, 'IS NOT NULL');
+      $query->orderBy('count_sold', $direction);
+      $query->groupBy('cpvd.product_id');
+    }
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function exo_list_builder_query_exo_entity_list_commerce_product_sales_timestamp_range_alter(AlterableInterface $query) {
+  if ($query instanceof SelectInterface) {
+    $value = $query->getMetaData('exo_entity_list_commerce_product_sales_timestamp_range');
+    $original_entity_type_id = $query->getMetaData('entity_type');
+    if ($original_entity_type_id === 'commerce_product') {
+      if (!empty($value['s']) || !empty($value['e'])) {
+        exo_list_build_query_product_order_joins($query);
+        $and = $query->andConditionGroup();
+        if (!empty($value['s'])) {
+          $and->condition('co.placed', $value['s'], '>=');
+        }
+        if (!empty($value['e'])) {
+          $and->condition('co.placed', $value['e'], '<=');
+        }
+        $query->condition($and);
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_query_TAG_alter().
  */
 function exo_list_builder_query_exo_entity_list_moderation_state_alter(AlterableInterface $query) {

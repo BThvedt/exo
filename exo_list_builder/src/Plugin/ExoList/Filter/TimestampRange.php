@@ -3,7 +3,6 @@
 namespace Drupal\exo_list_builder\Plugin\ExoList\Filter;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\exo_list_builder\EntityListInterface;
