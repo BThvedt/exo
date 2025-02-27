@@ -863,7 +863,14 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
    * {@inheritdoc}
    */
   public function buildList(array $build) {
-    $enhancedCache = $this->getEntityList()->getSetting('cache_status', FALSE);
+    $entity_list = $this->getEntityList();
+    $render_status = $entity_list->getSetting('render_status');
+    // Only load the entities when we want to render the results.
+    $entities = $render_status ? $this->load() : [];
+
+    // Advanced cache. Needs to run after load() so that the pager will properly
+    // render.
+    $enhancedCache = $entity_list->getSetting('cache_status', FALSE);
     if ($enhancedCache) {
       $cid = ['exo_list_builder', $this->entityList->id()];
       foreach ($this->getOptions() as $option => $value) {
@@ -877,8 +884,7 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
         return $cache->data;
       }
     }
-    $entity_list = $this->getEntityList();
-    $render_status = $entity_list->getSetting('render_status');
+
     $total = $this->getTotal();
     // We are not modified and we only have a single entity..
     $hide_extras = !$this->isFiltered() && $total <= 1;
@@ -951,8 +957,6 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
     }
     $build[$this->entitiesKey] = $format_build;
 
-    // Only load the entities when we want to render the results.
-    $entities = $render_status ? $this->load() : [];
     $build['#draggable'] = FALSE;
     if ($entities) {
       $build_rows = [];
@@ -1084,7 +1088,7 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
     $this->cacheableMetadata->applyTo($build);
 
     if ($enhancedCache) {
-      \Drupal::cache()->set($cid, $build, Cache::PERMANENT, $this->getCacheTags());
+      \Drupal::cache()->set($cid, $build, Cache::PERMANENT, $this->cacheableMetadata->getCacheTags());
     }
 
     if ($this->getEntityList()->getSetting('autosubmit')) {
