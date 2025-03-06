@@ -50,6 +50,11 @@ abstract class ExoComponentFieldComputedBase extends ExoComponentFieldBase imple
   /**
    * {@inheritdoc}
    */
+  public function onDiscardLayoutBuilderEntity(ContentEntityInterface $entity, EntityInterface $parent_entity) {}
+
+  /**
+   * {@inheritdoc}
+   */
   public function onClone(ContentEntityInterface $entity, $all = FALSE) {}
 
   /**

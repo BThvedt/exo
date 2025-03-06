@@ -72,6 +72,16 @@ interface ExoComponentFieldComputedInterface extends ExoComponentFieldInterface 
   public function onPostDeleteLayoutBuilderEntity(ContentEntityInterface $entity, EntityInterface $parent_entity);
 
   /**
+   * Acts on discard changes.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The component.
+   * @param \Drupal\Core\Entity\EntityInterface $parent_entity
+   *   The layout-builder-enabled entity that contains this field.
+   */
+  public function onDiscardLayoutBuilderEntity(ContentEntityInterface $entity, EntityInterface $parent_entity);
+
+  /**
    * Acts on field before it is cloned.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
