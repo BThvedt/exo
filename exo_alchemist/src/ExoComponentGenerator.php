@@ -226,7 +226,6 @@ class ExoComponentGenerator {
             $plugin = $component->getPlugin();
             if ($plugin instanceof DerivativeInspectionInterface && $plugin->getBaseId() === 'global_block') {
               /** @var \Drupal\layout_builder\Plugin\Block\InlineBlock $plugin */
-              $plugin = $component->getPlugin();
               $plugin->saveBlockContent();
               $post_save_configuration = $plugin->getConfiguration();
               $component->setConfiguration($post_save_configuration);
