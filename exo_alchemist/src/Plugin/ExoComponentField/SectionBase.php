@@ -161,6 +161,13 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
   /**
    * {@inheritdoc}
    */
+  public function onDiscardLayoutBuilderEntity(ContentEntityInterface $entity, EntityInterface $parent_entity) {
+    $this->layoutTempstoreRepository()->delete($this->getTemporarySectionStorage($entity, $parent_entity));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isHideable(array $contexts) {
     return FALSE;
   }
