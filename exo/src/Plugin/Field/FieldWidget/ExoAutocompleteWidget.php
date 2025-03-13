@@ -122,6 +122,13 @@ class ExoAutocompleteWidget extends WidgetBase implements ContainerFactoryPlugin
       '#default_value' => $this->getSetting('delimiter'),
       '#size' => 1,
     ];
+    $element['match_operator'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Autocomplete matching'),
+      '#default_value' => $this->getSetting('match_operator'),
+      '#options' => $this->getMatchOperatorOptions(),
+      '#description' => $this->t('Select the method used to collect autocomplete suggestions. Note that <em>Contains</em> can cause performance issues on sites with thousands of nodes.'),
+    ];
     $element['not_found_message_allow'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show Term not found message'),
@@ -159,6 +166,7 @@ class ExoAutocompleteWidget extends WidgetBase implements ContainerFactoryPlugin
     $summary[] = $this->t('Limit: @limit', ['@limit' => $this->getSetting('limit')]);
     $summary[] = $this->t('Min length: @min_length', ['@min_length' => $this->getSetting('min_length')]);
     $summary[] = $this->t('Delimiter: @delimiter', ['@delimiter' => $this->getSetting('delimiter')]);
+    $summary[] = $this->t('Matching: @operator', ['@operator' => strtolower($this->getSetting('match_operator'))]);
     $summary[] = $this->t('Allow Not Found message: @not_found_message_allow', ['@not_found_message_allow' => $this->getSetting('not_found_message_allow') ? 'Yes' : 'No']);
     $summary[] = $this->t('Not Found message: @not_found_message', ['@not_found_message' => $this->getSetting('not_found_message')]);
     $summary[] = $this->t('Allow new terms: @new_terms', ['@new_terms' => $this->getSetting('new_terms') ? 'Yes' : 'No']);
