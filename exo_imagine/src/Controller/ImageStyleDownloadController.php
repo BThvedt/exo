@@ -43,7 +43,7 @@ class ImageStyleDownloadController extends CoreImageStyleDownloadController {
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
    *   Thrown when the file is still being generated.
    */
-  public function deliver(Request $request, $scheme, ImageStyleInterface $image_style, string $required_derivative_scheme = NULL) {
+  public function deliver(Request $request, $scheme, ImageStyleInterface $image_style, ?string $required_derivative_scheme = NULL) {
     $original_target = $request->query->get('file');
 
     // Only act on .webp images.

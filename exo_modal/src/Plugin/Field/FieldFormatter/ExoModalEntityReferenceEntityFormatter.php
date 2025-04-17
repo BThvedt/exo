@@ -160,7 +160,7 @@ class ExoModalEntityReferenceEntityFormatter extends ExoModalFieldFormatterBase 
 
     $types = $this->triggerTypeOptions();
     $type = $this->getSetting('trigger_type');
-    $summary[] = $this->t('Trigger type: @type', ['@type' => isset($types[$type]) ? $types[$type] : $type]);
+    $summary[] = $this->t('Trigger type: @type', ['@type' => $types[$type] ?? $type]);
 
     if ($this->getSetting('text_auto')) {
       $summary[] = $this->t('Append title to trigger: @value', ['@value' => 'Yes']);
@@ -181,11 +181,11 @@ class ExoModalEntityReferenceEntityFormatter extends ExoModalFieldFormatterBase 
     $view_modes = $this->entityDisplayRepository->getViewModeOptions($this->getFieldSetting('target_type'));
     if ($type == 'entity') {
       $view_mode = $this->getSetting('view_mode');
-      $summary[] = $this->t('Trigger rendered as @mode', ['@mode' => isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : $view_mode]);
+      $summary[] = $this->t('Trigger rendered as @mode', ['@mode' => $view_modes[$view_mode] ?? $view_mode]);
     }
 
     $view_mode = $this->getSetting('modal_view_mode');
-    $summary[] = $this->t('Modal rendered as @mode', ['@mode' => isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : $view_mode]);
+    $summary[] = $this->t('Modal rendered as @mode', ['@mode' => $view_modes[$view_mode] ?? $view_mode]);
     return $summary;
   }
 

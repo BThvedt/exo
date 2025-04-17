@@ -174,7 +174,7 @@ abstract class ExoModalBlockBase extends BlockBase implements ExoModalBlockPlugi
     $count = 0;
     foreach ($this->getBlockOptions($theme) as $id => $label) {
       $status = isset($settings[$id]);
-      $panel_settings = isset($settings[$id]['panel']) ? $settings[$id]['panel'] : [];
+      $panel_settings = $settings[$id]['panel'] ?? [];
       $weight = $status ? array_search($id, array_keys($settings)) : $count + 100;
       $html_id = 'exo-modal-block-blocks-' . $id . '-' . $group;
       $form[$id]['#attributes']['class'][] = 'draggable';

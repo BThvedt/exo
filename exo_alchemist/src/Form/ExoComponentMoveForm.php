@@ -33,7 +33,7 @@ class ExoComponentMoveForm extends MoveBlockForm {
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
     $form = parent::buildForm($form, $form_state, $section_storage, $delta, $region, $uuid);
     // We disable the region selection to prevent moving components into locked
     // regions.

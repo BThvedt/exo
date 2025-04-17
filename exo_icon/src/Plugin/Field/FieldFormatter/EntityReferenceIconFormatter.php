@@ -82,7 +82,7 @@ class EntityReferenceIconFormatter extends EntityReferenceLabelFormatter {
       $entity_field_manager = \Drupal::service('entity_field.manager');
       $this->iconFields = [];
       $target_type = $this->fieldDefinition->getFieldStorageDefinition()->getSetting('target_type');
-      $bundles = isset($this->fieldDefinition->getSetting('handler_settings')['target_bundles']) ? $this->fieldDefinition->getSetting('handler_settings')['target_bundles'] : [];
+      $bundles = $this->fieldDefinition->getSetting('handler_settings')['target_bundles'] ?? [];
       foreach ($bundles as $bundle) {
         foreach ($entity_field_manager->getFieldDefinitions($target_type, $bundle) as $field_definition) {
           if ($field_definition->getType() == 'icon') {

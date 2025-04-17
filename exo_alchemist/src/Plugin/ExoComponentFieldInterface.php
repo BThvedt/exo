@@ -53,7 +53,7 @@ interface ExoComponentFieldInterface extends PluginInspectionInterface, ContextA
    * @param \Drupal\field\FieldConfigInterface $from_config
    *   The from field config.
    */
-  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, FieldStorageConfigInterface $from_storage = NULL, FieldConfigInterface $from_config = NULL);
+  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, ?FieldStorageConfigInterface $from_storage = NULL, ?FieldConfigInterface $from_config = NULL);
 
   /**
    * Runs before install of the config entity used as the entity type.

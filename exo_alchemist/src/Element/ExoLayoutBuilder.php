@@ -582,7 +582,7 @@ class ExoLayoutBuilder extends LayoutBuilder {
    * @return bool
    *   Returns TRUE if the section is default.
    */
-  protected function isSectionEditable(SectionStorageInterface $section_storage, Section $section = NULL) {
+  protected function isSectionEditable(SectionStorageInterface $section_storage, ?Section $section = NULL) {
     $section = $section ?: $this->section;
     $is_default_storage = $this->isDefaultStorage($section_storage);
 
@@ -619,7 +619,7 @@ class ExoLayoutBuilder extends LayoutBuilder {
    * @return bool
    *   Returns TRUE if section is locked.
    */
-  protected function isSectionLocked(Section $section = NULL) {
+  protected function isSectionLocked(?Section $section = NULL) {
     $section = $section ?: $this->section;
     $locked = !empty($section->getLayoutSettings()['exo_section_lock']);
     if (!$locked && $permission = $this->getSectionPermission($section)) {
@@ -637,7 +637,7 @@ class ExoLayoutBuilder extends LayoutBuilder {
    * @return string
    *   The permission.
    */
-  protected function getSectionPermission(Section $section = NULL) {
+  protected function getSectionPermission(?Section $section = NULL) {
     $section = $section ?: $this->section;
     return !empty($section->getLayoutSettings()['exo_section_permission']) ? $section->getLayoutSettings()['exo_section_permission'] : NULL;
   }

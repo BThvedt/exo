@@ -213,7 +213,7 @@ class ExoComponentFieldManager extends DefaultPluginManager implements ContextAw
    * @return array
    *   An array containing ['add' => [], 'update' => [], 'remove' => []].
    */
-  public function getEntityBundleFieldChanges(ExoComponentDefinition $to_definition, ExoComponentDefinition $from_definition = NULL) {
+  public function getEntityBundleFieldChanges(ExoComponentDefinition $to_definition, ?ExoComponentDefinition $from_definition = NULL) {
     $changes = [
       'add' => [],
       'update' => [],
@@ -340,7 +340,7 @@ class ExoComponentFieldManager extends DefaultPluginManager implements ContextAw
    * @param \Drupal\exo_alchemist\Definition\ExoComponentDefinition $original_definition
    *   The current component definition.
    */
-  public function buildEntityType(ExoComponentDefinition $definition, EntityFormDisplayInterface $form_display, EntityViewDisplayInterface $view_display, ExoComponentDefinition $original_definition = NULL) {
+  public function buildEntityType(ExoComponentDefinition $definition, EntityFormDisplayInterface $form_display, EntityViewDisplayInterface $view_display, ?ExoComponentDefinition $original_definition = NULL) {
 
     $changes = $this->getEntityBundleFieldChanges($definition, $original_definition);
     $entity_type = ExoComponentManager::ENTITY_TYPE;

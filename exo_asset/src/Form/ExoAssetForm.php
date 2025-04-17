@@ -16,7 +16,7 @@ class ExoAssetForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\exo_asset\Entity\ExoAsset */
+    /** @var \Drupal\exo_asset\Entity\ExoAsset $entity */
     $form = parent::buildForm($form, $form_state);
     $entity = $this->entity;
 

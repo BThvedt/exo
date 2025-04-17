@@ -18,7 +18,7 @@ class ExoIconPackageStorage extends ConfigEntityStorage {
   /**
    * {@inheritdoc}
    */
-  protected function doLoadMultiple(array $ids = NULL) {
+  protected function doLoadMultiple(?array $ids = NULL) {
     $entities = parent::doLoadMultiple($ids);
     uasort($entities, 'Drupal\exo_icon\Entity\ExoIconPackage::sort');
     return $entities;

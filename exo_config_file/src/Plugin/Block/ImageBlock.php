@@ -2,7 +2,6 @@
 
 namespace Drupal\exo_config_file\Plugin\Block;
 
-use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -11,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Image\ImageFactory;
-use Drupal\Core\Render\Markup;
 use Drupal\exo_link\Plugin\Block\LinkBlock;
 
 /**

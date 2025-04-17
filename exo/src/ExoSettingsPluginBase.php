@@ -97,7 +97,7 @@ abstract class ExoSettingsPluginBase extends ExoSettingsBase implements ExoSetti
    */
   public function getPluginSiteSettings($plugin_id) {
     $settings = $this->getSiteSettings();
-    $settings = isset($settings[$plugin_id]) ? $settings[$plugin_id] : [];
+    $settings = $settings[$plugin_id] ?? [];
     if (!empty($settings)) {
       // Plugin settings are empty until loading in site settings.
       $this->setPluginSettings($plugin_id, $settings);
@@ -187,7 +187,7 @@ abstract class ExoSettingsPluginBase extends ExoSettingsBase implements ExoSetti
    */
   public function getPluginPreset($plugin_id, $preset_id) {
     $presets = $this->getPluginPresets($plugin_id);
-    return isset($presets[$preset_id]) ? $presets[$preset_id] : [];
+    return $presets[$preset_id] ?? [];
   }
 
   /**
@@ -195,7 +195,7 @@ abstract class ExoSettingsPluginBase extends ExoSettingsBase implements ExoSetti
    */
   public function getPluginPresetOptions($plugin_id) {
     return array_map(function ($item) {
-      return isset($item['label']) ? $item['label'] : '- Undefined Label -';
+      return $item['label'] ?? '- Undefined Label -';
     }, $this->getPluginPresets($plugin_id));
   }
 

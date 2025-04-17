@@ -19,7 +19,7 @@ class ExoLayoutBuilderEntityViewDisplay extends LayoutBuilderEntityViewDisplay {
    *
    * @var \Drupal\Core\Entity\EntityInterface
    */
-  static protected $rootEntity;
+  protected static $rootEntity;
 
   /**
    * Builds the render array for the sections of a given entity.

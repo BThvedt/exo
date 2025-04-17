@@ -131,7 +131,7 @@ class Media extends MediaBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  protected function getValueEntity(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValueEntity(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     $entity = NULL;
     $component_field_id = 'media_' . $value->get('bundle');
     if ($component_field = $this->exoComponentFieldManager->createInstance($component_field_id, $this->configuration)) {

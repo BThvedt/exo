@@ -109,7 +109,7 @@ abstract class ExoAttributeWidgetBase extends WidgetBase implements ExoAttribute
     $options = $this->defaultOptions();
     $enabled_options = $this->getSetting('enabled_options');
     $supports_multiple = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality() != 1;
-    $value = isset($items[$delta]->value) ? $items[$delta]->value : '';
+    $value = $items[$delta]->value ?? '';
     if ($supports_multiple) {
       $value = explode('|', $value);
     }

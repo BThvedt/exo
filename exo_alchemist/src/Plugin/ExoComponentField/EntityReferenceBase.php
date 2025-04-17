@@ -233,7 +233,7 @@ class EntityReferenceBase extends ExoComponentFieldFieldableBase implements Cont
   /**
    * {@inheritdoc}
    */
-  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, FieldStorageConfigInterface $from_storage = NULL, FieldConfigInterface $from_config = NULL) {
+  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, ?FieldStorageConfigInterface $from_storage = NULL, ?FieldConfigInterface $from_config = NULL) {
     $field_definition = $this->getFieldDefinition();
     // Some fields, such as webform, do not have target bundles.
     if ($from_config) {
@@ -328,7 +328,7 @@ class EntityReferenceBase extends ExoComponentFieldFieldableBase implements Cont
   /**
    * {@inheritdoc}
    */
-  protected function getValue(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValue(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     return $this->getValueEntity($value, $item);
   }
 
@@ -343,7 +343,7 @@ class EntityReferenceBase extends ExoComponentFieldFieldableBase implements Cont
    * @return \Drupal\Core\Entity\EntityInterface
    *   An entity that will be used to set the value of the field.
    */
-  protected function getValueEntity(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValueEntity(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     if ($value->has('target_id') && !is_bool($value->get('target_id'))) {
       return [
         'target_id' => $value->get('target_id'),

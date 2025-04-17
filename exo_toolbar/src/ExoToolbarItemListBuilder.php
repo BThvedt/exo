@@ -48,7 +48,7 @@ class ExoToolbarItemListBuilder extends ConfigEntityListBuilder implements FormI
   public function __construct(
     EntityTypeInterface $entity_type,
     EntityStorageInterface $storage,
-    FormBuilderInterface $form_builder
+    FormBuilderInterface $form_builder,
   ) {
     parent::__construct($entity_type, $storage);
     $this->formBuilder = $form_builder;
@@ -76,7 +76,7 @@ class ExoToolbarItemListBuilder extends ConfigEntityListBuilder implements FormI
    * @return array
    *   The item list as a renderable array.
    */
-  public function render(Request $request = NULL, ExoToolbarInterface $exo_toolbar = NULL) {
+  public function render(?Request $request = NULL, ?ExoToolbarInterface $exo_toolbar = NULL) {
     if ($request && $exo_toolbar) {
       $this->request = $request;
       $this->exoToolbar = $exo_toolbar;
@@ -164,7 +164,7 @@ class ExoToolbarItemListBuilder extends ConfigEntityListBuilder implements FormI
     if ($regions) {
       foreach ($regions as $region) {
         $region_id = $region->getPluginId();
-        $region_items = isset($items[$region->getPluginId()]) ? $items[$region->getPluginId()] : [];
+        $region_items = $items[$region->getPluginId()] ?? [];
         $form[$region_id] = $this->buildRegionsForm($region, $region_items) + [
           '#type' => 'details',
           '#title' => $this->t('Region: %name', ['%name' => $region->label()]),
@@ -198,7 +198,7 @@ class ExoToolbarItemListBuilder extends ConfigEntityListBuilder implements FormI
     foreach ($region->getSections() as $section) {
       /** @var \Drupal\exo_toolbar\ExoToolbarSectionInterface $section */
       $section_id = $section->id();
-      $section_items = isset($items[$section_id]) ? $items[$section_id] : [];
+      $section_items = $items[$section_id] ?? [];
       $form[$section_id] = [
         '#type' => 'fieldset',
         '#title' => $this->t('Section: %name', ['%name' => $section->label()]),
@@ -258,7 +258,7 @@ class ExoToolbarItemListBuilder extends ConfigEntityListBuilder implements FormI
     $region_section_options = [];
     $section_id = $section->id();
     foreach ($regions as $region) {
-      /* @var /Drupal/exo_toolbar/Plugin/ExoToolbarRegionPluginInterface $region */
+      /** @var /Drupal/exo_toolbar/Plugin/ExoToolbarRegionPluginInterface $region */
       foreach ($region->getSections() as $region_section) {
         $region_section_options[$region->getPluginId()][$region_section->id()] = $region_section->label();
       }

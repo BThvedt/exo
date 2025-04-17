@@ -24,7 +24,7 @@ trait ExoArrayAccessDefinitionTrait {
    */
   #[\ReturnTypeWillChange]
   public function offsetGet($offset) {
-    return isset($this->definition[$offset]) ? $this->definition[$offset] : NULL;
+    return $this->definition[$offset] ?? NULL;
   }
 
   /**

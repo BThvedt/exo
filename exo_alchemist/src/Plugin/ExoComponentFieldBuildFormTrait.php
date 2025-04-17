@@ -123,7 +123,7 @@ trait ExoComponentFieldBuildFormTrait {
   /**
    * Get a form class.
    */
-  protected function viewValueGetForm(EntityInterface $entity = NULL, array $contexts = NULL) {
+  protected function viewValueGetForm(?EntityInterface $entity = NULL, ?array $contexts = NULL) {
     if (!isset($this->form)) {
       $this->form = $this->viewValueForm($entity, $contexts);
       foreach (Element::children($this->form) as $key) {
@@ -136,7 +136,7 @@ trait ExoComponentFieldBuildFormTrait {
   /**
    * Build a form class.
    */
-  protected function viewValueForm(EntityInterface $entity = NULL, array $contexts = NULL) {
+  protected function viewValueForm(?EntityInterface $entity = NULL, ?array $contexts = NULL) {
     return [];
   }
 

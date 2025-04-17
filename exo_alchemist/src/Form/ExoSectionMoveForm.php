@@ -76,7 +76,7 @@ class ExoSectionMoveForm extends FormBase {
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
 
     $storage_label = $section_storage->label();

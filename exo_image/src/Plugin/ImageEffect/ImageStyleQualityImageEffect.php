@@ -61,7 +61,7 @@ class ImageStyleQualityImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $existing_quality = isset($this->configuration['quality']) ? $this->configuration['quality'] : '75';
+    $existing_quality = $this->configuration['quality'] ?? '75';
     $form['quality'] = [
       '#type' => 'number',
       '#title' => t('Quality'),

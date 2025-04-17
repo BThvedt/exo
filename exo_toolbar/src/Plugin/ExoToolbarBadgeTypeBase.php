@@ -51,7 +51,7 @@ abstract class ExoToolbarBadgeTypeBase extends PluginBase implements ExoToolbarB
    * {@inheritdoc}
    */
   public function getProvider() {
-    return isset($this->pluginDefinition['provider']) ? $this->pluginDefinition['provider'] : FALSE;
+    return $this->pluginDefinition['provider'] ?? FALSE;
   }
 
   /**

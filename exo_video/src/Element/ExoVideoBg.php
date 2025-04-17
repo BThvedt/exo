@@ -127,7 +127,7 @@ class ExoVideoBg extends RenderElement {
         preg_match('/^https?:\/\/(www\.)?vimeo.com\/(channels\/[a-zA-Z0-9]*\/)?(?<id>[0-9]*)(\/[a-zA-Z0-9]+)?(\#t=(\d+)s)?$/', $url, $matches);
         break;
     }
-    return isset($matches['id']) ? $matches['id'] : FALSE;
+    return $matches['id'] ?? FALSE;
   }
 
 }

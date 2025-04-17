@@ -305,7 +305,7 @@ class ExoSettingsInstance implements ExoSettingsInstanceInterface {
    * This should be set and unset for temporary setting switching while still
    * using the parent ExoSettings class for the majority of the form handling.
    *
-   * @TODO Find a better way to do this.
+   * @todo Find a better way to do this.
    */
   protected function setState(FormStateInterface $form_state) {
     $form_state->set('exo_settings_is_local', TRUE);
@@ -318,7 +318,7 @@ class ExoSettingsInstance implements ExoSettingsInstanceInterface {
    * This should be used whenever setState is used to return the parent
    * ExoSettings object back to its initial values.
    *
-   * @TODO Find a better way to do this.
+   * @todo Find a better way to do this.
    */
   protected function unsetState(FormStateInterface $form_state) {
     $form_state->set('exo_settings_is_local', FALSE);

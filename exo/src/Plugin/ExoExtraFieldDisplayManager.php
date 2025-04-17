@@ -178,7 +178,7 @@ class ExoExtraFieldDisplayManager extends DefaultPluginManager implements ExoExt
     $result = [];
     foreach ($entityBundleKeys as $entityBundleKey) {
       if (strpos($entityBundleKey, '.')) {
-        list($entityType, $bundle) = explode('.', $entityBundleKey);
+        [$entityType, $bundle] = explode('.', $entityBundleKey);
         if ($bundle == '*') {
           foreach ($this->allEntityBundles($entityType) as $bundle) {
             $key = $this->entityBundleKey($entityType, $bundle);

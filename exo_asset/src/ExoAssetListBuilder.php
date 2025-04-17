@@ -31,7 +31,7 @@ class ExoAssetListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\exo_asset\Entity\ExoAsset */
+    /** @var \Drupal\exo_asset\Entity\ExoAsset $entity */
     $row['id'] = $entity->id();
     $row['image'] = [];
     if (!$entity->image->isEmpty()) {

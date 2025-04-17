@@ -52,7 +52,7 @@ class ExoConfigImage extends FormElement {
 
     $element['upload'] = [
       '#type' => 'exo_config_file',
-      '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
+      '#default_value' => $element['#default_value'] ?? NULL,
       '#required' => $element['#required'],
       '#extensions' => $element['#extensions'],
       '#final_parents' => $element['#parents'],
@@ -97,12 +97,12 @@ class ExoConfigImage extends FormElement {
     $value = $form_state->getValue($element['#parents']);
     if (!empty($value['remove'])) {
       // $complete_form = $form_state->getFormObject();
-      /* @var \Drupal\Core\Entity\EntityInterface $entity */
+      /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $form_state->getFormObject()->getEntity();
       $field_name = $element['upload']['#original_name'];
       $exo_config_file_id = ExoConfigFile::getConfigFileEntityId($entity, $field_name);
       $storage = \Drupal::entityTypeManager()->getStorage('exo_config_file');
-      /* @var \Drupal\exo_file_config\Entity\ExoConfigFileInterface $exo_config_file */
+      /** @var \Drupal\exo_file_config\Entity\ExoConfigFileInterface $exo_config_file */
       $exo_config_file = $storage->load($exo_config_file_id);
       if ($exo_config_file) {
         $exo_config_file->delete();

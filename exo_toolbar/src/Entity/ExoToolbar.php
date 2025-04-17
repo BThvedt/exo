@@ -314,7 +314,7 @@ class ExoToolbar extends ConfigEntityBase implements ExoToolbarInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function getVisibleItems($region_id = NULL, $section_id = NULL, CacheableMetadata $cacheable_metadata = NULL) {
+  public function getVisibleItems($region_id = NULL, $section_id = NULL, ?CacheableMetadata $cacheable_metadata = NULL) {
     if ($region_id && $section_id) {
       return $this->exoToolbarRepository()->getVisibleToolbarRegionSectionItems($this->id(), $region_id, $section_id, $cacheable_metadata);
     }
@@ -353,7 +353,7 @@ class ExoToolbar extends ConfigEntityBase implements ExoToolbarInterface, Entity
     $options = [];
     $collection = $this->getRegionCollection();
     foreach ($collection as $region) {
-      /* @var /Drupal/exo_toolbar/Plugin/ExoToolbarRegionInterface $region */
+      /** @var /Drupal/exo_toolbar/Plugin/ExoToolbarRegionInterface $region */
       $options[$region->getPluginId()] = $region->label();
     }
     return $options;
@@ -401,7 +401,7 @@ class ExoToolbar extends ConfigEntityBase implements ExoToolbarInterface, Entity
       $removed_regions = array_diff($original->getRegionIds(), $this->getRegionIds());
       foreach ($removed_regions as $region_id) {
         foreach ($this->getItems($region_id) as $item) {
-          /* @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
+          /** @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
           $item->delete();
         }
       }
@@ -422,7 +422,7 @@ class ExoToolbar extends ConfigEntityBase implements ExoToolbarInterface, Entity
     if (!isset($this->itemCacheTags)) {
       $this->itemCacheTags = parent::getCacheTags();
       foreach ($this->getVisibleItems($region_id, $section_id) as $item) {
-        /* @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface.php $item */
+        /** @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface.php $item */
         $this->itemCacheTags = Cache::mergeTags($this->itemCacheTags, $item->getCacheTags());
       }
     }
@@ -443,7 +443,7 @@ class ExoToolbar extends ConfigEntityBase implements ExoToolbarInterface, Entity
     if (!isset($this->itemCacheContexts)) {
       $this->itemCacheContexts = parent::getCacheContexts();
       foreach ($this->getVisibleItems($region_id, $section_id) as $item) {
-        /* @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface.php $item */
+        /** @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface.php $item */
         $this->itemCacheContexts = Cache::mergeContexts($this->itemCacheContexts, $item->getCacheContexts());
       }
     }
@@ -464,7 +464,7 @@ class ExoToolbar extends ConfigEntityBase implements ExoToolbarInterface, Entity
     if (!isset($this->itemCacheMaxAge)) {
       $this->itemCacheMaxAge = parent::getCacheMaxAge();
       foreach ($this->getVisibleItems($region_id, $section_id) as $item) {
-        /* @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface.php $item */
+        /** @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface.php $item */
         $this->itemCacheMaxAge = Cache::mergeMaxAges($this->itemCacheMaxAge, $item->getCacheMaxAge());
       }
     }

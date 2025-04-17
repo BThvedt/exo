@@ -179,7 +179,7 @@ class SiteSettingsFieldBlock extends BlockBase implements BlockPluginInterface, 
     $config = $this->getConfiguration();
     $storage = $this->entityTypeManager->getStorage('exo_site_settings');
     foreach ($config['site_settings_fields'] as $weight => $key) {
-      list($type_id, $field_name) = explode('.', $key);
+      [$type_id, $field_name] = explode('.', $key);
       $exo_site_settings = $storage->load($type_id);
       if ($exo_site_settings && $exo_site_settings->hasField($field_name) && !$exo_site_settings->get($field_name)->isEmpty()) {
         $build[$key] = $exo_site_settings->get($field_name)->view($config['site_settings_view_mode']);
@@ -198,7 +198,7 @@ class SiteSettingsFieldBlock extends BlockBase implements BlockPluginInterface, 
     $config = $this->getConfiguration();
     $storage = $this->entityTypeManager->getStorage('exo_site_settings');
     foreach ($config['site_settings_fields'] as $key) {
-      list($type_id, $field_name) = explode('.', $key);
+      [$type_id, $field_name] = explode('.', $key);
       $exo_site_settings = $storage->load($type_id);
       if ($exo_site_settings && $exo_site_settings->hasField($field_name) && !$exo_site_settings->get($field_name)->isEmpty()) {
         $tags = Cache::mergeTags($tags, $exo_site_settings->getCacheTags());

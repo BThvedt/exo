@@ -93,7 +93,7 @@ abstract class ExoComponentFieldComputedBase extends ExoComponentFieldBase imple
   /**
    * {@inheritdoc}
    */
-  public function access(array $contexts, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(array $contexts, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $account ?: \Drupal::currentUser();
     $access = $this->componentAccess($contexts, $account);
     return $return_as_object ? $access : $access->isAllowed();

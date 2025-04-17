@@ -114,7 +114,7 @@ class EntityForm extends EntityReferenceBase implements ContainerFactoryPluginIn
   /**
    * Get a form class.
    */
-  protected function viewValueForm(EntityInterface $entity = NULL, array $contexts = NULL) {
+  protected function viewValueForm(?EntityInterface $entity = NULL, ?array $contexts = NULL) {
     $field = $this->getFieldDefinition();
     $form = $this->entityFormBuilder->getForm($entity, $field->getAdditionalValue('entity_operation'));
     return $form;

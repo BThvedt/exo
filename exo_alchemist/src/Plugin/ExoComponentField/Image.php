@@ -184,7 +184,7 @@ class Image extends EntityReferenceBase {
   /**
    * {@inheritdoc}
    */
-  protected function getValueEntity(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValueEntity(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     $has_entity = $item && $item->entity;
     if ($has_entity) {
       $old_id = $item->entity->id();

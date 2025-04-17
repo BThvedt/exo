@@ -421,7 +421,7 @@ abstract class ExoToolbarItemBase extends PluginBase implements ExoToolbarItemPl
     }
     foreach ($elements as $delta => $element) {
       if ($element) {
-        /* @var \Drupal\exo_toolbar\ExoToolbarElementInterface $element */
+        /** @var \Drupal\exo_toolbar\ExoToolbarElementInterface $element */
         if ($this->isDependent()) {
           $element->addClass('exo-toolbar-element-dependent');
         }

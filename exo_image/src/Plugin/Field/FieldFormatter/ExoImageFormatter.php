@@ -157,7 +157,7 @@ class ExoImageFormatter extends ImageFormatter {
     $breakpoints = $this->exoImageStyleManager->getBreakpoints();
     foreach ($breakpoints as $key => $breakpoint) {
       $default = $key === key($breakpoints);
-      $config = isset($this->getSetting('breakpoints')[$key]) ? $this->getSetting('breakpoints')[$key] : [];
+      $config = $this->getSetting('breakpoints')[$key] ?? [];
       $settings[$key] = [
         'label' => $default ? $this->t('Default') : $breakpoint->getLabel(),
         'description' => $default ? $this->t('The settings used when no settings are specified for a given breakpoint.') : $breakpoint->getMediaQuery(),
@@ -359,7 +359,7 @@ class ExoImageFormatter extends ImageFormatter {
                 $mime_type = $this->mimeTypeGuesser->guess($image_style_uri);
                 if (file_exists($image_style_uri)) {
                   $preview_src = 'data:' . $mime_type . ';base64,' . base64_encode(file_get_contents($image_style_uri));
-                  list($preview_width, $preview_height) = getimagesize($image_style_uri);
+                  [$preview_width, $preview_height] = getimagesize($image_style_uri);
                 }
               }
               else {

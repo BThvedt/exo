@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\exo_list_builder\Plugin\ExoList\Element;
 
-use Drupal\commerce_order\Entity\OrderItemType;
-use Drupal\commerce_order\Entity\OrderItemTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\exo_list_builder\Plugin\ExoListElementBase;
 

@@ -63,7 +63,7 @@ class ExoReverseReferenceList extends EntityReferenceFieldItemList {
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     // Statically includes the managers, since DI isn't available.
     $this->reverseEntityManager = \Drupal::service('exo_reverse_entity_reference.manager');

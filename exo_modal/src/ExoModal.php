@@ -283,7 +283,7 @@ class ExoModal implements ExoModalInterface {
         'text' => $this->icon($settings['text'])->setIcon($settings['icon'])->setIconOnly($settings['icon_only']),
         'return' => $this->icon($settings['return_text'])->setIcon($settings['return_icon'])->setIconOnly($settings['return_icon_only']),
       ],
-      '#weight' => isset($render['#weight']) ? $render['#weight'] : NULL,
+      '#weight' => $render['#weight'] ?? NULL,
     ];
     $this->addSectionContent($group, $id, $trigger);
 
@@ -294,7 +294,7 @@ class ExoModal implements ExoModalInterface {
         'key' => $id,
         'content' => $render,
       ],
-      '#weight' => isset($render['#weight']) ? $render['#weight'] : NULL,
+      '#weight' => $render['#weight'] ?? NULL,
     ];
     $this->panels[$id] = $panel;
 
@@ -536,7 +536,7 @@ class ExoModal implements ExoModalInterface {
    */
   protected function getSiteModalSettings() {
     $settings = $this->exoSettings->getSiteSettingsDiff();
-    return isset($settings['modal']) ? $settings['modal'] : NULL;
+    return $settings['modal'] ?? NULL;
   }
 
   /**
@@ -549,7 +549,7 @@ class ExoModal implements ExoModalInterface {
    */
   protected function getLocalModalSettings() {
     $settings = $this->exoSettings->getLocalSettingsDiff();
-    $settings = isset($settings['modal']) ? $settings['modal'] : [];
+    $settings = $settings['modal'] ?? [];
     if (isset($settings['icon']) && empty($settings['iconText'])) {
       $icon = $this->icon()->setIcon($settings['icon']);
       // Render as root as this request may be made too late.

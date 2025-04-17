@@ -87,7 +87,7 @@ class MenuComponentManager implements MenuComponentManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function viewMenuComponent($id, $view_mode = 'default', MenuComponentInterface $exo_menu_component = NULL) {
+  public function viewMenuComponent($id, $view_mode = 'default', ?MenuComponentInterface $exo_menu_component = NULL) {
     $build = [];
     $exo_menu_component = $exo_menu_component ?? $this->getMenuComponent($id);
     if ($exo_menu_component instanceof MenuComponentInterface) {

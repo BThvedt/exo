@@ -86,7 +86,7 @@ class ExoFieldNextController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\Response
    *   The controller response.
    */
-  public function build(SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL, $path = NULL) {
+  public function build(?SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL, $path = NULL) {
 
     $component = $section_storage->getSection($delta)->getComponent($uuid);
     /** @var \Drupal\layout_builder\Plugin\Block\InlineBlock $block */

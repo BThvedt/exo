@@ -112,7 +112,7 @@ class Sequence extends EntityReferenceBase {
   /**
    * {@inheritdoc}
    */
-  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, FieldStorageConfigInterface $from_storage = NULL, FieldConfigInterface $from_config = NULL) {
+  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, ?FieldStorageConfigInterface $from_storage = NULL, ?FieldConfigInterface $from_config = NULL) {
     /** @var \Drupal\exo_alchemist\Plugin\ExoComponentField\Sequence $from_field */
     $component_definition = $this->getComponentDefinition();
     $sequence_changes = $this->exoComponentManager()->getExoComponentFieldManager()->getEntityBundleFieldChanges($component_definition, $from_field->getComponentDefinition());
@@ -423,7 +423,7 @@ class Sequence extends EntityReferenceBase {
   /**
    * {@inheritdoc}
    */
-  protected function getValueEntity(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValueEntity(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     $component = $this->getComponentDefinitionWithValue($value);
     $entity = $this->exoComponentManager()->loadEntity($component);
     if (!$entity) {

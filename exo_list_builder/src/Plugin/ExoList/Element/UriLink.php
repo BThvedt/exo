@@ -4,16 +4,12 @@ namespace Drupal\exo_list_builder\Plugin\ExoList\Element;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
-use Drupal\exo_icon\ExoIconMimeManager;
 use Drupal\exo_icon\ExoIconTranslationTrait;
 use Drupal\exo_list_builder\EntityListInterface;
 use Drupal\exo_list_builder\Plugin\ExoListElementContentBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a eXo list element for rendering a content entity field.

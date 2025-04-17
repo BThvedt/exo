@@ -16,7 +16,7 @@ class ExoDatetime extends Datetime {
    * {@inheritdoc}
    */
   public static function processDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
-    $mode = isset($element['#exo_mode']) ? $element['#exo_mode'] : 'button';
+    $mode = $element['#exo_mode'] ?? 'button';
 
     $element = parent::processDatetime($element, $form_state, $completeForm);
     $settings_date = [
@@ -55,7 +55,7 @@ class ExoDatetime extends Datetime {
       case 'button':
         if (isset($element['date'])) {
           $text = t('Select Date');
-          $icon = isset($element['#exo_icon_date']) ? $element['#exo_icon_date'] : 'regular-calendar';
+          $icon = $element['#exo_icon_date'] ?? 'regular-calendar';
           $text = exo_icon($text)->setIcon($icon)->setIconOnly();
           $element['date']['#field_suffix'] = [
             '#type' => 'html_tag',

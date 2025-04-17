@@ -27,27 +27,27 @@ class ExoModalMetaWidget extends WidgetBase {
     $element['trigger_text'] = [
       '#title' => $this->t('Link Title'),
       '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]->trigger_text) ? $items[$delta]->trigger_text : NULL,
+      '#default_value' => $items[$delta]->trigger_text ?? NULL,
     ];
     $element['trigger_icon'] = [
       '#title' => $this->t('Link Icon'),
       '#type' => 'exo_icon',
-      '#default_value' => isset($items[$delta]->trigger_icon) ? $items[$delta]->trigger_icon : NULL,
+      '#default_value' => $items[$delta]->trigger_icon ?? NULL,
     ];
     $element['modal_title'] = [
       '#title' => $this->t('Modal Title'),
       '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]->modal_title) ? $items[$delta]->modal_title : NULL,
+      '#default_value' => $items[$delta]->modal_title ?? NULL,
     ];
     $element['modal_subtitle'] = [
       '#title' => $this->t('Modal Subtitle'),
       '#type' => 'textfield',
-      '#default_value' => isset($items[$delta]->modal_subtitle) ? $items[$delta]->modal_subtitle : NULL,
+      '#default_value' => $items[$delta]->modal_subtitle ?? NULL,
     ];
     $element['modal_icon'] = [
       '#title' => $this->t('Modal Icon'),
       '#type' => 'exo_icon',
-      '#default_value' => isset($items[$delta]->modal_icon) ? $items[$delta]->modal_icon : NULL,
+      '#default_value' => $items[$delta]->modal_icon ?? NULL,
     ];
 
     return $element;

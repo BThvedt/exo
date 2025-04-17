@@ -107,7 +107,7 @@ abstract class MediaFileBase extends MediaBase {
    * @return mixed
    *   A value suitable for setting to \Drupal\Core\Field\FieldItemInterface.
    */
-  protected function setMediaValue(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function setMediaValue(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     $values = [];
     if ($file = $this->componentFile($value)) {
       $values[] = [

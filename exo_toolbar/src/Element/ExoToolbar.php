@@ -47,9 +47,9 @@ class ExoToolbar extends RenderElement {
    *   A renderable array.
    */
   public static function preRenderToolbar(array $element) {
-    /* @var \Drupal\exo_toolbar\Entity\ExoToolbarInterface $exo_toolbar */
+    /** @var \Drupal\exo_toolbar\Entity\ExoToolbarInterface $exo_toolbar */
     $exo_toolbar = $element['#exo_toolbar'];
-    /* @var \Drupal\exo_toolbar\Plugin\ExoToolbarRegionPluginInterface[] $exo_toolbar_regions */
+    /** @var \Drupal\exo_toolbar\Plugin\ExoToolbarRegionPluginInterface[] $exo_toolbar_regions */
     $exo_toolbar_regions = $exo_toolbar->getRegions();
     foreach ($exo_toolbar_regions as $exo_region_id => $exo_region) {
       if ($exo_toolbar->isAdminMode() || !$exo_toolbar->regionIsEmpty($exo_region_id)) {

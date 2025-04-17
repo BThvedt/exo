@@ -59,7 +59,7 @@ class ExoComponentUninstallForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ExoComponentDefinition $definition = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?ExoComponentDefinition $definition = NULL) {
     $this->definition = $definition;
     return parent::buildForm($form, $form_state);
   }

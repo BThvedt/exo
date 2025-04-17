@@ -19,7 +19,7 @@ class ExoOverridesEntityForm extends OverridesEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL) {
     $build = parent::buildForm($form, $form_state, $section_storage);
     $build['layout_builder__layout']['widget']['#process'][] = [
       'Drupal\exo_alchemist\Element\ExoLayoutBuilder', 'process',

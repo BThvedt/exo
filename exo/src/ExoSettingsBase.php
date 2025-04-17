@@ -374,7 +374,7 @@ abstract class ExoSettingsBase implements ExoSettingsInterface {
    */
   public function getPreset($preset_id) {
     $presets = $this->getPresets();
-    return isset($presets[$preset_id]) ? $presets[$preset_id] : [];
+    return $presets[$preset_id] ?? [];
   }
 
   /**
@@ -382,7 +382,7 @@ abstract class ExoSettingsBase implements ExoSettingsInterface {
    */
   public function getPresetOptions() {
     return array_map(function ($item) {
-      return isset($item['label']) ? $item['label'] : '- Undefined Label -';
+      return $item['label'] ?? '- Undefined Label -';
     }, $this->getPresets());
   }
 

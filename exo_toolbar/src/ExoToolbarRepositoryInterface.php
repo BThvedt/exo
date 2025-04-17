@@ -71,7 +71,7 @@ interface ExoToolbarRepositoryInterface {
    * @return \Drupal\Component\Plugin\LazyPluginCollection
    *   The region's plugin collection.
    */
-  public function getRegionCollection(array $configurations = NULL);
+  public function getRegionCollection(?array $configurations = NULL);
 
   /**
    * Gets the definition of all region plugins.
@@ -102,7 +102,7 @@ interface ExoToolbarRepositoryInterface {
    * @return array
    *   An array keyed by item ID, with item entities as the values.
    */
-  public function getVisibleToolbarItems($toolbar_id, CacheableMetadata $cacheable_metadata = NULL);
+  public function getVisibleToolbarItems($toolbar_id, ?CacheableMetadata $cacheable_metadata = NULL);
 
   /**
    * Returns TRUE of a toolbar contains of item of a specific plugin type.

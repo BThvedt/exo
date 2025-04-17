@@ -25,7 +25,7 @@ class ExoToolbarItemController extends ControllerBase {
    * @return array
    *   A render array as expected by drupal_render().
    */
-  public function listing(Request $request, ExoToolbarInterface $exo_toolbar = NULL) {
+  public function listing(Request $request, ?ExoToolbarInterface $exo_toolbar = NULL) {
     return $this->entityTypeManager()->getListBuilder('exo_toolbar_item')->render($request, $exo_toolbar);
   }
 
@@ -40,7 +40,7 @@ class ExoToolbarItemController extends ControllerBase {
    * @return array
    *   A render array as expected by drupal_render().
    */
-  public function items(Request $request, ExoToolbarItemInterface $exo_toolbar_item = NULL) {
+  public function items(Request $request, ?ExoToolbarItemInterface $exo_toolbar_item = NULL) {
     $response = new AjaxResponse();
     $response->addCommand(new ExoToolbarRegionItemCommand($exo_toolbar_item));
     return $response;

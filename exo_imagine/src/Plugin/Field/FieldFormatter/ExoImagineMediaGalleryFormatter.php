@@ -3,7 +3,6 @@
 namespace Drupal\exo_imagine\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;

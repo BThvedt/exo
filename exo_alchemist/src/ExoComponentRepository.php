@@ -224,7 +224,7 @@ class ExoComponentRepository {
    * @return \Drupal\Core\Field\FieldItemListInterface
    *   The component entities.
    */
-  public function getComponentItemsByEntityFieldType(BlockContent $component, $field_type, FieldItemListInterface $items = NULL, $visible_only = FALSE) {
+  public function getComponentItemsByEntityFieldType(BlockContent $component, $field_type, ?FieldItemListInterface $items = NULL, $visible_only = FALSE) {
     $definition = $this->exoComponentManager->getEntityComponentDefinition($component);
     $hidden = [];
     if ($visible_only) {

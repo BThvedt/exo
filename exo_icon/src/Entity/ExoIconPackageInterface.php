@@ -101,7 +101,7 @@ interface ExoIconPackageInterface extends ConfigEntityInterface {
    * @return \Drupal\exo_icon\ExoIconInterface[]
    *   An array of icon instances.
    */
-  public function getInstances(array $definitions = NULL);
+  public function getInstances(?array $definitions = NULL);
 
   /**
    * Get icon instance.

@@ -3,7 +3,6 @@
 namespace Drupal\exo_list_builder\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

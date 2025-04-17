@@ -201,7 +201,7 @@ abstract class ExoModalFieldFormatterBase extends FormatterBase implements ExoMo
 
     foreach ($items as $delta => $item) {
       if ($item instanceof FieldItemInterface) {
-        /* @var \Drupal\Core\Field\FieldItemInterface $item */
+        /** @var \Drupal\Core\Field\FieldItemInterface $item */
         $modal = $this->generateModal($item, $delta);
         if ($use_ajax) {
           $entity = $items->getEntity();

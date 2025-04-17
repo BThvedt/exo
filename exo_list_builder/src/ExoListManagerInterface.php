@@ -32,6 +32,6 @@ interface ExoListManagerInterface extends PluginManagerInterface {
    * @return array
    *   An array of definition options.
    */
-  public function getFieldOptions($field_type, $entity_type = NULL, array $bundles = NULL, $field_name = NULL);
+  public function getFieldOptions($field_type, $entity_type = NULL, ?array $bundles = NULL, $field_name = NULL);
 
 }

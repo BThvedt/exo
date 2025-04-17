@@ -50,7 +50,7 @@ class ExoToolbarDialogCommand implements CommandInterface, CommandWithAttachedAs
    * @param array $settings
    *   An array of JavaScript settings to be passed to any attached behaviors.
    */
-  public function __construct(ExoToolbarItemInterface $exo_toolbar_item, $content, array $settings = NULL) {
+  public function __construct(ExoToolbarItemInterface $exo_toolbar_item, $content, ?array $settings = NULL) {
     if (!is_array($content)) {
       $content = ['#markup' => $content];
     }

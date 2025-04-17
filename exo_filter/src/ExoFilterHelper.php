@@ -43,7 +43,7 @@ class ExoFilterHelper {
 
     $lines = explode("\n", trim($rewrite_settings));
     foreach ($lines as $line) {
-      list($search, $replace) = array_map('trim', explode('|', $line));
+      [$search, $replace] = array_map('trim', explode('|', $line));
       if (!empty($search)) {
         $rewrites[$search] = $replace;
 

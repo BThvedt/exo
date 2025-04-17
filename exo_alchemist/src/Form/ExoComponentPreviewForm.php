@@ -101,7 +101,7 @@ class ExoComponentPreviewForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ExoComponentDefinition $definition = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?ExoComponentDefinition $definition = NULL) {
     /** @var \Drupal\exo_alchemist\Definition\ExoComponentDefinition $definition */
     $entity = $form_state->get('entity');
     if (empty($entity)) {

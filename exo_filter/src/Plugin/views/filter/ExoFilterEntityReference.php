@@ -152,11 +152,11 @@ class ExoFilterEntityReference extends ManyToOne {
             return !$field_definition->isComputed();
           });
           foreach ($bundle_fields as $field_name => $field_definition) {
-            /* @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+            /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
             $columns = $field_definition->getFieldStorageDefinition()->getColumns();
             // If there is more than one column, display them all, otherwise just
             // display the field label.
-            // @todo: Use property labels instead of the column name.
+            // @todo Use property labels instead of the column name.
             if (count($columns) > 1) {
               foreach ($columns as $column_name => $column_info) {
                 $fields[$field_name . '.' . $column_name] = $this->t('@label (@column)', ['@label' => $field_definition->getLabel(), '@column' => $column_name]);
@@ -532,7 +532,7 @@ class ExoFilterEntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     if (empty($this->definition['field_name'])) {
       $this->definition['field_name'] = $options['field'];
     }

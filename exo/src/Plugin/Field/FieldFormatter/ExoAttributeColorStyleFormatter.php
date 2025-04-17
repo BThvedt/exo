@@ -177,10 +177,8 @@ class ExoAttributeColorStyleFormatter extends FormatterBase {
   // protected function viewValue(ColorFieldType $item) {
   //   $opacity = $this->getFieldSetting('opacity');
   //   $settings = $this->getSettings();
-
-  //   $color_hex = new ColorHex($item->color, $item->opacity);
-
-  //   switch ($settings['format']) {
+  // $color_hex = new ColorHex($item->color, $item->opacity);
+  // switch ($settings['format']) {
   //     case 'hex':
   //       if ($opacity && $settings['opacity']) {
   //         $output = $color_hex->toString(TRUE);
@@ -189,8 +187,7 @@ class ExoAttributeColorStyleFormatter extends FormatterBase {
   //         $output = $color_hex->toString(FALSE);
   //       }
   //       break;
-
-  //     case 'rgb':
+  // case 'rgb':
   //       if ($opacity && $settings['opacity']) {
   //         $output = $color_hex->toRgb()->toString(TRUE);
   //       }
@@ -199,8 +196,6 @@ class ExoAttributeColorStyleFormatter extends FormatterBase {
   //       }
   //       break;
   //   }
-
-  //   return $output;
-  // }
-
+  // return $output;
+  // }.
 }
