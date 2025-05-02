@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\exo_list_builder\EntityListInterface;
 use Drupal\exo_list_builder\Plugin\ExoListFieldValuesInterface;
-use Drupal\exo_list_builder\Plugin\ExoListFilterBase;
 use Drupal\exo_list_builder\Plugin\ExoListFilterMatchBase;
 use Drupal\state_machine\WorkflowGroupManagerInterface;
 use Drupal\state_machine\WorkflowManagerInterface;

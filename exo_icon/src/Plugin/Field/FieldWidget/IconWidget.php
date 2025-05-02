@@ -53,7 +53,7 @@ class IconWidget extends WidgetBase {
 
     $element['value'] = $element + [
       '#type' => 'exo_icon',
-      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+      '#default_value' => $items[$delta]->value ?? NULL,
       '#packages' => $this->getSetting('packages'),
     ];
 

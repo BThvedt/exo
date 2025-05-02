@@ -48,16 +48,27 @@ class SiteSettingsStorage extends SqlContentEntityStorage {
    *   The language manager.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   *   The event dispatcher.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The entity last installed schema repository.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The event dispatcher.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, EntityTypeManagerInterface $entity_type_manager = NULL, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL, EventDispatcherInterface $dispatcher) {
+  public function __construct(
+    EntityTypeInterface $entity_info,
+    Connection $database,
+    EntityFieldManagerInterface $entity_field_manager,
+    CacheBackendInterface $cache,
+    LanguageManagerInterface $language_manager,
+    MemoryCacheInterface $memory_cache,
+    EventDispatcherInterface $dispatcher,
+    ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    ?EntityTypeManagerInterface $entity_type_manager = NULL,
+    ?EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL,
+  ) {
     parent::__construct($entity_info, $database, $entity_field_manager, $cache, $language_manager, $memory_cache, $entity_type_bundle_info, $entity_type_manager, $entity_last_installed_schema_repository);
     $this->eventDispatcher = $dispatcher;
   }
@@ -73,10 +84,10 @@ class SiteSettingsStorage extends SqlContentEntityStorage {
       $container->get('cache.entity'),
       $container->get('language_manager'),
       $container->get('entity.memory_cache'),
+      $container->get('event_dispatcher'),
       $container->get('entity_type.bundle.info'),
       $container->get('entity_type.manager'),
-      $container->get('entity.last_installed_schema.repository'),
-      $container->get('event_dispatcher')
+      $container->get('entity.last_installed_schema.repository')
     );
   }
 

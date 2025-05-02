@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
-
 /**
  * Presents entity browser in an Modal.
  *
@@ -115,7 +114,7 @@ class ExoModal extends Modal {
    * propagate selected entities upstream.
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-   * 
+   *
    *   Response event.
    */
   public function propagateSelection(ResponseEvent $event) {

@@ -51,7 +51,7 @@ class ExoThemeSettingsForm extends ConfigFormBase {
     ConfigFactoryInterface $config_factory,
     ThemeHandlerInterface $theme_handler,
     ExoThemePluginManagerInterface $exo_theme_manager,
-    ExoThemeProviderPluginManagerInterface $exo_theme_provider_manager
+    ExoThemeProviderPluginManagerInterface $exo_theme_provider_manager,
   ) {
     parent::__construct($config_factory);
     $this->themeHandler = $theme_handler;

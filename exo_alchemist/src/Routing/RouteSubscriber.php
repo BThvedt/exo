@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\exo_alchemist\ExoComponentManager;
-use Drupal\exo_alchemist\Plugin\ExoComponentField\EntityDisplay;
 use Drupal\exo_alchemist\Plugin\ExoComponentFieldDisplayInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;

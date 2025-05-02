@@ -3,7 +3,6 @@
 namespace Drupal\exo_modal\Controller;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;

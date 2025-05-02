@@ -185,7 +185,7 @@ abstract class ExoComponentFieldFieldableBase extends ExoComponentFieldBase impl
    * @return mixed
    *   A value suitable for setting to \Drupal\Core\Field\FieldItemInterface.
    */
-  protected function getValue(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValue(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     return $value->toArray();
   }
 
@@ -533,7 +533,7 @@ abstract class ExoComponentFieldFieldableBase extends ExoComponentFieldBase impl
   /**
    * {@inheritdoc}
    */
-  public function access(FieldItemListInterface $items, array $contexts, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(FieldItemListInterface $items, array $contexts, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $account ?: \Drupal::currentUser();
     $access = $this->componentAccess($items, $contexts, $account);
     return $return_as_object ? $access : $access->isAllowed();

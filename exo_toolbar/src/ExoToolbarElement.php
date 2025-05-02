@@ -185,7 +185,7 @@ class ExoToolbarElement implements ExoToolbarElementInterface {
    *   Optional properties of the element.
    */
   public function __construct(array $values = []) {
-    $attributes = isset($values['attributes']) ? $values['attributes'] : [];
+    $attributes = $values['attributes'] ?? [];
     $this->id = Html::getUniqueId('exo-toolbar-element');
     $attributes['id'] = $this->id;
     if (isset($attributes['class']) && !is_array($attributes['class'])) {
@@ -247,7 +247,7 @@ class ExoToolbarElement implements ExoToolbarElementInterface {
    * {@inheritdoc}
    */
   public function getTag() {
-    return isset($this->tag) ? $this->tag : NULL;
+    return $this->tag ?? NULL;
   }
 
   /**
@@ -262,7 +262,7 @@ class ExoToolbarElement implements ExoToolbarElementInterface {
    * {@inheritdoc}
    */
   public function getTitle() {
-    return isset($this->title) ? $this->title : NULL;
+    return $this->title ?? NULL;
   }
 
   /**
@@ -330,7 +330,7 @@ class ExoToolbarElement implements ExoToolbarElementInterface {
    * {@inheritdoc}
    */
   public function getUrl() {
-    return isset($this->url) ? $this->url : NULL;
+    return $this->url ?? NULL;
   }
 
   /**
@@ -358,7 +358,7 @@ class ExoToolbarElement implements ExoToolbarElementInterface {
 
         if ($url->isRouted()) {
           // Set data element for active link setting.
-          // @TODO Drupal's active-link.js seems to not work for this. Why?
+          // @todo Drupal's active-link.js seems to not work for this. Why?
           $system_path = $url->getInternalPath();
           // Special case for the front page.
           $path = $system_path == '' ? '<front>' : $system_path;
@@ -753,7 +753,7 @@ class ExoToolbarElement implements ExoToolbarElementInterface {
     $subelements = $this->getSubElements();
     if ($subelements) {
       foreach ($subelements as $element) {
-        /* @var \Drupal\exo_toolbar\ExoToolbarElement $element */
+        /** @var \Drupal\exo_toolbar\ExoToolbarElement $element */
         $build['subelements'][] = $element->toRenderable();
       }
       // Sort items at this stage so that theme preprocessing can break them

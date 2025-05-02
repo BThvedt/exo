@@ -54,7 +54,7 @@ class ExoMenuSettings extends ExoSettingsPluginBase {
    * @return array
    *   The menu form.
    */
-  public function buildMenuForm(array $settings, array $limit_menus = NULL) {
+  public function buildMenuForm(array $settings, ?array $limit_menus = NULL) {
     $form = [
       '#type' => 'table',
       '#header' => [
@@ -115,7 +115,7 @@ class ExoMenuSettings extends ExoSettingsPluginBase {
    * @return array
    *   Keys are menu names (ids) values are the menu labels.
    */
-  protected function getMenuOptions(array $settings = [], array $limit_menus = NULL) {
+  protected function getMenuOptions(array $settings = [], ?array $limit_menus = NULL) {
     $menus = \Drupal::entityTypeManager()->getStorage('menu')->loadMultiple($limit_menus);
     $options = array_flip($settings);
     /** @var \Drupal\system\MenuInterface[] $menus */

@@ -147,7 +147,7 @@ class ExportCsv extends ExoListActionBase {
     parent::executeFinish($entity_list, $results);
 
     // Store data as file.
-    $data = $this->temp->get($results['csv_file_uri']) ?? [];
+    $data = $this->getCsvFinalData($entity_list, $results);
     $handle = fopen($results['csv_file_path'], 'a');
     fwrite($handle, (chr(0xEF) . chr(0xBB) . chr(0xBF)));
     // Write headers now.
@@ -177,6 +177,26 @@ class ExportCsv extends ExoListActionBase {
         '@download_url' => $download_url,
       ]));
     }
+  }
+
+  /**
+   * Retrieves the final CSV data for export.
+   *
+   * This method fetches the CSV data stored in a temporary storage
+   * location identified by the 'csv_file_uri' key in the results array.
+   * If no data is found, it returns an empty array.
+   *
+   * @param \Drupal\exo_list_builder\EntityListInterface $entity_list
+   *   The entity list interface instance.
+   * @param array $results
+   *   An associative array containing the results, including the 'csv_file_uri'
+   *   key which points to the temporary storage location of the CSV data.
+   *
+   * @return array
+   *   The final CSV data as an array, or an empty array if no data is found.
+   */
+  protected function getCsvFinalData(EntityListInterface $entity_list, array &$results) {
+    return $this->temp->get($results['csv_file_uri']) ?? [];
   }
 
   /**

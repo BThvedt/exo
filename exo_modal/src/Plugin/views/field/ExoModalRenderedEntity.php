@@ -91,7 +91,7 @@ class ExoModalRenderedEntity extends RenderedEntity {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
     $this->exoModalSettings = $this->exoModalSettings->createInstance($this->options['modal']);
   }

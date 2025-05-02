@@ -40,7 +40,7 @@ class CommercePluginItem extends OptionsSelect implements ContainerFactoryPlugin
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    PluginManagerInterface $plugin_manager
+    PluginManagerInterface $plugin_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->pluginManager = $plugin_manager;

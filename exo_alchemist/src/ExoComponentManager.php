@@ -211,7 +211,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
   /**
    * {@inheritdoc}
    */
-  public function getAlphabeticalDefinitions(array $definitions = NULL, $label_key = 'label') {
+  public function getAlphabeticalDefinitions(?array $definitions = NULL, $label_key = 'label') {
     // Sort the plugins by label.
     /** @var \Drupal\Core\Plugin\CategorizingPluginManagerTrait|\Drupal\Component\Plugin\PluginManagerInterface $this */
     $definitions = $definitions ?? $this->getDefinitions();
@@ -487,7 +487,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function accessDefinition(ExoComponentDefinition $definition, $operation, AccountInterface $account = NULL) {
+  public function accessDefinition(ExoComponentDefinition $definition, $operation, ?AccountInterface $account = NULL) {
     if (empty($account)) {
       $account = \Drupal::currentUser();
     }
@@ -702,7 +702,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @param \Drupal\exo_alchemist\Definition\ExoComponentDefinition $original_definition
    *   The current component definition.
    */
-  protected function saveEntityType(ExoComponentDefinition $definition, ConfigEntityInterface $entity, ExoComponentDefinition $original_definition = NULL) {
+  protected function saveEntityType(ExoComponentDefinition $definition, ConfigEntityInterface $entity, ?ExoComponentDefinition $original_definition = NULL) {
     $entity->setThirdPartySetting('exo_alchemist', 'exo_component_definition', $definition->toArray());
     if ($dependents = $definition->calculateDependents()) {
       $entity->setThirdPartySetting('exo_alchemist', 'exo_component_dependents', $dependents);
@@ -852,7 +852,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @param \Drupal\exo_alchemist\Definition\ExoComponentDefinition $original_definition
    *   The current component definition.
    */
-  public function buildEntityType(ExoComponentDefinition $definition, ExoComponentDefinition $original_definition = NULL) {
+  public function buildEntityType(ExoComponentDefinition $definition, ?ExoComponentDefinition $original_definition = NULL) {
     $form_display = $this->getEntityTypeFormDisplay($definition);
     $view_display = $this->getEntityTypeViewDisplay($definition);
     $this->exoComponentFieldManager->buildEntityType($definition, $form_display, $view_display, $original_definition);
@@ -926,7 +926,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @return array
    *   An array containing ['add' => [], 'update' => [], 'remove' => []].
    */
-  public function getEntityBundleFieldChanges(ExoComponentDefinition $to_definition, ExoComponentDefinition $from_definition = NULL) {
+  public function getEntityBundleFieldChanges(ExoComponentDefinition $to_definition, ?ExoComponentDefinition $from_definition = NULL) {
     return $this->exoComponentFieldManager->getEntityBundleFieldChanges($to_definition, $from_definition);
   }
 
@@ -980,7 +980,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @return \Drupal\Core\Entity\ContentEntityInterface
    *   The content entity.
    */
-  public function loadGlobalEntity(ExoComponentDefinition $definition, ContentEntityInterface $entity = NULL, $all = FALSE) {
+  public function loadGlobalEntity(ExoComponentDefinition $definition, ?ContentEntityInterface $entity = NULL, $all = FALSE) {
     $entity = NULL;
     $storage = $this->entityTypeManager->getStorage(self::ENTITY_TYPE);
     $query = $storage->getQuery();
@@ -1104,7 +1104,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @return \Drupal\Core\Entity\ContentEntityInterface
    *   The content entity.
    */
-  public function cloneEntity(ExoComponentDefinition $definition, ContentEntityInterface $entity = NULL, $all = FALSE) {
+  public function cloneEntity(ExoComponentDefinition $definition, ?ContentEntityInterface $entity = NULL, $all = FALSE) {
     $entity = $entity ? $entity : $this->loadEntity($definition);
     if ($entity) {
       $entity = $entity->createDuplicate();
@@ -1235,7 +1235,7 @@ class ExoComponentManager extends DefaultPluginManager implements ContextAwarePl
    * @return bool|\Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function accessEntity(ExoComponentDefinition $definition, ContentEntityInterface $entity, array $contexts, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function accessEntity(ExoComponentDefinition $definition, ContentEntityInterface $entity, array $contexts, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $account = $account ?: \Drupal::currentUser();
     $access = AccessResult::allowed();
     if ($definition->hasFields()) {

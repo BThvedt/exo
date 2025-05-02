@@ -184,7 +184,7 @@ class Webform extends EntityReferenceBase implements ContainerFactoryPluginInter
    * @return mixed
    *   A renderable element.
    */
-  protected function getWebformRenderable(WebformInterface $webform, FieldItemInterface $item = NULL) {
+  protected function getWebformRenderable(WebformInterface $webform, ?FieldItemInterface $item = NULL) {
     $element = [
       '#type' => 'webform',
       '#webform' => $webform,

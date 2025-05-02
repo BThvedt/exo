@@ -43,7 +43,7 @@ class ExoToolbarRegion extends DeriverBase implements ContainerDeriverInterface 
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    /* @var $exo_toolbar_items \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface[] */
+    /** @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface[] $exo_toolbar_items */
     $exo_toolbar_items = $this->exoToolbarItemStorage->loadByProperties(['plugin' => 'region']);
     // Reset the discovered definitions.
     $this->derivatives = [];

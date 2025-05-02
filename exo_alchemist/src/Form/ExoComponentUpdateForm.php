@@ -80,7 +80,7 @@ class ExoComponentUpdateForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ExoComponentDefinition $definition = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?ExoComponentDefinition $definition = NULL) {
     $this->definitionFrom = $definition;
     $this->definitionTo = $this->exoComponentManager->getDefinition($definition->id());
     $this->changes = $this->exoComponentManager->getEntityBundleFieldChanges($this->definitionTo, $this->definitionFrom);

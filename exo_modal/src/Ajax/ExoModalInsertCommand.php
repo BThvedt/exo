@@ -22,7 +22,7 @@ class ExoModalInsertCommand extends InsertCommand {
    * @param array $settings
    *   An array of JavaScript settings to be passed to any attached behaviors.
    */
-  public function __construct($selector, $content, array $settings = NULL) {
+  public function __construct($selector, $content, ?array $settings = NULL) {
     $this->selector = $selector;
     if (!is_array($content)) {
       $content = ['#markup' => $content];

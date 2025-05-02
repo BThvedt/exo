@@ -89,7 +89,7 @@ class ExoIconTranslatableMarkup extends TranslatableMarkup {
   /**
    * {@inheritdoc}
    */
-  public function __construct($string = '', array $arguments = [], array $options = [], TranslationInterface $string_translation = NULL) {
+  public function __construct($string = '', array $arguments = [], array $options = [], ?TranslationInterface $string_translation = NULL) {
     if (is_a($string, '\Drupal\Core\StringTranslation\TranslatableMarkup')) {
       $arguments = $string->getArguments();
       $options = $string->getOptions();
@@ -133,7 +133,7 @@ class ExoIconTranslatableMarkup extends TranslatableMarkup {
    *
    * @return static
    */
-  public static function fromString($string = '', array $arguments = [], array $options = [], TranslationInterface $string_translation = NULL) {
+  public static function fromString($string = '', array $arguments = [], array $options = [], ?TranslationInterface $string_translation = NULL) {
     return new static($string, $arguments, $options, $string_translation);
   }
 

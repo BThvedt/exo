@@ -152,7 +152,7 @@ abstract class MediaBase extends EntityReferenceBase implements ExoComponentFiel
   /**
    * {@inheritdoc}
    */
-  protected function getValueEntity(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValueEntity(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     $media = NULL;
     if ($reference_value = parent::getValueEntity($value, $item)) {
       return $reference_value;
@@ -271,7 +271,7 @@ abstract class MediaBase extends EntityReferenceBase implements ExoComponentFiel
    * @return mixed
    *   A value suitable for setting to \Drupal\Core\Field\FieldItemInterface.
    */
-  protected function setMediaValue(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function setMediaValue(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     return NULL;
   }
 

@@ -76,7 +76,7 @@ class ExoComponentAccessCheck implements AccessInterface {
     // Split the entity type and the operation.
     $requirement = $route->getRequirement('_exo_component');
     $parts = explode('.', $requirement);
-    list($parameter, $operation) = $parts;
+    [$parameter, $operation] = $parts;
     if ($operation === 'field') {
       array_shift($parts);
       $operation = implode('.', $parts);

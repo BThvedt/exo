@@ -35,7 +35,7 @@ class ExoIconPackageListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\exo_icon\Entity\ExoIconPackageInterface */
+    /** @var \Drupal\exo_icon\Entity\ExoIconPackageInterface $entity */
     $preview = [];
     $definitions = $entity->getDefinitions();
     shuffle($definitions);

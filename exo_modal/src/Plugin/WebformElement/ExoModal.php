@@ -2,19 +2,9 @@
 
 namespace Drupal\exo_modal\Plugin\WebformElement;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\exo\ExoSettingsInterface;
-use Drupal\exo_modal\ExoModalGeneratorInterface;
 use Drupal\webform\Plugin\WebformElement\ContainerBase;
-use Drupal\webform\Plugin\WebformElementManagerInterface;
-use Drupal\webform\WebformLibrariesManagerInterface;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\webform\WebformTokenManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

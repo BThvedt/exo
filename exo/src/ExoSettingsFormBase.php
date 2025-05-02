@@ -22,7 +22,7 @@ abstract class ExoSettingsFormBase extends FormBase {
    * Constructs a new ExoSettingsForm object.
    */
   public function __construct(
-    ExoSettingsInterface $exo_settings
+    ExoSettingsInterface $exo_settings,
   ) {
     $this->exoSettings = $exo_settings;
   }

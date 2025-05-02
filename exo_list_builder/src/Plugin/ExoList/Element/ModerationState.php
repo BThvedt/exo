@@ -6,7 +6,6 @@ use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Url;
 use Drupal\exo_list_builder\Plugin\ExoListContentTrait;
 use Drupal\exo_list_builder\Plugin\ExoListElementBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;

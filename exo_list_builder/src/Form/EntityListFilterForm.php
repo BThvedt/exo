@@ -37,7 +37,7 @@ class EntityListFilterForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityListInterface $entity = NULL, Url $redirectUrl = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityListInterface $entity = NULL, ?Url $redirectUrl = NULL) {
     $this->entity = $entity;
     $this->redirectUrl = $redirectUrl;
     $form = $this->form($form, $form_state);

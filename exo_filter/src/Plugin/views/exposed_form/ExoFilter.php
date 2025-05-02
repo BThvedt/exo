@@ -12,7 +12,6 @@ use Drupal\exo\ExoSettingsInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Form\SubformState;
-use Drupal\Core\Url;
 use Drupal\views\Plugin\views\exposed_form\InputRequired;
 
 /**
@@ -84,7 +83,7 @@ class ExoFilter extends InputRequired {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
     $this->exoModalSettings = $this->exoModalSettings->createInstance($this->options['modal']);
   }
@@ -142,7 +141,7 @@ class ExoFilter extends InputRequired {
     // Initialize options if any sort is exposed.
     // Iterate over each sort and determine if any sorts are exposed.
     $is_sort_exposed = FALSE;
-    /* @var \Drupal\views\Plugin\views\HandlerBase $sort */
+    /** @var \Drupal\views\Plugin\views\HandlerBase $sort */
     foreach ($this->view->display_handler->getHandlers('sort') as $sort) {
       if ($sort->isExposed()) {
         $is_sort_exposed = TRUE;
@@ -283,7 +282,7 @@ class ExoFilter extends InputRequired {
 
     // Iterate over each sort and determine if any sorts are exposed.
     $is_sort_exposed = FALSE;
-    /* @var \Drupal\views\Plugin\views\HandlerBase $sort */
+    /** @var \Drupal\views\Plugin\views\HandlerBase $sort */
     foreach ($this->view->display_handler->getHandlers('sort') as $sort) {
       if ($sort->isExposed()) {
         $is_sort_exposed = TRUE;
@@ -332,7 +331,6 @@ class ExoFilter extends InputRequired {
       // $form['sort']['expose_sort_order'] = $original_form['expose_sort_order'];
       // $form['sort']['sort_asc_label'] = $original_form['sort_asc_label'];
       // $form['sort']['sort_desc_label'] = $original_form['sort_desc_label'];
-
       if ($selected_plugin_id) {
         $plugin_configuration = $this->options['sort'] ?? [];
         /** @var \Drupal\exo_filter\Plugin\ExoFilterBase $plugin */
@@ -380,7 +378,7 @@ class ExoFilter extends InputRequired {
         '#type' => 'container',
       ];
       foreach ($filter_options as $format => $label) {
-        $format_settings = isset($settings['settings'][$format]) ? $settings['settings'][$format] : [];
+        $format_settings = $settings['settings'][$format] ?? [];
         $settings_element = [];
         $plugin = $this->exoFilterManager->createInstance($format, $format_settings);
         $plugin->setView($this->view);
@@ -541,7 +539,7 @@ class ExoFilter extends InputRequired {
         $form[$identifier]['#attributes']['aria-label'] = $label;
       }
       if ($format) {
-        $format_settings = isset($this->options[$id]['settings'][$format]) ? $this->options[$id]['settings'][$format] : [];
+        $format_settings = $this->options[$id]['settings'][$format] ?? [];
         $plugin = $this->exoFilterManager->createInstance($format, $format_settings);
         $plugin->setView($this->view);
         $plugin->exposedElementAlter($form[$identifier], $form_state, $context);

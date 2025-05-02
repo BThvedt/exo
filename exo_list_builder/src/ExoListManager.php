@@ -66,7 +66,7 @@ class ExoListManager extends DefaultPluginManager implements ExoListManagerInter
   /**
    * {@inheritdoc}
    */
-  public function getFieldOptions($field_type, $entity_type = NULL, array $bundles = NULL, $field_name = NULL) {
+  public function getFieldOptions($field_type, $entity_type = NULL, ?array $bundles = NULL, $field_name = NULL) {
     $options = [];
     $definitions = $this->getDefinitions();
     $this->sortDefinitions($definitions);

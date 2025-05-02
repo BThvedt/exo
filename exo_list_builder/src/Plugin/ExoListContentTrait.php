@@ -466,7 +466,7 @@ trait ExoListContentTrait {
       foreach ($reference_bundles as $reference_bundle) {
         $cacheable_metadata->addCacheTags([$reference_entity_type->id() . '_list:' . $reference_bundle]);
         $reference_field_definitions += $entity_field_manager->getFieldDefinitions($reference_entity_type_id, $reference_bundle);
-      };
+      }
       /** @var \Drupal\Core\Field\FieldConfigInterface $reference_field_definition */
       $reference_field_definition = $reference_field_definitions[$reference_field_name];
       $reference_field_storage_definition = $reference_field_definition->getFieldStorageDefinition();
@@ -536,7 +536,7 @@ trait ExoListContentTrait {
         //   ksm($reference_entity_type->id(), $query);
         //   $query->fields($query->getMetaData('base_alias'), [$label_key]);
         //   $query->orderBy($query->getMetaData('base_alias') . '.' . $label_key);
-        // }
+        // }.
         if ($status_key = $reference_entity_type->getKey('status')) {
           // Take into account a status filter that is not exposed.
           if ($entity_list->hasField($status_key)) {

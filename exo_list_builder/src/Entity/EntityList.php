@@ -699,7 +699,7 @@ class EntityList extends ConfigEntityBase implements EntityListInterface {
                 // This is gross.
                 $parts = explode(':', $reference_field['id']);
                 $prop = end($parts);
-                $reference_field['sort_field'] = $reference_field['reference_field_query'] . '.' . $prop. '.' . $property_name;
+                $reference_field['sort_field'] = $reference_field['reference_field_query'] . '.' . $prop . '.' . $property_name;
               }
               else {
                 $reference_field['sort_field'] = str_replace(':', '.entity.', $reference_field['id']) . '.' . $property_name;

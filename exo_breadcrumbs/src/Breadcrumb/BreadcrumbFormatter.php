@@ -47,7 +47,6 @@ class BreadcrumbFormatter extends PathBasedBreadcrumbBuilder {
 
     $breadcrumb->addCacheContexts(['url.path.parent', 'url.path.is_front', 'route']);
     // $breadcrumb->addCacheContexts($parent_breadcrumb->getCacheContexts());
-
     // Set home to configured title.
     /** @var \Drupal\Core\Link $first_link */
     $first_link = reset($links);

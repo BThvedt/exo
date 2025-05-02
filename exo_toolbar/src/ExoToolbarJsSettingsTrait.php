@@ -41,7 +41,7 @@ trait ExoToolbarJsSettingsTrait {
    * {@inheritdoc}
    */
   public function getJsSetting($name) {
-    return isset($this->jsSettings[$name]) ? $this->jsSettings[$name] : NULL;
+    return $this->jsSettings[$name] ?? NULL;
   }
 
 }

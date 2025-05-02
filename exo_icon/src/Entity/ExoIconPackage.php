@@ -247,7 +247,7 @@ class ExoIconPackage extends ConfigEntityBase implements ExoIconPackageInterface
   /**
    * {@inheritdoc}
    */
-  public function getInstances(array $definitions = NULL) {
+  public function getInstances(?array $definitions = NULL) {
     $definitions = $definitions ? $definitions : $this->getDefinitions();
     return $this->exoIconRepository()->getInstances($definitions);
   }
@@ -292,7 +292,7 @@ class ExoIconPackage extends ConfigEntityBase implements ExoIconPackageInterface
    */
   public function getInfoName() {
     $info = $this->getInfo();
-    return isset($info['metadata']['name']) ? $info['metadata']['name'] : substr($this->getInfoPrefix(), 0, -1);
+    return $info['metadata']['name'] ?? substr($this->getInfoPrefix(), 0, -1);
   }
 
   /**

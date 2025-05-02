@@ -127,6 +127,6 @@ interface ExoComponentFieldComputedInterface extends ExoComponentFieldInterface 
    * @return bool|\Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(array $contexts, AccountInterface $account = NULL, $return_as_object = FALSE);
+  public function access(array $contexts, ?AccountInterface $account = NULL, $return_as_object = FALSE);
 
 }

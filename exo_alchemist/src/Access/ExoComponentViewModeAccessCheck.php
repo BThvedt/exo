@@ -4,7 +4,6 @@ namespace Drupal\exo_alchemist\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field_ui\Access\ViewModeAccessCheck;

@@ -54,7 +54,7 @@ class MediaAudio extends MediaFileBase {
           'autoplay' => FALSE,
           'loop' => FALSE,
           'multiple_file_display_type' => 'tags',
-        ]
+        ],
       ]),
       'icon' => $icon,
       'icon_render' => $this->icon()->setIcon($icon)->toRenderable(),

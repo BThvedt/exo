@@ -50,22 +50,19 @@ class ExoAlchemistDrushCommands extends DrushCommands {
   // public function exoScss() {
   //   $dirname = 'public://exo';
   //   $this->fileSystem->prepareDirectory($dirname, FILE_CREATE_DIRECTORY);
-
-  //   // Generate exo-common.scss.
+  // // Generate exo-common.scss.
   //   $destination = $dirname . '/exo-common.scss';
   //   $exo_path = DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('exo');
   //   $data = file_get_contents($exo_path . '/src/scss/_common.scss');
   //   $data = str_replace("@import '", "@import '" . $exo_path . '/src/scss/', $data);
   //   file_save_data($data, $destination, FILE_EXISTS_REPLACE);
-
-  //   // Generate exo-theme.scss.
+  // // Generate exo-theme.scss.
   //   $destination = $dirname . '/exo-theme.scss';
   //   $theme = \Drupal::service('plugin.manager.exo_theme')->getCurrentTheme();
   //   $exo_path = DRUPAL_ROOT . '/' . $theme->getScssPath() . '/exo-theme';
   //   $data = "@import '$exo_path';";
   //   file_save_data($data, $destination, FILE_EXISTS_REPLACE);
-
-  //   $this->logger()->success(dt('eXo utilities generated at @destination', ['@destination' => $dirname]));
+  // $this->logger()->success(dt('eXo utilities generated at @destination', ['@destination' => $dirname]));
   // }
 
   /**

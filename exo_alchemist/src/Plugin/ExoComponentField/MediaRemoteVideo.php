@@ -228,7 +228,7 @@ class MediaRemoteVideo extends MediaBase {
   /**
    * {@inheritdoc}
    */
-  protected function setMediaValue(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function setMediaValue(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     return [
       'value' => $value->get('path'),
     ];

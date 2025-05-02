@@ -182,7 +182,7 @@ class ExoFieldUpdateForm extends FormBase {
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL, $path = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL, $path = NULL) {
     $form['#id'] = 'exo-field-update-form';
     $this->sectionStorage = $section_storage;
     $this->contexts = $section_storage->getContexts();

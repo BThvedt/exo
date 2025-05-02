@@ -49,7 +49,7 @@ class ExoToolbarItemManager extends DefaultPluginManager implements ExoToolbarIt
   /**
    * {@inheritdoc}
    */
-  public function getSortedDefinitions(array $definitions = NULL, $show_hidden = FALSE) {
+  public function getSortedDefinitions(?array $definitions = NULL, $show_hidden = FALSE) {
     // Sort the plugins first by category, then by admin label.
     $definitions = $this->traitGetSortedDefinitions($definitions, 'admin_label');
     // Do not display the 'broken' plugin in the UI.

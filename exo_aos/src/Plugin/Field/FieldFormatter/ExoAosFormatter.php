@@ -35,7 +35,7 @@ class ExoAosFormatter extends FormatterBase {
     $to_field = $this->getSetting('to_field');
     if ($to_field) {
       $field_options = $this->getFieldOptions();
-      $to_field = isset($field_options[$to_field]) ? $field_options[$to_field] : NULL;
+      $to_field = $field_options[$to_field] ?? NULL;
     }
     $summary = [];
     $summary[] = $this->t('Animate on: @field', [

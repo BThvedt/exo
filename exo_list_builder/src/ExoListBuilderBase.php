@@ -963,7 +963,7 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
       foreach ($entities as $key => $target_entity) {
         if ($row = $this->buildRow($target_entity)) {
           switch ($format) {
-            case 'table';
+            case 'table':
               $build_rows[$key] = $row;
               $build['#draggable'] = !empty($row['#draggable']);
               break;
@@ -2016,7 +2016,7 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
   /**
    * Build modal columns.
    */
-  protected function buildFormFilters(array $form, FormStateInterface $form_state, array $filters = NULL) {
+  protected function buildFormFilters(array $form, FormStateInterface $form_state, ?array $filters = NULL) {
     $filters = $filters ?: $this->getExposedFilters();
     if (empty($filters)) {
       return [];

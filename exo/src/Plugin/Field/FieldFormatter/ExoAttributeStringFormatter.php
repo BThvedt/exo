@@ -65,7 +65,7 @@ class ExoAttributeStringFormatter extends BasicStringFormatter {
     $summary = [];
     $options = $this->getFormModesAsOptions();
     $summary[] = $this->t('Form Mode: %value', [
-      '%value' => isset($options[$this->getSetting('form_mode')]) ? $options[$this->getSetting('form_mode')] : $this->t('- Missing -'),
+      '%value' => $options[$this->getSetting('form_mode')] ?? $this->t('- Missing -'),
     ]);
     return $summary;
   }

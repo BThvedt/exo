@@ -113,7 +113,7 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
     ExoToolbarRegionManagerInterface $exo_toolbar_region_manager,
     ExoToolbarPathMatcherInterface $exo_toolbar_path_matcher,
     AccountProxyInterface $account_proxy,
-    ContextHandlerInterface $context_handler
+    ContextHandlerInterface $context_handler,
   ) {
     $this->exoToolbarStorage = $entity_type_manager->getStorage('exo_toolbar');
     $this->exoToolbarItemStorage = $entity_type_manager->getStorage('exo_toolbar_item');
@@ -172,7 +172,7 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRegionCollection(array $configurations = NULL) {
+  public function getRegionCollection(?array $configurations = NULL) {
     if (!$this->regionPluginCollection) {
       $this->regionPluginCollection = new ExoToolbarRegionCollection(\Drupal::service('plugin.manager.exo_toolbar_region'));
     }
@@ -253,7 +253,7 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getVisibleToolbarItems($toolbar_id, CacheableMetadata $cacheable_metadata = NULL) {
+  public function getVisibleToolbarItems($toolbar_id, ?CacheableMetadata $cacheable_metadata = NULL) {
     if (!isset($this->toolbarVisibleItems[$toolbar_id])) {
       $this->toolbarVisibleItems[$toolbar_id] = [];
       $toolbar = $this->getToolbar($toolbar_id);
@@ -297,7 +297,7 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
     $items = &drupal_static(__FUNCTION__);
     if (!isset($items[$toolbar_id][$region_id])) {
       $items[$toolbar_id][$region_id] = array_filter($this->getToolbarItems($toolbar_id), function ($item) use ($region_id) {
-        /* @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
+        /** @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
         return $item->getRegionId() == $region_id;
       });
     }
@@ -307,11 +307,11 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getVisibleToolbarRegionItems($toolbar_id, $region_id, CacheableMetadata $cacheable_metadata = NULL) {
+  public function getVisibleToolbarRegionItems($toolbar_id, $region_id, ?CacheableMetadata $cacheable_metadata = NULL) {
     $items = &drupal_static(__FUNCTION__);
     if (!isset($items[$toolbar_id][$region_id])) {
       $items[$toolbar_id][$region_id] = array_filter($this->getVisibleToolbarItems($toolbar_id, $cacheable_metadata), function ($item) use ($region_id) {
-        /* @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
+        /** @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
         return $item->getRegionId() == $region_id;
       });
     }
@@ -325,7 +325,7 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
     $items = &drupal_static(__FUNCTION__);
     if (!isset($items[$toolbar_id][$region_id][$section_id])) {
       $items[$toolbar_id][$region_id][$section_id] = array_filter($this->getToolbarRegionItems($toolbar_id, $region_id), function ($item) use ($section_id) {
-        /* @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
+        /** @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
         return $item->getSectionId() == $section_id;
       });
     }
@@ -335,11 +335,11 @@ class ExoToolbarRepository implements ExoToolbarRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getVisibleToolbarRegionSectionItems($toolbar_id, $region_id, $section_id, CacheableMetadata $cacheable_metadata = NULL) {
+  public function getVisibleToolbarRegionSectionItems($toolbar_id, $region_id, $section_id, ?CacheableMetadata $cacheable_metadata = NULL) {
     $items = &drupal_static(__FUNCTION__);
     if (!isset($items[$toolbar_id][$region_id][$section_id])) {
       $items[$toolbar_id][$region_id][$section_id] = array_filter($this->getVisibleToolbarRegionItems($toolbar_id, $region_id, $cacheable_metadata), function ($item) use ($section_id) {
-        /* @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
+        /** @var /Drupal/exo_toolbar/Entity/ExoToolbarItemInterface $item */
         return $item->getSectionId() == $section_id;
       });
     }

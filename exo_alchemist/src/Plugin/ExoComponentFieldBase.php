@@ -52,7 +52,7 @@ abstract class ExoComponentFieldBase extends PluginBase implements ExoComponentF
   /**
    * {@inheritdoc}
    */
-  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, FieldStorageConfigInterface $from_storage = NULL, FieldConfigInterface $from_config = NULL) {
+  public function onFieldChanges(array &$changes, ExoComponentFieldInterface $from_field, ?FieldStorageConfigInterface $from_storage = NULL, ?FieldConfigInterface $from_config = NULL) {
   }
 
   /**

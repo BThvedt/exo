@@ -3,7 +3,6 @@
 namespace Drupal\exo_filter\Plugin\views\area;
 
 use Drupal\views\Plugin\views\area\AreaPluginBase;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 
 /**
@@ -40,7 +39,7 @@ class ExoFiltersSummary extends AreaPluginBase {
       $label = $info['label'];
       $alias = $info['value'];
       $multiple = !empty($filter->options['expose']['multiple']);
-      $field_form = isset($this->view->exposed_widgets['secondary'][$alias]) ? $this->view->exposed_widgets['secondary'][$alias] : $this->view->exposed_widgets[$alias];
+      $field_form = $this->view->exposed_widgets['secondary'][$alias] ?? $this->view->exposed_widgets[$alias];
       if (!isset($field_form['#type'])) {
         continue;
       }
@@ -100,7 +99,7 @@ class ExoFiltersSummary extends AreaPluginBase {
    *   Return string or array of values.
    */
   protected function getSelectValue(array $element, $value) {
-    return isset($element['#options'][$value]) ? $element['#options'][$value] : NULL;
+    return $element['#options'][$value] ?? NULL;
   }
 
   /**
@@ -130,7 +129,7 @@ class ExoFiltersSummary extends AreaPluginBase {
    *   Return string or array of values.
    */
   protected function getCheckboxesValue(array $element, $value) {
-    return isset($element['#options'][$value]) ? $element['#options'][$value] : NULL;
+    return $element['#options'][$value] ?? NULL;
   }
 
 }

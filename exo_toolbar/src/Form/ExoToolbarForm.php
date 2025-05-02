@@ -35,7 +35,7 @@ class ExoToolbarForm extends EntityForm {
    */
   public function __construct(
     ExoToolbarRepositoryInterface $exo_toolbar_repository,
-    ExoSettingsInterface $exo_settings
+    ExoSettingsInterface $exo_settings,
   ) {
     $this->exoToolbarRepository = $exo_toolbar_repository;
     $this->exoSettings = $exo_settings;

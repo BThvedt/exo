@@ -45,14 +45,14 @@ class ExoToolbarAdminController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A json response to use via javascript.
    */
-  public function updateItems(Request $request = NULL) {
+  public function updateItems(?Request $request = NULL) {
     $response = [];
     $content = $request->getContent();
     if (!empty($content)) {
       $storage = $this->entityTypeManager->getStorage('exo_toolbar_item');
       $data = json_decode($content, TRUE);
       foreach ($storage->loadMultiple(array_keys($data)) as $id => $item) {
-        /* @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface $item */
+        /** @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface $item */
         $item_data = $data[$id];
         foreach (['region', 'section', 'weight'] as $property) {
           if (isset($item_data[$property])) {

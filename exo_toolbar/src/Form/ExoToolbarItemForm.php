@@ -168,7 +168,7 @@ class ExoToolbarItemForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
-    /* @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface $entity */
+    /** @var \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface $entity */
     $status = $entity->save();
 
     switch ($status) {

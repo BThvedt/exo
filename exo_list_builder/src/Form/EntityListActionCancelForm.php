@@ -2,7 +2,6 @@
 
 namespace Drupal\exo_list_builder\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;

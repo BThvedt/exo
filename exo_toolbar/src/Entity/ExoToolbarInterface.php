@@ -107,7 +107,7 @@ interface ExoToolbarInterface extends ConfigEntityInterface {
   /**
    * Get visible items.
    */
-  public function getVisibleItems($region_id = NULL, $section_id = NULL, CacheableMetadata $cacheable_metadata = NULL);
+  public function getVisibleItems($region_id = NULL, $section_id = NULL, ?CacheableMetadata $cacheable_metadata = NULL);
 
   /**
    * Encapsulates the creation of the region's LazyPluginCollection.

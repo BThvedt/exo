@@ -246,7 +246,7 @@ class ExoComponentDefaultsSectionStorage extends ExoDefaultsSectionStorage imple
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     return $this->getParentEntityStorage()->access($operation, $account, $return_as_object);
   }
 

@@ -104,7 +104,7 @@ class Form extends ExoComponentFieldComputedBase implements ContainerFactoryPlug
   /**
    * Get a form class.
    */
-  protected function viewValueForm(EntityInterface $entity = NULL, array $contexts = NULL) {
+  protected function viewValueForm(?EntityInterface $entity = NULL, ?array $contexts = NULL) {
     $field = $this->getFieldDefinition();
     $args = array_merge([
       $field->getAdditionalValue('form_class'),

@@ -39,7 +39,7 @@ class ExoToolbarItem extends RenderElement {
    *   A renderable array.
    */
   public static function preRenderItem(array $element) {
-    /* @var \Drupal\exo_toolbar\Entity\ExoToolbarInterface $exo_toolbar */
+    /** @var \Drupal\exo_toolbar\Entity\ExoToolbarInterface $exo_toolbar */
     $exo_toolbar_item = $element['#exo_toolbar_item'];
     $element['item'] = $exo_toolbar_item->getPlugin()->build();
     return $element;

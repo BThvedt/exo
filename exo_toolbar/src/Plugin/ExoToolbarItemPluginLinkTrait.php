@@ -49,7 +49,7 @@ trait ExoToolbarItemPluginLinkTrait {
 
         if ($url->isRouted()) {
           // Set data element for active link setting.
-          // @TODO Drupal's active-link.js seems to not work for this. Why?
+          // @todo Drupal's active-link.js seems to not work for this. Why?
           $system_path = $url->getInternalPath();
           // Special case for the front page.
           $attributes['data-drupal-link-system-path'] = $system_path == '' ? '<front>' : $system_path;

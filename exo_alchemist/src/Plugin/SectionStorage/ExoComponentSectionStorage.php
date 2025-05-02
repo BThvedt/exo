@@ -104,7 +104,7 @@ class ExoComponentSectionStorage extends ExoOverridesSectionStorage implements E
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($account === NULL) {
       $account = $this->currentUser;
     }

@@ -82,7 +82,7 @@ trait ExoVisibilityFormTrait {
         continue;
       }
       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
-      $condition = $this->conditionPluginManager()->createInstance($condition_id, isset($visibility[$condition_id]) ? $visibility[$condition_id] : []);
+      $condition = $this->conditionPluginManager()->createInstance($condition_id, $visibility[$condition_id] ?? []);
       $form_state->set(['conditions', $condition_id], $condition);
       $condition_form = $condition->buildConfigurationForm([], $form_state);
       $condition_form['#type'] = 'details';
@@ -168,7 +168,7 @@ trait ExoVisibilityFormTrait {
       // did not set its own mappings until Drupal 8.2.
       // @todo Remove the code that sets context mappings in Drupal 9.0.0.
       if ($condition instanceof ContextAwarePluginInterface) {
-        $context_mapping = isset($values['context_mapping']) ? $values['context_mapping'] : [];
+        $context_mapping = $values['context_mapping'] ?? [];
         $condition->setContextMapping($context_mapping);
       }
 

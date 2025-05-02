@@ -28,7 +28,7 @@ class ExoModalAccountLoginForm extends UserLoginForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, array $modal_settings = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?array $modal_settings = NULL) {
     $this->modalSettings = $modal_settings;
     $form = parent::buildForm($form, $form_state);
     $form['#id'] = 'exo-modal-account-login';

@@ -27,7 +27,7 @@ class ExoFormSettingsForm extends ExoSettingsFormBase {
    */
   public function __construct(
     ExoSettingsInterface $exo_settings,
-    ThemeHandler $theme_handler
+    ThemeHandler $theme_handler,
   ) {
     parent::__construct($exo_settings);
     $this->themeHandler = $theme_handler;

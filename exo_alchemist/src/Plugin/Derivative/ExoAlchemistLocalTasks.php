@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\exo_alchemist\ExoComponentManager;
-use Drupal\exo_alchemist\Plugin\ExoComponentField\EntityDisplay;
 use Drupal\exo_alchemist\Plugin\ExoComponentFieldDisplayInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

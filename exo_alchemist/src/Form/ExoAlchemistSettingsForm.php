@@ -4,13 +4,8 @@ namespace Drupal\exo_alchemist\Form;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\exo_alchemist\ExoComponentManager;
-use Drupal\exo_alchemist\Plugin\ExoComponentFieldFieldableInterface;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

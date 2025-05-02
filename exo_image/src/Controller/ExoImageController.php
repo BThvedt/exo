@@ -91,7 +91,7 @@ class ExoImageController extends ImageStyleDownloadController {
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
    *   Thrown when the file is still being generated.
    */
-  public function deliver(Request $request, $scheme, ImageStyleInterface $image_style, string $required_derivative_scheme = NULL) {
+  public function deliver(Request $request, $scheme, ImageStyleInterface $image_style, ?string $required_derivative_scheme = NULL) {
     $response = parent::deliver($request, $scheme, $image_style, $required_derivative_scheme);
     if ($response->getStatusCode() === 200) {
       $file = $response->getFile();

@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\exo_list_builder\EntityListInterface;
 use Drupal\exo_list_builder\Plugin\ExoListContentTrait;
 use Drupal\exo_list_builder\Plugin\ExoListFieldPropertyInterface;
-use Drupal\exo_list_builder\Plugin\ExoListFieldValuesInterface;
 use Drupal\exo_list_builder\Plugin\ExoListFilterBase;
 
 /**

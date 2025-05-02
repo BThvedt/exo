@@ -175,7 +175,7 @@ class EntityField extends ExoComponentFieldFieldableBase implements ContextAware
    * @return mixed
    *   A value suitable for setting to \Drupal\Core\Field\FieldItemInterface.
    */
-  protected function getValue(ExoComponentValue $value, FieldItemInterface $item = NULL) {
+  protected function getValue(ExoComponentValue $value, ?FieldItemInterface $item = NULL) {
     return ['value' => $value->toArray()];
   }
 

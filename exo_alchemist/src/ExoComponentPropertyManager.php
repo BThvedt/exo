@@ -112,7 +112,7 @@ class ExoComponentPropertyManager extends DefaultPluginManager implements ExoCom
    * @param \Drupal\exo_alchemist\Definition\ExoComponentDefinition $original_definition
    *   The current component definition.
    */
-  public function buildEntityType(ExoComponentDefinition $definition, EntityFormDisplayInterface $form_display, EntityViewDisplayInterface $view_display, ExoComponentDefinition $original_definition = NULL) {
+  public function buildEntityType(ExoComponentDefinition $definition, EntityFormDisplayInterface $form_display, EntityViewDisplayInterface $view_display, ?ExoComponentDefinition $original_definition = NULL) {
     if (!empty($definition->getModifiers())) {
       $entity_type = ExoComponentManager::ENTITY_TYPE;
       $bundle = $definition->safeId();
@@ -398,7 +398,7 @@ class ExoComponentPropertyManager extends DefaultPluginManager implements ExoCom
    * @return array
    *   The modifier values.
    */
-  public static function getEntityModifierValues(ContentEntityInterface $entity, $modifier_name = NULL, ExoComponentDefinition $definition = NULL, $cache = TRUE) {
+  public static function getEntityModifierValues(ContentEntityInterface $entity, $modifier_name = NULL, ?ExoComponentDefinition $definition = NULL, $cache = TRUE) {
     if (!isset(static::$entityModifierValues[$entity->uuid()]) || $cache === FALSE) {
       $values = !$entity->get(self::MODIFIERS_FIELD_NAME)->isEmpty() ? $entity->get(self::MODIFIERS_FIELD_NAME)->first()->value : [];
       if (!$definition) {

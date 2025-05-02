@@ -17,7 +17,7 @@ class ExoModalAccountPasswordForm extends UserPasswordForm {
   /**
    * {@inheritDoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, array $exo_settings = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?array $exo_settings = NULL) {
     $form = parent::buildForm($form, $form_state);
     $form['#id'] = 'exo-modal-account-password';
     $form['#attributes']['class'][] = 'exo-modal-account--password';

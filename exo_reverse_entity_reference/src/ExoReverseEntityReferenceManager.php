@@ -1,11 +1,9 @@
 <?php
 
 namespace Drupal\exo_reverse_entity_reference;
+
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 
 /**

@@ -207,7 +207,7 @@ class LinkBlock extends BlockBase {
       $displayable_string = $uri_reference;
     }
     elseif ($scheme === 'entity') {
-      list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
+      [$entity_type, $entity_id] = explode('/', substr($uri, 7), 2);
       if ($entity_type == 'node' && $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id)) {
         $displayable_string = EntityAutocomplete::getEntityLabels([$entity]);
       }

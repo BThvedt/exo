@@ -67,7 +67,7 @@ class SiteSettingsListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\exo_site_settings\Entity\SiteSettings */
+    /** @var \Drupal\exo_site_settings\Entity\SiteSettings $entity */
     $row['name'] = $entity->label();
     return $row + parent::buildRow($entity);
   }

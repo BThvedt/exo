@@ -27,7 +27,7 @@ class Checkbox extends ExoFormBase {
     $element['#wrapper_attributes']['class'][] = 'exo-form-checkbox';
     $element['#wrapper_attributes']['class'][] = 'exo-form-checkbox-js';
     $element['#attached']['library'][] = 'exo_form/checkbox';
-    $element['#title'] =  $element['#title'] ?? '';
+    $element['#title'] = $element['#title'] ?? '';
     // Blazy and modules like to add crap. Let's remove crap.
     if (isset($element['#field_suffix']) && $element['#field_suffix'] == '&nbsp;') {
       $element['#field_suffix'] = '';

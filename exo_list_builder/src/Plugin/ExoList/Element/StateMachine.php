@@ -4,8 +4,6 @@ namespace Drupal\exo_list_builder\Plugin\ExoList\Element;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\exo_list_builder\Plugin\ExoListContentTrait;
-use Drupal\exo_list_builder\Plugin\ExoListElementBase;
 use Drupal\exo_list_builder\Plugin\ExoListElementContentBase;
 
 /**

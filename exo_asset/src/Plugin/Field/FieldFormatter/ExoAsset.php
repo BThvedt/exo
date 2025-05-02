@@ -317,7 +317,7 @@ class ExoAsset extends EntityReferenceFormatterBase implements ContainerFactoryP
       if (!empty($modifier_settings['enabled'])) {
         if ($option_field->getType() == 'exo_attribute') {
           foreach ($this->getExoAttributeOptions($option_field) as $key => $option) {
-            $modifier_attribute_settings = isset($modifier_settings['options'][$key]) ? $modifier_settings['options'][$key] : [];
+            $modifier_attribute_settings = $modifier_settings['options'][$key] ?? [];
             $modifier_parents = array_merge($modifier_parents, [
               'settings',
               'options',
@@ -611,7 +611,7 @@ class ExoAsset extends EntityReferenceFormatterBase implements ContainerFactoryP
    */
   protected function getFieldDefinitions($bundle, $field_name) {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('media', $bundle);
-    return isset($field_definitions[$field_name]) ? $field_definitions[$field_name] : NULL;
+    return $field_definitions[$field_name] ?? NULL;
   }
 
   /**
