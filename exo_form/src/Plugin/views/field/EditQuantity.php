@@ -24,7 +24,9 @@ class EditQuantity extends CommerceEditQuantity {
     parent::viewsForm($form, $form_state);
 
     foreach ($this->view->result as $row_index => $row) {
-      $form[$this->options['id']][$row_index]['#type'] = 'exo_number';
+      if (!$row->_relationship_entities['order_items']->isLocked()) {
+        $form[$this->options['id']][$row_index]['#type'] = 'exo_number';
+      }
     }
   }
 
