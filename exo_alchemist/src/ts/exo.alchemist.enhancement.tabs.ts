@@ -8,6 +8,7 @@
     protected id:string = '';
     protected idSelector:string = '';
     protected history:boolean = false;
+    protected unhash:boolean = false;
 
     constructor(id:string, $wrapper:JQuery) {
       this.$wrapper = $wrapper;
@@ -16,17 +17,29 @@
       this.$triggers = $wrapper.find('.ee--tabs-trigger[' + this.idSelector + ']');
       this.$contents = $wrapper.find('.ee--tabs-content[' + this.idSelector + ']');
       this.history = typeof $wrapper.data('ee--accordion-history') !== 'undefined';
+      this.unhash = typeof $wrapper.data('ee--accordion-unhash') !== 'undefined';
       this.$contents.hide();
       let $show = this.$triggers.first();
       Drupal.Exo.$window.on('popstate.exo.alchemist.enhancement.tabs.' + this.id, e => {
-        const hashTab = Drupal.ExoAlchemistEnhancement.getHashForKey('ee--tabs');
-        if (hashTab && typeof hashTab[this.id] !== 'undefined') {
-          const $item = this.$triggers.filter('[data-ee--tab-id="' + hashTab[this.id] + '"]');
-          if ($item.length) {
-            this.show($item.first(), false);
+        if (this.unhash) {
+          const hash = window.location.hash.replace('#', '');
+          if (hash) {
+            const $item = this.findTriggerByHash(hash);
+            if ($item.length) {
+              this.show($item.first(), false);
+              return;
+            }
           }
-        }
-        else {
+          this.show(this.$triggers.first(), false);
+        } else {
+          const hashTab = Drupal.ExoAlchemistEnhancement.getHashForKey('ee--tabs');
+          if (hashTab && typeof hashTab[this.id] !== 'undefined') {
+            const $item = this.$triggers.filter('[data-ee--tab-id="' + hashTab[this.id] + '"]');
+            if ($item.length) {
+              this.show($item.first(), false);
+              return;
+            }
+          }
           this.show(this.$triggers.first(), false);
         }
       });
@@ -108,15 +121,43 @@
         Drupal.ExoAlchemistAdmin.unlockNestedFields($trigger);
       }
       else if (setHash) {
-        Drupal.ExoAlchemistEnhancement.setHashForKey('ee--tabs', id, this.id);
+        if (this.unhash) {
+          // Use the trigger text for the URL hash, removing leading/trailing hyphens
+          const hashText = $trigger.text().toLowerCase().trim()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+          window.location.hash = hashText;
+        }
+        else if (this.history) {
+          Drupal.ExoAlchemistEnhancement.setHashForKey('ee--tabs', id, this.id);
+        }
       }
     }
 
+    protected findTriggerByHash(hash:string):JQuery {
+      return this.$triggers.filter((i, el) => {
+        const text = $(el).text().toLowerCase().trim()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        return text === hash;
+      });
+    }
+
     protected buildTabHash(id:string) {
+      if (this.unhash) {
+        const $trigger = this.$triggers.filter('[data-ee--tab-id="' + id + '"]');
+        return $trigger.text().toLowerCase().trim()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
       return 'ee--tab-' + this.id + '--' + id;
     }
 
     protected extractTabIdFromHash(hash:string) {
+      if (this.unhash) {
+        const $matchingTrigger = this.findTriggerByHash(hash);
+        return $matchingTrigger.length ? $matchingTrigger.data('ee--tab-id') : null;
+      }
       const parts = hash.replace('ee--tab-', '').split('--');
       return parts[1];
     }

@@ -40,6 +40,9 @@ class Tabs extends ExoComponentEnhancementBase {
     if ($this->getEnhancementDefinition()->getAdditionalValue('history')) {
       $attributes['data-ee--accordion-history'] = 1;
     }
+    if ($this->getEnhancementDefinition()->getAdditionalValue('unhash')) {
+      $attributes['data-ee--accordion-unhash'] = 1;
+    }
     $view = [
       '#attached' => [
         'library' => ['exo_alchemist/enhancement.tabs'],
