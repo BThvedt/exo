@@ -203,7 +203,7 @@ class ExoComponentFieldsForm extends FormBase {
     }));
 
     foreach ($this->definition->getFields() as $field) {
-      if ($field->isInvisible() && $field->isHiddenByDefault()) {
+      if (!$field->isFilter() && $field->isInvisible() && $field->isHiddenByDefault()) {
         $hidden_field_ids[] = $field->getName();
       }
     }
