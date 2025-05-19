@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -503,7 +504,7 @@ class ExoLayoutBuilder extends LayoutBuilder {
   /**
    * Build nested section.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $parent
+   * @param \Drupal\Core\Entity\EntityInterface $parent
    *   The parent entity.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The child entity.
@@ -515,7 +516,7 @@ class ExoLayoutBuilder extends LayoutBuilder {
    * @return array
    *   The render array for a given component.
    */
-  protected function buildAdministrativeComponentSection(ContentEntityInterface $parent, ContentEntityInterface $entity, ExoComponentDefinitionField $field, $delta) {
+  protected function buildAdministrativeComponentSection(EntityInterface $parent, ContentEntityInterface $entity, ExoComponentDefinitionField $field, $delta) {
     $component_field = \Drupal::service('plugin.manager.exo_component_field')->createFieldInstance($field);
     /** @var \Drupal\exo_alchemist\Plugin\SectionStorage\ExoOverridesSectionStorage $component_section_storage */
     $component_section_storage = $component_field->getTemporarySectionStorage($entity, $parent);

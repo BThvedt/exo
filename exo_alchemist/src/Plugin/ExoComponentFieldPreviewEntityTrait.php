@@ -89,7 +89,7 @@ trait ExoComponentFieldPreviewEntityTrait {
    *   The entity type manager.
    */
   protected function entityTypeManager() {
-    return $this->entityTypeManager ?: \Drupal::service('entity_type.manager');
+    return $this->entityTypeManager ?? \Drupal::service('entity_type.manager');
   }
 
 }
