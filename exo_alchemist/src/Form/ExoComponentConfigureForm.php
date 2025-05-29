@@ -167,11 +167,14 @@ class ExoComponentConfigureForm extends FormBase {
     $this->entity = $form_state->get('parent_entity') ?: $this->exoComponentManager->cloneEntity($definition);
     $required_paths = $this->exoComponentManager->getExoComponentFieldManager()->getRequiredPaths($definition);
     $finished = TRUE;
-    if (isset($required_paths[$delta])) {
-      $delta = $form_state->get('required_path_delta') ?: 0;
+    // We used to use the $delta for $required_path_delta, but that does not
+    // work in layouts with more than one component region.
+    $required_path_delta = 0;
+    if (isset($required_paths[$required_path_delta])) {
+      $required_path_delta = $form_state->get('required_path_delta') ?: 0;
       $processed = $form_state->get('required_processed') ?: [];
       $finished = count($required_paths) == count($processed);
-      $path = $required_paths[$delta];
+      $path = $required_paths[$required_path_delta];
       $parents = explode('.', $path);
       $field_name = $this->getFieldNameFromParents($parents);
       $child_entity = $this->getTargetEntity($this->entity, $parents);
@@ -185,7 +188,7 @@ class ExoComponentConfigureForm extends FormBase {
           '%label' => $component_field->getLabel(),
         ]),
         '#suffix' => $this->t('Step %done of %total', [
-          '%done' => $delta + 1,
+          '%done' => $required_path_delta + 1,
           '%total' => count($required_paths),
         ]),
         '#description' => $component_field->getDescription(),
@@ -194,12 +197,12 @@ class ExoComponentConfigureForm extends FormBase {
       $form['wrapper'] += $this->getTargetForm($form['wrapper'], $form_state, $this->entity, $parents);
 
       $form['actions'] = ['#type' => 'actions'];
-      if (isset($required_paths[$delta - 1])) {
+      if (isset($required_paths[$required_path_delta - 1])) {
         $form['actions']['previous'] = [
           '#type' => 'submit',
           '#value' => $this->t('Previous'),
           '#submit' => ['::continueSubmit'],
-          '#required_path_delta' => $delta - 1,
+          '#required_path_delta' => $required_path_delta - 1,
           '#limit_validation_errors' => [],
           '#ajax' => [
             'callback' => '::ajaxContinueSubmit',
@@ -207,14 +210,14 @@ class ExoComponentConfigureForm extends FormBase {
           ],
         ];
       }
-      if (isset($required_paths[$delta + 1])) {
+      if (isset($required_paths[$required_path_delta + 1])) {
         $form['actions']['next'] = [
           '#type' => 'submit',
           '#value' => $this->t('Continue'),
           '#button_type' => $finished ? '' : 'primary',
           '#submit' => ['::continueSubmit'],
           '#required_path_process' => TRUE,
-          '#required_path_delta' => $delta + 1,
+          '#required_path_delta' => $required_path_delta + 1,
           '#ajax' => [
             'callback' => '::ajaxContinueSubmit',
             'wrapper' => 'exo-component-configure',
@@ -222,7 +225,7 @@ class ExoComponentConfigureForm extends FormBase {
         ];
       }
     }
-    if ($finished || !isset($required_paths[$delta + 1])) {
+    if ($finished || !isset($required_paths[$required_path_delta + 1])) {
       $form['actions']['submit'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add Component'),
@@ -272,12 +275,12 @@ class ExoComponentConfigureForm extends FormBase {
     $trigger = $form_state->getTriggeringElement();
     $this->submitTargetForm($form['wrapper'], $form_state);
 
-    $delta = $trigger['#required_path_delta'];
-    $form_state->set('required_path_delta', $delta);
+    $required_path_delta = $trigger['#required_path_delta'];
+    $form_state->set('required_path_delta', $required_path_delta);
 
     if (!empty($trigger['#required_path_process'])) {
       $processed = $form_state->get('required_processed') ?: [];
-      $processed[$delta] = TRUE;
+      $processed[$required_path_delta] = TRUE;
       $form_state->set('required_processed', $processed);
     }
 
