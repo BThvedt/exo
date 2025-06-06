@@ -34,7 +34,7 @@ class SiteSettingsTypeAccessControlHandler extends EntityAccessControlHandler {
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     $access = AccessResult::allowedIfHasPermission($account, 'edit config pages');
     if ($entity_bundle) {
-      $access->orIf(AccessResult::allowedIfHasPermission($account, 'edit ' . $entity_bundle->id() . ' config page'));
+      $access->orIf(AccessResult::allowedIfHasPermission($account, 'edit ' . $entity_bundle . ' config page'));
     }
     return $access;
   }

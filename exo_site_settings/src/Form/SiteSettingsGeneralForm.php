@@ -210,6 +210,7 @@ class SiteSettingsGeneralForm extends FormBase {
   public function processForm(array &$element, FormStateInterface &$form_state, array &$complete_form) {
     foreach ($this->innerForms as $key => $inner_form) {
       $inner_form_state = static::getInnerFormState($form_state, $key);
+      ksm($inner_form_state->getValues());
       foreach ($inner_form_state->get('#process') as $callback) {
         // The callback format was copied from FormBuilder::doBuildForm().
         $element[$key]['form'] = call_user_func_array($inner_form_state->prepareCallback($callback), [
