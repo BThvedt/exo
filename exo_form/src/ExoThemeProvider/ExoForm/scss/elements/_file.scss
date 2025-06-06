@@ -32,15 +32,9 @@
   td {
 
     &:first-child {
-      @include flex;
-      @include flex-align(left, middle);
 
-      > a {
-        flex: 0 0 auto;
-      }
-
-      > .exo-form-element {
-        flex: 1 1 auto;
+      > .tabledrag-handle {
+        float: left !important;
       }
     }
 
