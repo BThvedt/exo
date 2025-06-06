@@ -33,8 +33,9 @@
 
     &:first-child {
 
-      > .tabledrag-handle {
-        float: left !important;
+      > * {
+        display: inline-block !important;
+        vertical-align: middle;
       }
     }
 
