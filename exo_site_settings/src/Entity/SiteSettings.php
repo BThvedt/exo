@@ -62,6 +62,13 @@ class SiteSettings extends ContentEntityBase implements SiteSettingsInterface {
   /**
    * {@inheritdoc}
    */
+  public function label() {
+    return $this->type->entity->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
     $values += [

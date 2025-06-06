@@ -52,14 +52,14 @@ trait ExoNestedEntityFormTrait {
     if (isset($this->innerForms[$key])) {
       return $this->innerForms[$key];
     }
-    $entity_type = $this->getEntityTypeManager()->getDefinition($entity_type_id);
-    if ($bundle_key = $entity_type->getKey('bundle')) {
-      $data[$bundle_key] = $bundle_id;
-    }
     if ($data instanceof EntityInterface) {
       $entity = $data;
     }
     else {
+      $entity_type = $this->getEntityTypeManager()->getDefinition($entity_type_id);
+      if ($bundle_key = $entity_type->getKey('bundle')) {
+        $data[$bundle_key] = $bundle_id;
+      }
       $entity = $this->getEntityTypeManager()->getStorage($entity_type_id)->create($data);
     }
     $innerForm = $this->getEntityTypeManager()->getFormObject($entity->getEntityTypeId(), $form_handler)->setEntity($entity);
@@ -70,7 +70,7 @@ trait ExoNestedEntityFormTrait {
       $this->innerForms[$key] = $innerForm;
       return $this->getInnerForm($parents);
     }
-    return [];
+    return NULL;
   }
 
   /**
