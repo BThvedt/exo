@@ -5,8 +5,11 @@ div.exo-form-input {
   width: 100%;
 
   &.exo-form-inline {
-    flex-wrap: nowrap;
-    width: calc(100% + #{$global-margin}) !important;
+
+    @include breakpoint(medium) {
+      flex-wrap: nowrap;
+      width: calc(100% + #{$global-margin}) !important;
+    }
   }
 
   // Flex break items so they are full-width.
