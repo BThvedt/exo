@@ -2709,6 +2709,7 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
           'specifier' => $field['sort_field'],
           'field' => $field['sort_field'],
           'sort' => $initialize_table_sort ? $field['view']['sort'] : NULL,
+          'initial_click_sort' => $field['view']['sort'],
         ];
       }
     }
