@@ -26,11 +26,13 @@ class ExoAlchemistLayoutTempstoreRepository extends LayoutTempstoreRepository {
         foreach ($section->getComponents() as $component) {
           if (ExoComponentManager::isExoComponent($component)) {
             $component_entity = $exo_component_manager->entityLoadFromComponent($component);
-            $definition = $exo_component_manager->getEntityComponentDefinition($component_entity);
-            foreach ($definition->getFields() as $field) {
-              $component_field = $exo_component_manager->getExoComponentFieldManager()->createFieldInstance($field);
-              if ($component_field instanceof ExoComponentFieldComputedInterface) {
-                $component_field->onDiscardLayoutBuilderEntity($component_entity, $layout_entity);
+            if ($component_entity) {
+              $definition = $exo_component_manager->getEntityComponentDefinition($component_entity);
+              foreach ($definition->getFields() as $field) {
+                $component_field = $exo_component_manager->getExoComponentFieldManager()->createFieldInstance($field);
+                if ($component_field instanceof ExoComponentFieldComputedInterface) {
+                  $component_field->onDiscardLayoutBuilderEntity($component_entity, $layout_entity);
+                }
               }
             }
           }
