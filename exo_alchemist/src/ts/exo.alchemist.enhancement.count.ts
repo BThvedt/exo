@@ -15,6 +15,7 @@
       const prefix = value.match(/[^\d\.]*/i)[0] || ''; //eslint-disable-line
       const suffix = value.match(/[\d\.]+(.*)/i)[1] || ''; //eslint-disable-line
       const decimals = (value.match(/\./g) || []).length; //eslint-disable-line
+      const useGrouping = this.$wrapper.data('no-grouping') !== true;
       this.$wrapper.css({
         width: this.$wrapper.width() + 'px',
         overflow: 'visible',
@@ -26,7 +27,8 @@
           decimalPlaces: decimals,
           prefix: prefix,
           suffix: suffix,
-          duration: 3
+          duration: 3,
+          useGrouping: useGrouping
         });
         count.start();
       };
