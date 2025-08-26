@@ -52,7 +52,7 @@ class ExoMediaSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitReimportForm(array &$form, FormStateInterface $form_state) {
-    module_load_include('install', 'exo_media', 'exo_media');
+    \Drupal::moduleHandler()->loadInclude('install', 'exo_media', 'exo_media');
     exo_media_install();
   }
 

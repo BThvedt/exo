@@ -579,11 +579,11 @@ class ExoImagineManager {
     $sourceImage = \Drupal::service('image.factory')->get($derivative_uri, 'gd');
     /** @var \Drupal\system\Plugin\ImageToolkit\GDToolkit $toolkit */
     $toolkit = $sourceImage->getToolkit();
-    $sourceImage = $toolkit->getResource();
+    $sourceImage = $toolkit->getImage();
     $quality = \Drupal::service('exo_imagine.settings')->getSetting('webp_quality');
     $toolkit = $image->getToolkit();
     if ($toolkit instanceof GDToolkit) {
-      $success = @imagewebp($toolkit->getResource(), $derivative_uri, $quality);
+      $success = @imagewebp($toolkit->getImage(), $derivative_uri, $quality);
     }
     if (!$success) {
       if (file_exists($derivative_uri)) {

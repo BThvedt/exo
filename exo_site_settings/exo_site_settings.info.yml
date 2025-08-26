@@ -2,7 +2,7 @@ name: 'eXo Site Settings'
 type: module
 description: 'Allows the creation of custom configuration entities.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 dependencies:
   - exo:exo
   - exo_link:exo_link

@@ -2,7 +2,7 @@ name: 'eXo Modal'
 type: module
 description: 'A modal framework for building overlays and offcanvas popups.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 dependencies:
   - exo:exo
   - exo_icon:exo_icon
