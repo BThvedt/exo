@@ -218,6 +218,7 @@ class ExoExtraFieldDisplayManager extends DefaultPluginManager implements ExoExt
       if ($bundleType) {
         $bundles = $this->entityTypeManager
           ->getStorage($bundleType)
+          ->accessCheck(TRUE)
           ->getQuery()
           ->execute();
       }

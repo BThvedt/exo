@@ -1,7 +1,7 @@
 name: 'eXo Splash'
 type: module
 description: 'Provides a splash screen on first visit to the site.'
-core_version_requirement: ^8.8 || ^9 || ^10
+core_version_requirement: ^8.8 || ^9 || ^10 || ^11
 package: 'eXo'
 dependencies:
   - exo
