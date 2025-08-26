@@ -171,7 +171,7 @@ class ExoModalRenderedEntity extends RenderedEntity {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $entity = $this->getEntityTranslation($this->getEntity($values), $values);
+    $entity = $this->getEntityTranslationByRelationship($this->getEntity($values), $values);
     $build = [];
     if (isset($entity)) {
       $access = $entity->access('view', NULL, TRUE);

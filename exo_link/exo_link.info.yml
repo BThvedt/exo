@@ -2,7 +2,7 @@ name: eXo Link
 type: module
 description: Provides an alternate widget for the link field that allows setting icons.
 package: eXo
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 dependencies:
   - link
   - exo_icon

@@ -95,7 +95,7 @@ class ExoAlchemistSettingsForm extends ConfigFormBase {
    * Convert reference fields to reference revision fields.
    */
   public function submitRevisionConversion($form, FormStateInterface $form_state) {
-    module_load_include('install', 'exo_alchemist');
+    \Drupal::moduleHandler()->loadInclude('install', 'exo_alchemist');
     exo_alchemist_update_8005();
   }
 

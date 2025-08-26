@@ -2,7 +2,7 @@ name: 'eXo Toolbar'
 type: module
 description: 'Provides a toolbar that shows the top-level administration menu items and links from other modules.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 dependencies:
   - drupal:image
   - exo

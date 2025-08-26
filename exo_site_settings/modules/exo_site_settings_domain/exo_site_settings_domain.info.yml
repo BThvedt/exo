@@ -2,6 +2,6 @@ name: 'eXo Site Settings: Domain'
 type: module
 description: 'Provides domain access support to site settings.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 dependencies:
   - domain_access:domain_access
