@@ -208,8 +208,6 @@ trait ExoNestedEntityFormTrait {
   public static function inlineButtonSubmit(array $form, FormStateInterface $form_state) {
     $trigger = $form_state->getTriggeringElement();
     if (isset($trigger['#inner_form_parents']) && isset($trigger['#inner_form_submit'])) {
-      // $entity_form = NestedArray::getValue($form, $trigger['#inner_form_parents'])['form'] ?? NULL;
-      // dpm($entity_form);
       $inner_form_state = static::getInnerFormState($trigger['#inner_form_parents'], $form_state);
       /** @var \Drupal\Core\Form\FormSubmitterInterface $form_submitter */
       $form_submitter = \Drupal::service('form_submitter');
