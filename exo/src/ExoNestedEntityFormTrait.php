@@ -157,7 +157,7 @@ trait ExoNestedEntityFormTrait {
           &$inner_form_state,
           &$complete_form,
         ]);
-        $this->processRecursiveInnerForms($element[$key]['form'], $key);
+        $this->processRecursiveInnerForms($element[$key]['form'], [$key]);
       }
     }
     return $element;
@@ -174,7 +174,7 @@ trait ExoNestedEntityFormTrait {
   /**
    * Find any nested submit buttons.
    */
-  public function processRecursiveInnerForms(&$element, $inner_form_parents) {
+  public function processRecursiveInnerForms(&$element, array $inner_form_parents) {
     if (is_array($element)) {
       if (isset($element['#ajax']) && !isset($element['#inner_form_parents'])) {
         $element['#inner_form_parents'] = $inner_form_parents;
@@ -182,7 +182,7 @@ trait ExoNestedEntityFormTrait {
         $element['#submit'] = ['::inlineButtonSubmit'];
         if (!empty($element['#validate'])) {
           $element['#inner_form_validate'] = $element['#validate'];
-          $element['#validate'] = '::inlineButtonValidate';
+          $element['#validate'][] = '::inlineButtonValidate';
         }
       }
       if (!empty($element['#process'])) {
@@ -208,6 +208,8 @@ trait ExoNestedEntityFormTrait {
   public static function inlineButtonSubmit(array $form, FormStateInterface $form_state) {
     $trigger = $form_state->getTriggeringElement();
     if (isset($trigger['#inner_form_parents']) && isset($trigger['#inner_form_submit'])) {
+      // $entity_form = NestedArray::getValue($form, $trigger['#inner_form_parents'])['form'] ?? NULL;
+      // dpm($entity_form);
       $inner_form_state = static::getInnerFormState($trigger['#inner_form_parents'], $form_state);
       /** @var \Drupal\Core\Form\FormSubmitterInterface $form_submitter */
       $form_submitter = \Drupal::service('form_submitter');
@@ -216,6 +218,12 @@ trait ExoNestedEntityFormTrait {
       $form_submitter->doSubmitForm($form, $inner_form_state);
       $form_state->setRebuild($inner_form_state->isRebuilding());
       $inner_form_state->setSubmitHandlers([]);
+
+      // Merge in field storage changes.
+      $storage = $form_state->getStorage();
+      $inner_storage = $inner_form_state->getStorage();
+      $storage['field_storage'] = NestedArray::mergeDeep($storage['field_storage'] ?? [], $inner_storage['field_storage'] ?? []);
+      $form_state->setStorage($storage);
 
       // Merge in user input changes as submit handler may have altered them.
       $user_input = $form_state->getUserInput();
@@ -277,6 +285,9 @@ trait ExoNestedEntityFormTrait {
       // doSubmitForm method.
       $inner_form_state->setSubmitted();
       $form_submitter->doSubmitForm($form, $inner_form_state);
+      if (!$form_state->getErrors()) {
+        \Drupal::messenger()->deleteByType('status');
+      }
       return $entity_form->getEntity();
     }
     return NULL;
