@@ -1,7 +1,7 @@
 name: 'eXo oEmbed'
 type: module
 description: 'Provides enhancments to oEmbed.'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 package: 'eXo'
 dependencies:
   - drupal:media
