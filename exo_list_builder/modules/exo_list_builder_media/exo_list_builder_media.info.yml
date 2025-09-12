@@ -2,7 +2,7 @@ name: 'eXo List Builder: Media'
 type: module
 description: 'Provides list builder support to media management. (Safe to uninstall.)'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10'
+core_version_requirement: '^9.3 || ^10 || ^11'
 dependencies:
   - exo:exo_list_builder
   - core:media
