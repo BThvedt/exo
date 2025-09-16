@@ -70,12 +70,8 @@ class ExoComponentSetInlineBlockDependency extends SetInlineBlockDependency {
     }
     $layout_entity_storage = $this->entityTypeManager->getStorage($layout_entity_info->layout_entity_type);
     $layout_entity = $layout_entity_storage->load($layout_entity_info->layout_entity_id);
-    if ($definition = $this->exoComponentManager->getEntityComponentDefinition($block_content)) {
-      // We use computed definitions because these are definitions that are
-      // always managed programmatically.
-      if ($definition->isComputed()) {
-        return $layout_entity;
-      }
+    if ($this->exoComponentManager->getEntityComponentDefinition($block_content)) {
+      return $layout_entity;
     }
     return NULL;
   }
