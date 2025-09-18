@@ -6,6 +6,26 @@ interface ExoModalProcessBarInterface {
   updateProgress?:Function;
 }
 
+class DrupalDialogEvent extends Event {
+  dialog:any;
+  settings:any;
+  constructor(type:string, dialog:any, settings:any = null) {
+    super(`dialog:${type}`, { bubbles: true });
+    this.dialog = dialog;
+    this.settings = settings;
+  }
+
+  // Add a method to dispatch with jQuery compatibility
+  dispatchOn(element: Element) {
+    element.dispatchEvent(this);
+    // Use jQuery for backwards compatibility. Will be removed in Drupal 12.
+    if (typeof jQuery !== 'undefined') {
+      const eventType = this.type;
+      jQuery(element).trigger(eventType, [this.dialog, jQuery(element), this.settings]);
+    }
+  }
+}
+
 class ExoModal extends ExoData {
   protected label:string = 'Modal';
   protected doDebug:boolean = false;
@@ -1101,6 +1121,8 @@ class ExoModal extends ExoData {
     if (transitionIn !== '' && Drupal.Exo.animationEvent !== undefined) {
       this.$element.addClass('transitionIn ' + transitionIn).css('display', 'flex');
       this.event('opening').trigger(this);
+      const event = new DrupalDialogEvent('beforecreate', this, drupalSettings);
+      event.dispatchOn(this.$element.get(0));
       this.callCallback('onOpening');
       this.$wrap.on(Drupal.Exo.animationEvent + '.exo.modal', e => {
         if (this.$wrap.get(0) === e.currentTarget) {
@@ -1114,6 +1136,8 @@ class ExoModal extends ExoData {
     } else {
       this.$element.css('display', 'flex');
       this.event('opening').trigger(this);
+      const event = new DrupalDialogEvent('beforecreate', this, drupalSettings);
+      event.dispatchOn(this.$element.get(0));
       this.callCallback('onOpening');
       this.opened(param);
     }
@@ -1159,6 +1183,8 @@ class ExoModal extends ExoData {
     this.state = this.states.OPENED;
     this.$element.trigger(this.states.OPENED);
     this.event('opened').trigger(this);
+    const event = new DrupalDialogEvent('aftercreate', this, drupalSettings);
+    event.dispatchOn(this.$element.get(0));
     this.callCallback('onOpened');
     this.$element.addClass('isOpen');
 
@@ -1275,6 +1301,8 @@ class ExoModal extends ExoData {
       clearInterval(this.timerInterval);
 
       this.event('closing').trigger(this);
+      const event = new DrupalDialogEvent('beforeclose', this, drupalSettings);
+      event.dispatchOn(this.$element.get(0));
       this.callCallback('onClosing');
 
       let transitionOut = this.get('transitionOut');
@@ -1350,7 +1378,8 @@ class ExoModal extends ExoData {
     }
 
     this.event('closed').trigger(this);
-    $(window).trigger('dialog:afterclose', [{}, this.$element]);
+    const event = new DrupalDialogEvent('afterclose', this, drupalSettings);
+    event.dispatchOn(this.$element.get(0));
     this.callCallback('onClosed');
     this.$element.removeClass('isOpen');
 
