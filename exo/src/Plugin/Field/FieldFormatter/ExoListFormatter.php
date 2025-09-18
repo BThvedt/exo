@@ -2,12 +2,13 @@
 
 namespace Drupal\exo\Plugin\Field\FieldFormatter;
 
-use Drupal\options\Plugin\Field\FieldFormatter\OptionsDefaultFormatter;
-use Drupal\Core\Field\Attribute\FieldFormatter;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\OptGroup;
+use Drupal\options\Plugin\Field\FieldFormatter\OptionsDefaultFormatter;
 
 /**
  * Plugin implementation of the 'string' formatter.
@@ -100,7 +101,7 @@ class ExoListFormatter extends OptionsDefaultFormatter {
           '#allowed_tags' => FieldFilteredMarkup::allowedTags(),
         ];
 
-        $elements[$delta]['#prefix'] = '<span class="field-item">' . $this->getSetting('prefix');
+        $elements[$delta]['#prefix'] = '<span class="field-item '. Html::getClass($output) .'">' . $this->getSetting('prefix');
         $elements[$delta]['#suffix'] = '</span>';
 
         if (!empty($this->getSetting('delimiter')) && $items->count() > 1 && count($elements) < 2) {
