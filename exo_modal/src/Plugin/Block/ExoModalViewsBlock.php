@@ -19,6 +19,13 @@ use Drupal\Component\Utility\NestedArray;
 class ExoModalViewsBlock extends ExoModalBlockBase {
 
   /**
+   * The view.
+   *
+   * @var \Drupal\views\ViewExecutable
+   */
+  protected $view;
+
+  /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
