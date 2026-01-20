@@ -121,6 +121,7 @@ class ExoAutocompleteElement extends FormElement {
           '#attributes' => [
             'class' => ['exo-autocomplete-value-field'],
           ],
+          '#maxlength' => NULL,
           '#default_value' => $default_value,
           '#prefix' => '<div class="exo-autocomplete-value-container">',
           '#suffix' => '</div>',
