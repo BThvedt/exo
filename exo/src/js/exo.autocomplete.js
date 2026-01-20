@@ -166,6 +166,16 @@
       lastXhr = $.getJSON(url, request, function (data, status, xhr) {
         cache[term] = data;
         if (xhr === lastXhr) {
+          // Filter already selected items from the response data.
+          if (typeof self.valueForm !== 'undefined') {
+            var currentValues = self.valueForm.val().split('"');
+            var dataArray = Object.entries(data);
+            var dataFiltered = dataArray.filter(function (entry) {
+              var value = entry[1];
+              return !currentValues.includes(value);
+            });
+            data = Object.fromEntries(dataFiltered);
+          }
           response(generateValues(data, term));
         }
       });
