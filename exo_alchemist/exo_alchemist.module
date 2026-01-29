@@ -762,7 +762,14 @@ function exo_alchemist_block_content_access(EntityInterface $entity, $operation,
   }
   // Defer to layout builder content access if we are not acting on an exo
   // component.
-  return layout_builder_block_content_access($entity, $operation, $account);
+  if (class_exists('\Drupal\layout_builder\Hook\LayoutBuilderHooks')) {
+    $hooks = new \Drupal\layout_builder\Hook\LayoutBuilderHooks();
+    return $hooks->blockContentAccess($entity, $operation, $account);
+  }
+  elseif (function_exists('layout_builder_block_content_access')) {
+    return layout_builder_block_content_access($entity, $operation, $account);
+  }
+  return AccessResult::neutral();
 }
 
 /**

@@ -362,7 +362,7 @@ class Sequence extends EntityReferenceBase {
     foreach ($items as $delta => $item) {
       $component->addParentFieldDelta($this->getFieldDefinition(), $delta);
       $entity = $item->entity;
-      if ($entity) {
+      if ($entity && $entity->id()) {
         $this->exoComponentManager()->getExoComponentFieldManager()->onPostSaveLayoutBuilderEntity($component, $entity, $parent_entity);
         // We need to save usage.
         /** @var \Drupal\layout_builder\InlineBlockUsage $inline_block_usage */

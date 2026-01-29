@@ -3,7 +3,6 @@
 namespace Drupal\exo_alchemist;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\layout_builder\Plugin\Block\InlineBlock;
@@ -14,6 +13,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\exo\Access\ExoRefinableDependentAccessTrait;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\SectionComponent;
@@ -22,7 +22,7 @@ use Drupal\layout_builder\SectionComponent;
  * The eXo component repository.
  */
 class ExoComponentRepository {
-  use RefinableDependentAccessTrait;
+  use ExoRefinableDependentAccessTrait;
 
   /**
    * Drupal\exo_alchemist\ExoComponentManager definition.

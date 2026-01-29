@@ -56,7 +56,7 @@ class ExoLinkWidget extends LinkWidget {
       '#description' => $this->t('The icon packages that should be made available in this field. If no packages are selected, all will be made available.'),
       '#options' => $this->getPackageOptions(),
       '#element_validate' => [
-        [get_class(), 'validatePackages'],
+        [get_class($this), 'validatePackages'],
       ],
       '#states' => [
         'visible' => [

@@ -3,10 +3,10 @@
 namespace Drupal\exo_alchemist\Controller;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
-use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
+use Drupal\exo\Access\ExoRefinableDependentAccessTrait;
 use Drupal\layout_builder\Plugin\Block\InlineBlock;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\layout_builder\Plugin\Block\InlineBlock;
  */
 trait ExoFieldParentsTrait {
 
-  use RefinableDependentAccessTrait;
+  use ExoRefinableDependentAccessTrait;
 
   /**
    * The entity type manager.

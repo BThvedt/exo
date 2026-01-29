@@ -111,7 +111,6 @@ class ExoLayoutBuilder extends LayoutBuilder {
       $build['#attributes']['class'][] = Html::getClass($entity->getEntityTypeId());
       $build['#attributes']['class'][] = Html::getClass($entity->bundle());
     }
-
     if ($this->isDefaultStorage($section_storage)) {
       $build[] = $this->buildFooterAddSectionLink($section_storage, count($section_storage));
     }

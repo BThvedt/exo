@@ -55,13 +55,6 @@ class ExoComponentGenerator {
   protected $exoComponentManager;
 
   /**
-   * The section storage manager.
-   *
-   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
-   */
-  protected $sectionStorageManager;
-
-  /**
    * The UUID generator service.
    *
    * @var \Drupal\Component\Uuid\UuidInterface
@@ -199,8 +192,14 @@ class ExoComponentGenerator {
         // it, we manually call layout_builder_entity_presave when appropriate.
         $this->handleEntityViewDisplayPreSave($entity);
       }
-      // Call core's presave.
-      layout_builder_entity_presave($entity);
+      if (class_exists('\Drupal\layout_builder\Hook\LayoutBuilderHooks')) {
+        $hooks = new \Drupal\layout_builder\Hook\LayoutBuilderHooks();
+        return $hooks->entityPresave($entity);
+      }
+      elseif (function_exists('layout_builder_entity_presave')) {
+        // Call core's presave.
+        layout_builder_entity_presave($entity);
+      }
 
       // We need to remove the block_revision_id so that it is not exported.
       // We will use the block_uuid to load the block.

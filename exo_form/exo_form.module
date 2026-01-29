@@ -484,23 +484,21 @@ function exo_form_theme_registry_alter(&$theme_registry) {
 /**
  * Implements hook_preprocess().
  */
-if (version_compare(\Drupal::VERSION, 9.4) <= 0) {
-  function exo_form_preprocess(&$variables, $hook, &$info) {
-    if ($hook == 'form_element' || $hook == 'fieldset') {
-      if (!exo_form_access()) {
-        return;
-      }
-      if (function_exists('drupal_get_path')) {
-        // Force form elements to use exo form template.
-        $info['theme path'] = \Drupal::service('extension.list.module')->getPath('exo_form');
-        $info['path'] = \Drupal::service('extension.list.module')->getPath('exo_form') . '/templates';
-      }
-      else {
-        $path_resolver = \Drupal::service('extension.path.resolver');
-        $info['theme path'] = $path_resolver->getPath('module', 'exo_form');
-        // Force form elements to use exo form template.
-        $info['path'] = $path_resolver->getPath('module', 'exo_form') . '/templates';
-      }
+function exo_form_preprocess(&$variables, $hook, &$info) {
+  if ($hook == 'form_element' || $hook == 'fieldset') {
+    if (!exo_form_access()) {
+      return;
+    }
+    if (function_exists('drupal_get_path')) {
+      // Force form elements to use exo form template.
+      $info['theme path'] = \Drupal::service('extension.list.module')->getPath('exo_form');
+      $info['path'] = \Drupal::service('extension.list.module')->getPath('exo_form') . '/templates';
+    }
+    else {
+      $path_resolver = \Drupal::service('extension.path.resolver');
+      $info['theme path'] = $path_resolver->getPath('module', 'exo_form');
+      // Force form elements to use exo form template.
+      $info['path'] = $path_resolver->getPath('module', 'exo_form') . '/templates';
     }
   }
 }

@@ -68,3 +68,11 @@ services:
   logger.channel.exo_alchemist:
     parent: logger.channel_base
     arguments: ['exo_alchemist']
+  exo_alchemist.controller.entity_form:
+    # Override the entity form controller to handle the entity layout_builder
+    # operation.
+    decorates: controller.entity_form
+    class: Drupal\exo_alchemist\Controller\ExoLayoutBuilderHtmlEntityFormController
+    public: false
+    arguments: ['@exo_alchemist.controller.entity_form.inner']
+  Drupal\exo_alchemist\Controller\LayoutBuilderHtmlEntityFormController: '@exo_alchemist.controller.entity_form'
