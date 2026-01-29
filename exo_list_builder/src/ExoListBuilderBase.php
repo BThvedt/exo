@@ -2994,7 +2994,7 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     $vars = parent::__sleep();
     $vars = array_combine($vars, $vars);
     // Query contains a database reference and needs to be ignored on sleep.
