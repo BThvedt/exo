@@ -136,7 +136,7 @@ class EntityQuery extends ExoComponentFieldComputedBase implements ContainerFact
     if (!empty($bundles)) {
       $type = $this->entityTypeManager->getDefinition($entity_type);
       $bundles_key = $type->getKey('bundle');
-      $query->condition($bundles_key, array_values($bundles));
+      $query->condition($bundles_key, array_values($bundles), 'IN');
     }
 
     if ($limit = $field->getAdditionalValue('query_limit')) {
