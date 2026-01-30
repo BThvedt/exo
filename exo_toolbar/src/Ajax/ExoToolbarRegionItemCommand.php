@@ -30,6 +30,13 @@ class ExoToolbarRegionItemCommand implements CommandInterface, CommandWithAttach
   protected $settings;
 
   /**
+   * The renderable content array.
+   *
+   * @var array
+   */
+  protected $content;
+
+  /**
    * Constructs an ExoToolbarRegionItemCommand object.
    *
    * @param \Drupal\exo_toolbar\Entity\ExoToolbarItemInterface $exo_toolbar_item
