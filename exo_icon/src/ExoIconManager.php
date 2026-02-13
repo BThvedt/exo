@@ -81,8 +81,9 @@ class ExoIconManager extends DefaultPluginManager implements ExoIconManagerInter
       throw new PluginException(sprintf('eXo Icon property (%s) definition "id" is required.', $plugin_id));
     }
 
+    // Core uses *.icons.yml convention, which has a different structure.
     if (empty($definition['icon'])) {
-      throw new PluginException(sprintf('eXo Icon property (%s) definition "icon" is required.', $plugin_id));
+      return;
     }
 
     if (!empty($definition['smart'])) {
