@@ -4,7 +4,7 @@ services:
     parent: default_plugin_manager
   exo_menu.link_tree:
     class: Drupal\exo_menu\ExoMenuLinkTree
-    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@callable_resolver']
+    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@?callable_resolver', '@?controller_resolver']
   exo_menu.settings:
     class: Drupal\exo_menu\ExoMenuSettings
     arguments: ['@config.factory', '@plugin.manager.exo_menu']

@@ -6,6 +6,10 @@ use Drupal\Core\Menu\MenuLinkTree;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Menu\MenuActiveTrailInterface;
+use Drupal\Core\Menu\MenuLinkManagerInterface;
+use Drupal\Core\Menu\MenuTreeStorageInterface;
 use Drupal\exo_icon\ExoIconIconize;
 use Drupal\system\Entity\Menu;
 
@@ -13,6 +17,16 @@ use Drupal\system\Entity\Menu;
  * Implements the loading, transforming and rendering of menu link trees.
  */
 class ExoMenuLinkTree extends MenuLinkTree {
+
+  /**
+   * {@inheritdoc}
+   *
+   * Accepts either @callable_resolver (Drupal 10+) or @controller_resolver
+   * (Drupal 9) so that this service works across Drupal 9, 10, and 11.
+   */
+  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, $callable_resolver = NULL, $controller_resolver = NULL) {
+    parent::__construct($tree_storage, $menu_link_manager, $route_provider, $menu_active_trail, $callable_resolver ?? $controller_resolver);
+  }
 
   /**
    * {@inheritdoc}
