@@ -114,7 +114,16 @@ class ExoFieldCloneController implements ContainerInjectionInterface {
           $clone_items = clone $items;
           $items->setValue(NULL);
           foreach ($clone_items as $item_delta => $item) {
-            $items->appendItem($item->getValue());
+            $value = $item->getValue();
+            // Preserve target_revision_id when copying so entity_reference_revisions
+            // constraint is satisfied (clone+remove can otherwise drop it).
+            if (!empty($value['target_id']) && empty($value['target_revision_id']) && !empty($value['entity'])) {
+              $ref = $value['entity'];
+              if ($ref instanceof \Drupal\Core\Entity\RevisionableInterface && $ref->getRevisionId()) {
+                $value['target_revision_id'] = $ref->getRevisionId();
+              }
+            }
+            $items->appendItem($value);
             if ($field_delta === $item_delta) {
               // Set new path.
               $updated_path = explode('.', $updated_path);
@@ -126,6 +135,7 @@ class ExoFieldCloneController implements ContainerInjectionInterface {
               if ($entity && $entity->getEntityTypeId() == ExoComponentManager::ENTITY_TYPE) {
                 $item_definition = $this->exoComponentManager->getEntityBundleComponentDefinition($entity->type->entity);
                 $value['target_id'] = NULL;
+                unset($value['target_revision_id']);
                 $value['entity'] = $this->exoComponentManager->cloneEntity($item_definition, $entity);
               }
               $items->appendItem($value);

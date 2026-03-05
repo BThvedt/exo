@@ -333,6 +333,27 @@ class Sequence extends EntityReferenceBase {
   public function onPreSaveLayoutBuilderEntity(FieldItemListInterface $items, EntityInterface $parent_entity) {
     parent::onPreSaveLayoutBuilderEntity($items, $parent_entity);
     $component = $this->getComponentDefinition();
+    $target_type = $items->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+    $storage = \Drupal::entityTypeManager()->getStorage($target_type);
+    // Ensure every item has target_revision_id when target_id is set, so
+    // EntityReferenceRevisionsItem::preSave() can load the entity and run.
+    foreach ($items as $delta => $item) {
+      if (!empty($item->target_id) && empty($item->target_revision_id)) {
+        $entity = $item->entity ?? $storage->load($item->target_id);
+        if ($entity && $entity instanceof RevisionableInterface) {
+          $revision_id = $entity->getRevisionId();
+          // If in-memory entity has no revision (e.g. setNewRevision() was called),
+          // load from storage so we never write NULL.
+          if (empty($revision_id) && $entity->id()) {
+            $loaded = $storage->load($entity->id());
+            $revision_id = $loaded ? $loaded->getRevisionId() : NULL;
+          }
+          if (!empty($revision_id)) {
+            $item->set('target_revision_id', $revision_id);
+          }
+        }
+      }
+    }
     foreach ($items as $delta => $item) {
       $component->addParentFieldDelta($this->getFieldDefinition(), $delta);
       $entity = $item->entity;
