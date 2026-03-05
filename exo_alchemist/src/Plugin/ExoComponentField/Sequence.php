@@ -186,9 +186,11 @@ class Sequence extends EntityReferenceBase {
           foreach ($child_definition->getFields() as $field) {
             $this->exoComponentManager()->onDraftUpdateLayoutBuilderEntity($child_definition, $item->entity);
           }
+          $revision_id = $item->entity->getRevisionId(); // if no revision id this is null
           $item->entity->enforceIsNew();
           $item->setValue([
             'target_id' => NULL,
+            'target_revision_id' => $revision_id,
             'entity' => $item->entity,
           ]);
         }
