@@ -4,11 +4,11 @@ namespace Drupal\exo_asset\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 
 /**
  * Provides a form for deleting a Asset revision.
@@ -27,7 +27,7 @@ class ExoAssetRevisionDeleteForm extends ConfirmFormBase {
   /**
    * The Asset storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\RevisionableStorageInterface
    */
   protected $exoAssetStorage;
 
@@ -48,14 +48,14 @@ class ExoAssetRevisionDeleteForm extends ConfirmFormBase {
   /**
    * Constructs a new ExoAssetRevisionDeleteForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
+   * @param \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage
    *   The entity storage.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(EntityStorageInterface $entity_storage, Connection $connection, DateFormatterInterface $date_formatter) {
+  public function __construct(RevisionableStorageInterface $entity_storage, Connection $connection, DateFormatterInterface $date_formatter) {
     $this->exoAssetStorage = $entity_storage;
     $this->connection = $connection;
     $this->dateFormatter = $date_formatter;

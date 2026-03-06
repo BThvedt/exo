@@ -263,13 +263,17 @@ class ExoAsset extends RevisionableContentEntityBase implements ExoAssetInterfac
   /**
    * {@inheritdoc}
    */
-  public function getCollectionLabel() {
-    if (empty($this->label_collection)) {
-      $label = $this->getLabel();
-      $this->label_collection = new TranslatableMarkup('@label entities!', ['@label' => $label], [], $this->getStringTranslation());
-    }
-    return $this->label_collection;
-  }
+  // this appears to be a method that is for an Entity Type, while ExoAsset is an Entity instance?
+  // regardless, it was throwing warnings of calling undefined methods (getLabel, getStringTranslation)
+  // as well as TranslatableMarkup is not defined either .. but I don't think it gets called so 
+  // maybe can be safely removed?
+  // public function getCollectionLabel() {
+  //   if (empty($this->label_collection)) {
+  //     $label = $this->getLabel();
+  //     $this->label_collection = new TranslatableMarkup('@label entities!', ['@label' => $label], [], $this->getStringTranslation());
+  //   }
+  //   return $this->label_collection;
+  // }
 
   /**
    * {@inheritdoc}

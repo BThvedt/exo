@@ -68,6 +68,7 @@ class ExoAssetForm extends ContentEntityForm {
         ]));
     }
     $form_state->setRedirect('entity.exo_asset.collection');
+    return $status;
   }
 
 }

@@ -19,6 +19,7 @@ use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceSelectionTrait;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldConfigInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
@@ -88,6 +89,13 @@ class ExoAsset extends EntityReferenceFormatterBase implements ContainerFactoryP
   protected $entityFieldManager;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * An array of counters for the recursive rendering protection.
    *
    * Each counter takes into account all the relevant information about the
@@ -126,14 +134,17 @@ class ExoAsset extends EntityReferenceFormatterBase implements ContainerFactoryP
    *   The module handler.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManager $field_type_manager, FormatterPluginManager $field_formatter_manager, ModuleHandlerInterface $module_handler, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManager $field_type_manager, FormatterPluginManager $field_formatter_manager, ModuleHandlerInterface $module_handler, EntityFieldManagerInterface $entity_field_manager, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypeManager = $field_type_manager;
     $this->fieldFormatterManager = $field_formatter_manager;
     $this->moduleHandler = $module_handler;
     $this->entityFieldManager = $entity_field_manager;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -152,7 +163,8 @@ class ExoAsset extends EntityReferenceFormatterBase implements ContainerFactoryP
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.formatter'),
       $container->get('module_handler'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('logger.factory')
     );
   }
 

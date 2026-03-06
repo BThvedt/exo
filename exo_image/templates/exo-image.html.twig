@@ -18,11 +18,9 @@
 {{ attach_library('exo_image/base') }}
 <{{ tag }} {{ attributes }} data-exo-image="{{ data|json_encode }}">
   {% if url %}
-    {% apply spaceless %}
     <a href="{{ url }}">
       <img {{ image_attributes }}/>
     </a>
-    {% endapply %}
   {% else %}
     <img {{ image_attributes }}/>
   {% endif %}
