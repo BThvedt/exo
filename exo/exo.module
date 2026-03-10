@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoAttributeColorStyleFormatter;
+use Drupal\filter\Render\FilteredMarkup;
 
 /**
  * Implements hook_element_info_alter().
