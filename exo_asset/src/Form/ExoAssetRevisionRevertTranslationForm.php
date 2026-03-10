@@ -94,7 +94,7 @@ class ExoAssetRevisionRevertTranslationForm extends ExoAssetRevisionRevertForm {
     $revert_untranslated_fields = $form_state->getValue('revert_untranslated_fields');
 
     /** @var \Drupal\exo_asset\Entity\ExoAssetInterface $default_revision */
-    $latest_revision = $this->ExoAssetStorage->load($revision->id());
+    $latest_revision = $this->exoAssetStorage->load($revision->id());
     $latest_revision_translation = $latest_revision->getTranslation($this->langcode);
 
     $revision_translation = $revision->getTranslation($this->langcode);

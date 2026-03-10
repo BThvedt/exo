@@ -3,12 +3,12 @@
 namespace Drupal\exo_asset\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\exo_asset\Entity\ExoAssetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 
 /**
  * Provides a form for reverting a Asset revision.
@@ -27,7 +27,7 @@ class ExoAssetRevisionRevertForm extends ConfirmFormBase {
   /**
    * The Asset storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\RevisionableStorageInterface
    */
   protected $exoAssetStorage;
 
@@ -41,12 +41,12 @@ class ExoAssetRevisionRevertForm extends ConfirmFormBase {
   /**
    * Constructs a new ExoAssetRevisionRevertForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
+   * @param \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage
    *   The Asset storage.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(EntityStorageInterface $entity_storage, DateFormatterInterface $date_formatter) {
+  public function __construct(RevisionableStorageInterface $entity_storage, DateFormatterInterface $date_formatter) {
     $this->exoAssetStorage = $entity_storage;
     $this->dateFormatter = $date_formatter;
   }

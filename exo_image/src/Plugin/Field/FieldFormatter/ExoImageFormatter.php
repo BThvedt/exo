@@ -15,13 +15,14 @@ use Drupal\exo_image\ExoImageStyleManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\exo\ExoSettingsInterface;
 use Drupal\Core\Form\SubformState;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\Render\Markup;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceSelectionTrait;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceLinkTrait;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Plugin implementation of the 'eXo Image' formatter.
@@ -62,7 +63,7 @@ class ExoImageFormatter extends ImageFormatter {
   /**
    * The MIME type guesser.
    *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
    */
   protected $mimeTypeGuesser;
 
@@ -101,16 +102,18 @@ class ExoImageFormatter extends ImageFormatter {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
    *   The image style storage.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file url generator.
    * @param \Drupal\exo\ExoSettingsInterface $exo_image_settings
    *   The exo image settings.
    * @param \Drupal\exo_image\ExoImageStyleManagerInterface $exo_image_style_manager
    *   The exo image stype manager.
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type guesser.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, ExoSettingsInterface $exo_image_settings, ExoImageStyleManagerInterface $exo_image_style_manager, MimeTypeGuesserInterface $mime_type_guesser, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator, ExoSettingsInterface $exo_image_settings, ExoImageStyleManagerInterface $exo_image_style_manager, MimeTypeGuesserInterface $mime_type_guesser, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage);
     $this->exoImageSettings = $exo_image_settings;
     $this->exoImageStyleManager = $exo_image_style_manager;
@@ -132,6 +135,7 @@ class ExoImageFormatter extends ImageFormatter {
       $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('entity_type.manager')->getStorage('image_style'),
+      $container->get('file_url_generator'),
       $container->get('exo_image.settings'),
       $container->get('exo_image.style.manager'),
       $container->get('file.mime_type.guesser'),
@@ -356,7 +360,7 @@ class ExoImageFormatter extends ImageFormatter {
                     $image_style_uri = $webp_uri;
                   }
                 }
-                $mime_type = $this->mimeTypeGuesser->guess($image_style_uri);
+                $mime_type = $this->mimeTypeGuesser->guessMimeType($image_style_uri) ?? 'application/octet-stream';
                 if (file_exists($image_style_uri)) {
                   $preview_src = 'data:' . $mime_type . ';base64,' . base64_encode(file_get_contents($image_style_uri));
                   [$preview_width, $preview_height] = getimagesize($image_style_uri);

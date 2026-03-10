@@ -20,11 +20,9 @@
 {{ attach_library('drimage/drimage') }}
 <{{ tag }} {{ item_attributes }} data-drimage="{{ data|json_encode }}">
     {% if url %}
-        {% apply spaceless %}
         <a href="{{ url }}">
             <img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='{{ width }}' height='{{ height }}' viewBox='0 0 {{ width }} {{ height }}' %3E%3C/svg%3E" width="{{ width }}" height="{{ height }}" alt="{{ alt }}">
         </a>
-        {% endapply %}
     {% else %}
         <img src="data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='{{ width }}' height='{{ height }}' viewBox='0 0 {{ width }} {{ height }}' %3E%3C/svg%3E" width="{{ width }}" height="{{ height }}" alt="{{ alt }}">
     {% endif %}

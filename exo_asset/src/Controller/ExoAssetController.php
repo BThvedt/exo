@@ -10,6 +10,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\exo_asset\Entity\ExoAssetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 
 /**
  * Class ExoAssetController.
@@ -54,7 +55,10 @@ class ExoAssetController extends ControllerBase implements ContainerInjectionInt
    *   An array suitable for drupal_render().
    */
   public function revisionShow($exo_asset_revision) {
-    $exo_asset = $this->entityTypeManager()->getStorage('exo_asset')->loadRevision($exo_asset_revision);
+    // I guess the $storage variable needs to be typed or I get warnings with upgrade status
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage('exo_asset');
+    $exo_asset = $storage->loadRevision($exo_asset_revision);
     $view_builder = $this->entityTypeManager()->getViewBuilder('exo_asset');
     return $view_builder->view($exo_asset);
   }
@@ -69,7 +73,9 @@ class ExoAssetController extends ControllerBase implements ContainerInjectionInt
    *   The page title.
    */
   public function revisionPageTitle($exo_asset_revision) {
-    $exo_asset = $this->entityTypeManager()->getStorage('exo_asset')->loadRevision($exo_asset_revision);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage('exo_asset');
+    $exo_asset = $storage->loadRevision($exo_asset_revision);
     return $this->t('Revision of %title from %date', ['%title' => $exo_asset->label(), '%date' => $this->dateFormatter->format($exo_asset->getRevisionCreationTime())]);
   }
 
@@ -88,6 +94,8 @@ class ExoAssetController extends ControllerBase implements ContainerInjectionInt
     $langname = $exo_asset->language()->getName();
     $languages = $exo_asset->getTranslationLanguages();
     $has_translations = (count($languages) > 1);
+
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $exo_asset_storage */
     $exo_asset_storage = $this->entityTypeManager()->getStorage('exo_asset');
 
     $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $exo_asset->label()]) : $this->t('Revisions for %title', ['%title' => $exo_asset->label()]);

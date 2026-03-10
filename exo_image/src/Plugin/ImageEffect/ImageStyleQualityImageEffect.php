@@ -55,6 +55,7 @@ class ImageStyleQualityImageEffect extends ConfigurableImageEffectBase {
     $this->gdConfig->setModuleOverride([
       'jpeg_quality' => $quality,
     ]);
+    return TRUE;
   }
 
   /**

@@ -1,7 +1,7 @@
 name: 'eXo Entity Browser'
 type: module
 description: 'Provides entity browser enhancements.'
-core_version_requirement: ^8.8 || ^9 || ^10
+core_version_requirement: ^8.8 || ^9 || ^10 || ^11
 package: 'eXo'
 dependencies:
   - exo_modal

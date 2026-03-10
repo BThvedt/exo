@@ -2,7 +2,7 @@ name: 'eXo Paragraphs'
 type: module
 description: 'Provides paragraphs enhancements.'
 package: 'eXo'
-core_version_requirement: ^8.8 || ^9 || ^10
+core_version_requirement: ^8.8 || ^9 || ^10 || ^11
 dependencies:
   - exo
   - paragraphs

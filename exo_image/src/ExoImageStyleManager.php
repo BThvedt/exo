@@ -9,6 +9,7 @@ use Drupal\exo_icon\ExoIconTranslationTrait;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\exo\ExoSettingsInterface;
 use Drupal\Core\Image\ImageFactory;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 /**
  * Class ExoImageStyleManager.
@@ -52,14 +53,22 @@ class ExoImageStyleManager implements ExoImageStyleManagerInterface {
   protected $exoSettings;
 
   /**
+   * Drupal\Core\Logger\LoggerChannelFactoryInterface defintion
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructs a new ExoImageStyleManager object.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, ImageFactory $imageFactory, ImageEffectManager $plugin_manager_image_effect, ExoSettingsInterface $exo_settings) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, ImageFactory $imageFactory, ImageEffectManager $plugin_manager_image_effect, ExoSettingsInterface $exo_settings, LoggerChannelFactoryInterface $logger_factory) {
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->imageFactory = $imageFactory;
     $this->pluginManagerImageEffect = $plugin_manager_image_effect;
     $this->exoSettings = $exo_settings;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -297,7 +306,7 @@ class ExoImageStyleManager implements ExoImageStyleManagerInterface {
       usleep(rand(10000, 50000));
       $image_style = $image_style_storage->load($name);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       return NULL;
     }
     return $image_style;
@@ -348,7 +357,7 @@ class ExoImageStyleManager implements ExoImageStyleManagerInterface {
       $sourceImage = $this->imageFactory->get($uri, 'gd');
       /** @var \Drupal\system\Plugin\ImageToolkit\GDToolkit $toolkit */
       $toolkit = $sourceImage->getToolkit();
-      $sourceImage = $toolkit->getResource();
+      $sourceImage = $toolkit->getImage();
 
       // If we can generate a GD resource from the source image, generate the URI
       // of the WebP copy and try to create it.
@@ -368,7 +377,7 @@ class ExoImageStyleManager implements ExoImageStyleManagerInterface {
         }
         else {
           $error = $this->t('Could not generate WebP image.');
-          $this->logger->error($error);
+          $this->loggerFactory->get('exo_image')->error($error);
         }
       }
     }
