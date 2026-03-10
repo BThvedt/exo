@@ -456,3 +456,47 @@ function exo_string_transform($text, $remove = FALSE, $wrap = FALSE) {
   }
   return $text;
 }
+
+/**
+ * Backwards support for old habbits.
+ */
+if (!function_exists('ksm') && class_exists('Kint')) {
+
+  /**
+   * Prints passed argument(s) to the 'message' area of the page.
+   *
+   * Wrapper for DevelDumperManager::message().
+   *
+   * @see \Drupal\devel\DevelDumperManager::message()
+   */
+  function ksm(mixed ...$args): void {
+    ob_start();
+    call_user_func_array(['Kint', 'dump'], $args);
+    $dump = ob_get_clean();
+    \Drupal::messenger()->addMessage(FilteredMarkup::create($dump), 'status', TRUE);
+  }
+
+  Kint::$aliases[] = 'ksm';
+
+}
+
+/**
+ * Backwards support for old habbits.
+ */
+if (!function_exists('kint') && class_exists('Kint')) {
+
+  /**
+   * Prints passed argument(s) to the 'message' area of the page.
+   *
+   * Wrapper for DevelDumperManager::message().
+   *
+   * @see \Drupal\devel\DevelDumperManager::message()
+   */
+  function kint(mixed ...$args): void {
+    ob_start();
+    Kint::dump(...$args);
+  }
+
+  Kint::$aliases[] = 'kint';
+
+}
