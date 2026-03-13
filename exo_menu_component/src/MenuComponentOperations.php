@@ -114,6 +114,12 @@ class MenuComponentOperations implements ContainerInjectionInterface {
     if (!$menu_component_id) {
       return;
     }
+    if (is_array($menu_component_id)) {
+      $menu_component_id = reset($menu_component_id);
+      if (!$menu_component_id) {
+        return;
+      }
+    }
     $menu_component = $this->menuComponentManager->getMenuComponent($menu_component_id);
     if (!$menu_component || !isset($allowed_types[$menu_component->bundle()])) {
       return;
