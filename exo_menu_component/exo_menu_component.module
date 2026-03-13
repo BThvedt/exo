@@ -91,8 +91,14 @@ function exo_menu_component_form_menu_link_content_form_alter(&$form, FormStateI
  */
 function exo_menu_component_menu_link_content_delete(MenuLinkContentInterface $menu_link) {
   $menu_link_options = $menu_link->link->first()->options;
-  if (isset($menu_link_options['attributes']['data-exo-menu-component'])) {
-    $exo_menu_component = \Drupal::entityTypeManager()->getStorage('exo_menu_component')->load($menu_link_options['attributes']['data-exo-menu-component']);
-    $exo_menu_component->delete();
+  $menu_component_id = $menu_link_options['attributes']['data-exo-menu-component'] ?? NULL;
+  if (is_array($menu_component_id)) {
+    $menu_component_id = reset($menu_component_id);
+  }
+  if ($menu_component_id) {
+    $exo_menu_component = \Drupal::entityTypeManager()->getStorage('exo_menu_component')->load($menu_component_id);
+    if ($exo_menu_component) {
+      $exo_menu_component->delete();
+    }
   }
 }
