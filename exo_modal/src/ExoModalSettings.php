@@ -99,7 +99,7 @@ class ExoModalSettings extends ExoSettingsBase {
     $form['modal']['header'] = [
       '#type' => 'details',
       '#title' => $this->t('Header'),
-      '#process' => [[get_class(), 'processParents']],
+      '#process' => [[static::class, 'processParents']],
     ];
 
     $form['modal']['header']['title'] = [
@@ -138,7 +138,7 @@ class ExoModalSettings extends ExoSettingsBase {
     $form['modal']['footer'] = [
       '#type' => 'details',
       '#title' => $this->t('Footer'),
-      '#process' => [[get_class(), 'processParents']],
+      '#process' => [[static::class, 'processParents']],
     ];
 
     $form['modal']['footer']['smartActions'] = [
@@ -152,7 +152,7 @@ class ExoModalSettings extends ExoSettingsBase {
     $form['modal']['position'] = [
       '#type' => 'details',
       '#title' => $this->t('Position and Fullscreen'),
-      '#process' => [[get_class(), 'processParents']],
+      '#process' => [[static::class, 'processParents']],
     ];
 
     foreach (['top', 'bottom', 'left', 'right'] as $position) {
@@ -199,7 +199,7 @@ class ExoModalSettings extends ExoSettingsBase {
     $form['modal']['features'] = [
       '#type' => 'details',
       '#title' => $this->t('Features'),
-      '#process' => [[get_class(), 'processParents']],
+      '#process' => [[static::class, 'processParents']],
     ];
 
     $form['modal']['features']['focusInput'] = [
@@ -261,7 +261,7 @@ class ExoModalSettings extends ExoSettingsBase {
     $form['modal']['transition'] = [
       '#type' => 'details',
       '#title' => $this->t('Transitions'),
-      '#process' => [[get_class(), 'processParents']],
+      '#process' => [[static::class, 'processParents']],
     ];
 
     $form['modal']['transition']['transitionIn'] = [
@@ -300,7 +300,7 @@ class ExoModalSettings extends ExoSettingsBase {
     $form['modal']['timeout'] = [
       '#type' => 'details',
       '#title' => $this->t('Auto-open and Timeout'),
-      '#process' => [[get_class(), 'processParents']],
+      '#process' => [[static::class, 'processParents']],
     ];
 
     $form['modal']['timeout']['autoOpen'] = [
