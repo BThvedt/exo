@@ -482,9 +482,11 @@ if (!function_exists('ksm') && class_exists('Kint')) {
 }
 
 /**
- * Backwards support for old habbits.
+ * Backwards support for old habits.
+ *
+ * Only define if drupal/kint-kint is not installed.
  */
-if (!function_exists('kint') && class_exists('Kint')) {
+if (!function_exists('kint') && class_exists('Kint') && !class_exists('Drupal\kint\HelperManager')) {
 
   /**
    * Prints passed argument(s) to the 'message' area of the page.
