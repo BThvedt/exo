@@ -39,6 +39,9 @@ exo_list_builder.exo_entity_list.*:
     limit_options:
       type: sequence
       label: 'Limit Options'
+      sequence:
+        type: string
+        label: 'Limit option'
     offset:
       type: integer
       label: 'Offset'
@@ -49,7 +52,7 @@ exo_list_builder.exo_entity_list.*:
         type: mapping
         mapping:
           settings:
-            type: mapping
+            type: ignore
     sorts:
       type: sequence
       label: Sorts
@@ -57,7 +60,7 @@ exo_list_builder.exo_entity_list.*:
         type: mapping
         mapping:
           settings:
-            type: mapping
+            type: ignore
     sort:
       type: string
       label: Default sort field
@@ -89,7 +92,8 @@ exo_list_builder.exo_entity_list.*:
                 type: string
                 label: 'Element Type'
               settings:
-                type: mapping
+                type: ignore
+                label: 'Element settings'
               toggle:
                 type: boolean
                 label: 'Toggleable'
@@ -99,6 +103,33 @@ exo_list_builder.exo_entity_list.*:
               wrapper:
                 type: string
                 label: 'Wrapper'
+              sort:
+                type: string
+                label: 'Sort'
+              sort_asc_label:
+                type: string
+                label: 'Sort ascending label'
+              sort_desc_label:
+                type: string
+                label: 'Sort descending label'
+              sort_natsort:
+                type: boolean
+                label: 'Natural sort'
+              sort_secondary:
+                type: boolean
+                label: 'Secondary sort'
+              align:
+                type: string
+                label: 'Alignment'
+              size:
+                type: string
+                label: 'Size'
+              group_by:
+                type: boolean
+                label: 'Group by'
+              group_by_sort:
+                type: string
+                label: 'Group by sort'
           filter:
             type: mapping
             mapping:
@@ -106,12 +137,87 @@ exo_list_builder.exo_entity_list.*:
                 type: string
                 label: 'Filter Type'
               settings:
-                type: mapping
+                type: ignore
+                label: 'Filter settings'
           weight:
             type: integer
             label: 'Weight'
     settings:
       type: mapping
+      label: 'Settings'
+      mapping:
+        list_link:
+          type: integer
+          label: 'List link'
+        limit_status:
+          type: integer
+          label: 'Limit status'
+        pagerer_header:
+          type: string
+          label: 'Pager header'
+        pagerer_footer:
+          type: string
+          label: 'Pager footer'
+        remember_limit:
+          type: integer
+          label: 'Remember limit'
+        node_access_op:
+          type: string
+          label: 'Node access operation'
+        render_status:
+          type: integer
+          label: 'Render status'
+        operations_status:
+          type: integer
+          label: 'Operations status'
+        result_status:
+          type: integer
+          label: 'Result status'
+        sort_status:
+          type: integer
+          label: 'Sort status'
+        filter_status:
+          type: integer
+          label: 'Filter status'
+        filter_overview_status:
+          type: integer
+          label: 'Filter overview status'
+        block_status:
+          type: integer
+          label: 'Block status'
+        first_page_only_status:
+          type: integer
+          label: 'First page only status'
+        hide_no_results:
+          type: integer
+          label: 'Hide no results'
+        disable_url_encoding:
+          type: integer
+          label: 'Disable URL encoding'
+        cache_status:
+          type: integer
+          label: 'Cache status'
+        autosubmit:
+          type: integer
+          label: 'Autosubmit'
+        autosubmit_hide:
+          type: integer
+          label: 'Autosubmit hide'
+        item_wrapper_status:
+          type: integer
+          label: 'Item wrapper status'
+        expose_filter_values_to_data_layer:
+          type: integer
+          label: 'Expose filter values to data layer'
+        submit_label:
+          type: string
+          label: 'Submit label'
+        empty_message:
+          type: string
+          label: 'Empty message'
+        empty_filter_message:
+          type: string
+          label: 'Empty filter message'
     weight:
       type: integer
       label: 'Weight'
