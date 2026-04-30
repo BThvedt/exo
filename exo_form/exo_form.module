@@ -915,6 +915,7 @@ function exo_form_library_info_alter(&$libraries, $extension) {
     case 'gin':
     case 'classy':
     case 'core':
+    case 'claro':
     case 'blazy':
     case 'slick_ui':
     case 'views_ui':
