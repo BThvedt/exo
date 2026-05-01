@@ -961,6 +961,23 @@ function exo_form_library_info_alter(&$libraries, $extension) {
               if (strpos($filepath, '/dropbutton.component.css') !== FALSE) {
                 unset($libraries[$library]['css'][$type][$filepath]);
               }
+              if (strpos($filepath, '/dropbutton.css') !== FALSE) {
+                unset($libraries[$library]['css'][$type][$filepath]);
+              }
+              if ($extension === 'claro') {
+                if (strpos($filepath, '/form--managed-file.css') !== FALSE) {
+                  unset($libraries[$library]['css'][$type][$filepath]);
+                }
+                if (strpos($filepath, '/file.css') !== FALSE) {
+                  unset($libraries[$library]['css'][$type][$filepath]);
+                }
+                if (strpos($filepath, '/form--text.css') !== FALSE) {
+                  unset($libraries[$library]['css'][$type][$filepath]);
+                }
+                if (strpos($filepath, '/tables.css') !== FALSE) {
+                  unset($libraries[$library]['css'][$type][$filepath]);
+                }
+              }
             }
           }
         }
