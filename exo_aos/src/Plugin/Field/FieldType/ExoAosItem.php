@@ -13,7 +13,7 @@ use Drupal\Core\TypedData\MapDataDefinition;
  *   id = "exo_aos",
  *   label = @Translation("eXo Animate on Scroll"),
  *   description = @Translation("A field used to add AOS attributes to entity wrappers."),
- *   category = @Translation("eXo"),
+ *   category = "eXo",
  *   list_class = "\Drupal\Core\Field\MapFieldItemList",
  *   default_widget = "exo_aos",
  *   default_formatter = "exo_aos"

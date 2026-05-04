@@ -1,0 +1,4 @@
+reverse_reference:
+  label: 'Reverse Reference'
+  description: 'Fields that reference entities in reverse.'
+  weight: 10

@@ -11,7 +11,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
  *   id = "exo_attribute",
  *   label = @Translation("eXo Attribute"),
  *   description = @Translation("A field used to add attributes to entity wrappers."),
- *   category = @Translation("eXo"),
+ *   category = "eXo",
  *   default_widget = "exo_theme_color",
  *   default_formatter = "exo_attribute_class"
  * )
