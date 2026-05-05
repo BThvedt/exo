@@ -19,6 +19,10 @@
     height: math.div($button-height, 1.5);
     line-height: math.div($button-height, 1.5);
 
+    &:hover {
+      z-index: 20;
+    }
+
     .dropbutton-widget {
       position: inherit;
 
