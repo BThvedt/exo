@@ -47,4 +47,27 @@
     }
   }
 
+  /**
+   * Ajax command to open URL in a modal dialog.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
+   * @param {object} response
+   *   The Ajax response.
+   */
+  Drupal.AjaxCommands.prototype.openModalDialogWithUrl = function (
+    ajax,
+    response,
+  ) {
+    const dialogOptions = response.dialogOptions || {};
+    const elementSettings = {
+      progress: { type: 'throbber' },
+      dialogType: 'modal',
+      dialog: dialogOptions,
+      url: response.url,
+      httpMethod: 'GET',
+    };
+    Drupal.ajax(elementSettings).execute();
+  };
+
 })(jQuery, Drupal);

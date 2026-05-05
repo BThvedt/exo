@@ -43,6 +43,20 @@ function exo_is_admin() {
 }
 
 /**
+ * Check if we are using claro theme.
+ *
+ * @return bool
+ *   Returns TRUE if we are using claro theme.
+ */
+function exo_is_claro() {
+  $is_claro = &drupal_static(__FUNCTION__);
+  if (!isset($is_claro)) {
+    $is_claro = \Drupal::service('theme.manager')->getActiveTheme()->getName() === 'claro';
+  }
+  return $is_claro;
+}
+
+/**
  * Implements hook_theme().
  */
 function exo_theme($existing, $type, $theme, $path) {

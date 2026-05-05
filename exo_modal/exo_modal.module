@@ -153,7 +153,9 @@ function exo_modal_ajax_render_alter(array &$data) {
     if ($item['command'] === 'openDialog') {
       $id = Html::getUniqueId($data[$key]['selector']);
       $dialog_options = $data[$key]['dialogOptions'] ?? [];
-      $options = [];
+      $options = [
+        'width' => 1000,
+      ];
       $command = new ExoModalOpenCommand($id, Markup::create($data[$key]['data']), $options);
       $modal = $command->getModal();
       $set_padding = TRUE;
@@ -166,9 +168,12 @@ function exo_modal_ajax_render_alter(array &$data) {
       foreach ($dialog_options as $k => $val) {
         switch ($k) {
           case 'modal':
-            $modal->setSetting(['modal', 'nest'], $val);
+            $modal->setSetting(['modal', 'nest'], FALSE);
             $modal->setSetting(['modal', 'overlay'], $val);
             $modal->setSetting(['modal', 'bodyOverflow'], $val);
+            if (!$modal->getSetting(['modal', 'width'])) {
+              $modal->setSetting(['modal', 'width'], 1100);
+            }
             break;
 
           case 'title':

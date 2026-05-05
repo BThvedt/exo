@@ -35,6 +35,9 @@ function exo_form_theme() {
  *   Returns TRUE if eXo Form should be used.
  */
 function exo_form_access() {
+  if (exo_is_claro()) {
+    return FALSE;
+  }
   $status = &drupal_static(__FUNCTION__);
   if (!isset($status)) {
     $route_name = \Drupal::routeMatch()->getRouteName();
@@ -208,6 +211,9 @@ function exo_form_preprocess_exo_icon_browser(&$variables) {
  * our defaults are not loaded. As a result, they are added back here.
  */
 function exo_form_form_alter_process(&$element) {
+  if (!exo_form_access()) {
+    return $element;
+  }
   if (isset($element['#type']) && $element['#type'] !== 'form') {
     if (isset($element['#exo_theme'])) {
       $theme = !empty($element['#exo_theme']) ? $element['#exo_theme'] : NULL;
@@ -440,6 +446,9 @@ function exo_form_preprocess_region__content(&$variables) {
  * Implements hook_theme_registry_alter().
  */
 function exo_form_theme_registry_alter(&$theme_registry) {
+  if (!exo_form_access()) {
+    return;
+  }
   if (function_exists('drupal_get_path')) {
     $module_path = \Drupal::service('extension.list.module')->getPath('exo_form');
   }
@@ -915,7 +924,7 @@ function exo_form_library_info_alter(&$libraries, $extension) {
     case 'gin':
     case 'classy':
     case 'core':
-    case 'claro':
+    // case 'claro':
     case 'blazy':
     case 'slick_ui':
     case 'views_ui':
