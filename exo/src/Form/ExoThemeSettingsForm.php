@@ -2,9 +2,10 @@
 
 namespace Drupal\exo\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\exo\ExoThemePluginManagerInterface;
@@ -49,11 +50,12 @@ class ExoThemeSettingsForm extends ConfigFormBase {
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typed_config_manager,
     ThemeHandlerInterface $theme_handler,
     ExoThemePluginManagerInterface $exo_theme_manager,
     ExoThemeProviderPluginManagerInterface $exo_theme_provider_manager,
   ) {
-    parent::__construct($config_factory);
+    parent::__construct($config_factory, $typed_config_manager);
     $this->themeHandler = $theme_handler;
     $this->exoThemeManager = $exo_theme_manager;
     $this->exoThemeProviderManager = $exo_theme_provider_manager;
@@ -65,6 +67,7 @@ class ExoThemeSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('theme_handler'),
       $container->get('plugin.manager.exo_theme'),
       $container->get('plugin.manager.exo_theme_provider')

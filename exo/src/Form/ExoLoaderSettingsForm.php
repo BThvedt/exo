@@ -4,6 +4,7 @@ namespace Drupal\exo\Form;
 
 use Drupal\exo\Plugin\ExoThrobberManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,8 +31,8 @@ class ExoLoaderSettingsForm extends ConfigFormBase {
    * @param \Drupal\exo\Plugin\ExoThrobberManagerInterface $throbber_manager
    *   The throbber manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ExoThrobberManagerInterface $throbber_manager) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, ExoThrobberManagerInterface $throbber_manager) {
+    parent::__construct($config_factory, $typed_config_manager);
     $this->throbberManager = $throbber_manager;
   }
 
@@ -46,6 +47,7 @@ class ExoLoaderSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('exo.throbber.manager')
     );
   }
