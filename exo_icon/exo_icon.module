@@ -82,7 +82,7 @@ function exo_icon_page_attachments(array &$attachments) {
           'rel' => 'preload',
           'href' =>  	\Drupal::service('file_url_generator')->generateString($exo_icon_package->getPath() . '/fonts/icon-' . $exo_icon_package->id() . '.ttf'),
           'as' => 'font',
-          'type' => 'font/tff',
+          'type' => 'font/ttf',
           'crossorigin' => TRUE,
         ],
       ],
