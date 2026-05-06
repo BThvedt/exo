@@ -166,6 +166,13 @@ class ExoModal extends ExoData {
   protected $contentPlaceholder:JQuery;
   protected $sectionHeader:JQuery;
   protected $sectionFooter:JQuery;
+  // The element that had keyboard focus immediately before the dialog
+  // opened, so focus can be returned there when the dialog closes
+  // (W3C ARIA Dialog (Modal) pattern).
+  protected returnFocusEl:HTMLElement = null;
+  // Keydown handler that traps Tab / Shift+Tab inside the dialog while
+  // it is open, installed on `opened()` and torn down on `closed()`.
+  protected focusTrapHandler:(e:KeyboardEvent) => void = null;
 
   public build(data):Promise<ExoSettingsGroupInterface> {
     return new Promise((resolve, reject) => {
@@ -306,8 +313,23 @@ class ExoModal extends ExoData {
       this.$overlay = $('<div class="' + this.name + '-overlay" style="background-color:' + this.get('overlayColor') + '"></div>');
       this.$navigate = $('<div class="' + this.name + '-navigate"><div class="' + this.name + '-navigate-caption">Use</div><button class="' + this.name + '-navigate-prev"></button><button class="' + this.name + '-navigate-next"></button></div>');
       this.$element.attr('aria-hidden', 'true');
-      this.$element.attr('aria-labelledby', this.getId());
       this.$element.attr('role', 'dialog');
+      // W3C ARIA Dialog (Modal) pattern: aria-labelledby must reference
+      // the visible dialog heading, not the dialog's own id. We set this
+      // here as a safe initial value and refine it in opened() once the
+      // header is rendered.
+      const $headerTitle = this.$element.find('.exo-modal-header-title').first();
+      if ($headerTitle.length) {
+        let titleId = $headerTitle.attr('id');
+        if (!titleId) {
+          titleId = this.getId() + '-title';
+          $headerTitle.attr('id', titleId);
+        }
+        this.$element.attr('aria-labelledby', titleId);
+      }
+      else {
+        this.$element.attr('aria-labelledby', this.getId());
+      }
 
       this.$content = this.$element.find('.' + this.name + '-content').first();
       this.$sectionHeader = this.$element.find('.' + this.name + '-section-header');
@@ -946,6 +968,20 @@ class ExoModal extends ExoData {
   public open(param?:any) {
     if (this.state == this.states.CLOSED) {
       this.debug('log', 'Open', '[' + this.getId() + ']', this.getData());
+      // Remember the element that had focus before the dialog opened so
+      // it can be restored when the dialog closes (W3C ARIA Dialog
+      // (Modal) pattern). Captured here, before any code in this flow
+      // shifts focus into the dialog.
+      const activeBeforeOpen = (typeof document !== 'undefined') ? document.activeElement : null;
+      if (activeBeforeOpen && activeBeforeOpen !== document.body && !this.$element.get(0).contains(activeBeforeOpen)) {
+        this.returnFocusEl = activeBeforeOpen as HTMLElement;
+      }
+      else if (this.$trigger && this.$trigger.length) {
+        this.returnFocusEl = this.$trigger.get(0) as HTMLElement;
+      }
+      else {
+        this.returnFocusEl = null;
+      }
       let ajaxUrl = this.get('ajaxUrl');
       if (!ajaxUrl && this.get('ajax') || this.get('contentAjax')) {
         const route = this.get('ajax') ? this.get('ajax') : this.get('contentAjax');
@@ -1188,6 +1224,24 @@ class ExoModal extends ExoData {
     this.callCallback('onOpened');
     this.$element.addClass('isOpen');
 
+    // W3C ARIA Dialog (Modal) pattern: tell assistive tech the rest of
+    // the page is inert while this dialog is open, and refresh
+    // aria-labelledby in case the header was rendered late (e.g. AJAX).
+    this.$element.attr('aria-modal', 'true');
+    const $headerTitleOpen = this.$element.find('.exo-modal-header-title').first();
+    if ($headerTitleOpen.length) {
+      let titleId = $headerTitleOpen.attr('id');
+      if (!titleId) {
+        titleId = this.getId() + '-title';
+        $headerTitleOpen.attr('id', titleId);
+      }
+      this.$element.attr('aria-labelledby', titleId);
+    }
+
+    // Install a focus trap so Tab / Shift+Tab cycle within the dialog
+    // instead of leaking back into the page behind it.
+    this.installFocusTrap();
+
     const $trigger = this.getTriggerElement();
     if ($trigger) {
       $trigger.addClass('exo-modal-opened');
@@ -1362,6 +1416,67 @@ class ExoModal extends ExoData {
     }
   }
 
+  /**
+   * Install a Tab/Shift+Tab focus trap on the document.
+   *
+   * Per the W3C ARIA Dialog (Modal) pattern, keyboard focus must not be
+   * able to leave the dialog while it is open. We compute the focusable
+   * descendants on each Tab keystroke (rather than caching them) so the
+   * trap continues to work as content is added or removed dynamically
+   * (AJAX-loaded cart contents, lazy panels, etc.).
+   */
+  protected installFocusTrap() {
+    if (this.focusTrapHandler) {
+      return;
+    }
+    const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const modalEl = this.$element.get(0) as HTMLElement;
+    this.focusTrapHandler = (e:KeyboardEvent) => {
+      if (e.key !== 'Tab' && e.keyCode !== 9) {
+        return;
+      }
+      if (!modalEl.classList.contains('isOpen')) {
+        return;
+      }
+      const focusables = Array.prototype.filter.call(
+        modalEl.querySelectorAll(focusableSelector),
+        (el:HTMLElement) => el.offsetParent !== null
+      );
+      if (!focusables.length) {
+        // Nothing focusable inside — keep focus on the dialog itself.
+        e.preventDefault();
+        modalEl.focus();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || active === modalEl || !modalEl.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      }
+      else {
+        if (active === last || !modalEl.contains(active)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', this.focusTrapHandler, true);
+  }
+
+  /**
+   * Remove the focus trap installed by installFocusTrap().
+   */
+  protected removeFocusTrap() {
+    if (this.focusTrapHandler) {
+      document.removeEventListener('keydown', this.focusTrapHandler, true);
+      this.focusTrapHandler = null;
+    }
+  }
+
   protected closed(param?:any) {
     this.toggleContentSelector();
     this.state = this.states.CLOSED;
@@ -1382,6 +1497,15 @@ class ExoModal extends ExoData {
     event.dispatchOn(this.$element.get(0));
     this.callCallback('onClosed');
     this.$element.removeClass('isOpen');
+
+    // Tear down dialog-pattern state and return focus to the trigger so
+    // the user lands back where they were before the dialog opened.
+    this.removeFocusTrap();
+    this.$element.removeAttr('aria-modal');
+    if (this.returnFocusEl && typeof this.returnFocusEl.focus === 'function' && document.contains(this.returnFocusEl)) {
+      this.returnFocusEl.focus();
+    }
+    this.returnFocusEl = null;
 
     const $trigger = this.getTriggerElement();
     if ($trigger) {
