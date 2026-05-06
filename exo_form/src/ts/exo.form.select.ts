@@ -1,6 +1,39 @@
 (function ($, Drupal, document, displace) {
 
   let exoFormSelectCurrent:ExoFormSelect = null;
+  // Module-scoped record of the last select widget the user selected an
+  // option from. The native focus call inside closeDropdown() only sticks
+  // until commerce_option's ajaxRefresh replaces the form markup, which
+  // drops focus to <body>. On the freshly-attached widget we re-apply
+  // focus so keyboard users can Tab straight to the next field.
+  let exoFormSelectPendingFocus:string = null;
+
+  /**
+   * Announce a selection change politely to assistive tech.
+   *
+   * Reuses one shared aria-live region so multiple selects share a
+   * single channel and don't pile up duplicate live nodes in the DOM.
+   * Clearing the region between messages forces screen readers to
+   * announce repeated selections (e.g. picking the same option twice).
+   */
+  function announceSelectChange(message:string) {
+    let region = document.getElementById('exo-form-select-live');
+    if (!region) {
+      region = document.createElement('div');
+      region.id = 'exo-form-select-live';
+      region.className = 'visually-hidden';
+      region.setAttribute('aria-live', 'polite');
+      region.setAttribute('aria-atomic', 'true');
+      document.body.appendChild(region);
+    }
+    // Briefly clear so a repeat selection still triggers an announcement.
+    region.textContent = '';
+    setTimeout(() => {
+      if (region) {
+        region.textContent = message;
+      }
+    }, 50);
+  }
 
   interface ExoFormSelectValue {
     value: string;
@@ -54,12 +87,18 @@
         this.$field.addClass('exo-form-select-supported');
         this.$hidden
           .attr('id', 'exo-form-select-hidden-' + this.uniqueId)
-          .attr('aria-labelledby', 'exo-form-select-label-' + this.uniqueId + ' exo-form-select-trigger-' + this.uniqueId + ' exo-form-select-hidden-' + this.uniqueId);
+          .attr('aria-labelledby', 'exo-form-select-label-' + this.uniqueId + ' exo-form-select-trigger-' + this.uniqueId + ' exo-form-select-hidden-' + this.uniqueId)
+          // The trigger owns the listbox popup. aria-controls + a starting
+          // aria-expanded tell screen readers what the trigger toggles
+          // (W3C ARIA Listbox / combobox pattern).
+          .attr('aria-controls', 'exo-form-select-list-' + this.uniqueId)
+          .attr('aria-expanded', 'false');
+        // Plural label for multi-select, singular for single-select.
         if (this.multiple) {
-          this.$hidden.attr('aria-label', 'Select Option');
+          this.$hidden.attr('aria-label', 'Select Options');
         }
         else {
-          this.$hidden.attr('aria-label', 'Select Options');
+          this.$hidden.attr('aria-label', 'Select Option');
         }
         if (this.isDisabled()) {
           this.$hidden.prop('disabled', true).attr('tabindex', '-1');
@@ -77,9 +116,16 @@
           this.$dropdownWrapper = $('<div id="exo-form-select-dropdown-wrapper" class="exo-form"></div>');
           Drupal.Exo.getBodyElement().append(this.$dropdownWrapper);
         }
-        this.$dropdown = $('<div class="exo-form-select-dropdown exo-form-input ' + this.$field.data('drupal-selector') + '" role="combobox" aria-owns="exo-form-select-list-' + this.uniqueId + '" aria-expanded="false"></div>');
+        // Dropdown wrapper is a presentational container; the focusable
+        // trigger button (with aria-haspopup="listbox") is what assistive
+        // tech treats as the disclosure widget. Putting role="combobox"
+        // here previously created two competing combobox semantics.
+        this.$dropdown = $('<div class="exo-form-select-dropdown exo-form-input ' + this.$field.data('drupal-selector') + '"></div>');
         this.$dropdownScroll = $('<div class="exo-form-select-scroll"></div>').appendTo(this.$dropdown);
-        this.$dropdownList = $('<ul id="exo-form-select-list-' + this.uniqueId + '" class="exo-form-select-list" role="listbox" aria-labelledby="exo-form-select-label-' + this.uniqueId + '" tabindex="-1"></ul>').appendTo(this.$dropdownScroll);
+        // aria-multiselectable lets screen readers announce N-of-M
+        // selection state in multi-select mode (W3C ARIA Listbox).
+        const multiselectAttr = this.multiple ? ' aria-multiselectable="true"' : '';
+        this.$dropdownList = $('<ul id="exo-form-select-list-' + this.uniqueId + '" class="exo-form-select-list" role="listbox" aria-labelledby="exo-form-select-label-' + this.uniqueId + '"' + multiselectAttr + ' tabindex="-1"></ul>').appendTo(this.$dropdownScroll);
         this.$dropdownWrapper.append(this.$dropdown);
         this.$dropdown.addClass((this.multiple ? 'is-multiple' : 'is-single'));
         if (this.$field.hasClass('notranslate')) {
@@ -99,6 +145,19 @@
       this.bind();
       setTimeout(() => {
         this.$element.addClass('ready');
+        // If this widget is the replacement for a select that the user
+        // just selected from (and an AJAX refresh has dropped focus to
+        // <body>), restore focus to the new trigger so keyboard users
+        // resume where they left off.
+        if (this.supported && exoFormSelectPendingFocus) {
+          const selector = this.$field.attr('data-drupal-selector');
+          if (selector === exoFormSelectPendingFocus) {
+            exoFormSelectPendingFocus = null;
+            if (this.$hidden[0]) {
+              this.$hidden[0].focus();
+            }
+          }
+        }
       });
     }
 
@@ -248,7 +307,7 @@
       var action;
 
       if (!this.multiple) {
-        $wrapper.find('.active, .selected').removeClass('active selected').removeAttr('aria-selected');
+        $wrapper.find('.active, .selected').removeClass('active selected').attr('aria-selected', 'false');
         $item.addClass('active selected').attr('aria-selected', 'true');
         this.changeSelected(option, 'add');
         return this.closeDropdown(true);
@@ -275,13 +334,25 @@
       }
       var $item;
 
-      // TAB - switch to another input.
+      // TAB - commit the highlighted selection and move on.
+      // Shift+Tab: close the dropdown and return focus to the trigger so
+      //   the user backs out of the listbox to where they came from.
+      // Tab: commit and move forward to the next form field.
       if (e.which === 9) {
         // Select current item.
         $item = this.$dropdown.find('.selector.selected');
         if ($item.length) {
           var option = $item.data('option');
           this.changeSelected(option, 'add');
+        }
+
+        if (e.shiftKey) {
+          // Backwards Tab — close and let the trigger button reclaim
+          // focus, just like Esc would. The browser-default Shift+Tab
+          // would otherwise jump past the trigger because the search
+          // input has tabindex="-1".
+          e.preventDefault();
+          return this.closeDropdown(true);
         }
 
         // Focus on next visible field.
@@ -325,6 +396,40 @@
       // ARROW UP or LEFT - move to next not disabled or hidden option
       if (e.which === 38 || e.which === 37) {
         this.highlightOption(this.$dropdown.find('.selector.selected').prevAll('.selector:not(.hide):visible').first(), true, true);
+        e.preventDefault();
+      }
+
+      // HOME - jump to the first visible option (W3C ARIA Listbox).
+      if (e.which === 36) {
+        const $first = this.$dropdownList.find('.selector:not(.hide):visible').first();
+        if ($first.length) {
+          this.highlightOption($first, true, true);
+        }
+        e.preventDefault();
+      }
+
+      // END - jump to the last visible option.
+      if (e.which === 35) {
+        const $last = this.$dropdownList.find('.selector:not(.hide):visible').last();
+        if ($last.length) {
+          this.highlightOption($last, true, true);
+        }
+        e.preventDefault();
+      }
+
+      // PAGE DOWN / PAGE UP - jump 10 options at a time, useful for long
+      // option lists.
+      if (e.which === 34 || e.which === 33) {
+        const step = 10;
+        const $visible = this.$dropdownList.find('.selector:not(.hide):visible');
+        if ($visible.length) {
+          const currentIdx = $visible.index(this.$dropdown.find('.selector.selected'));
+          const baseIdx = currentIdx === -1 ? 0 : currentIdx;
+          const targetIdx = e.which === 34
+            ? Math.min(baseIdx + step, $visible.length - 1)
+            : Math.max(baseIdx - step, 0);
+          this.highlightOption($visible.eq(targetIdx), true, true);
+        }
         e.preventDefault();
       }
     }
@@ -482,9 +587,14 @@
       this.$dropdownList.find('li').remove();
 
       if (this.$dropdown.find('.search-input').length === 0) {
+        // Close affordance is now a real <button> so screen readers
+        // announce it as actionable and keyboard users can reach it.
+        // aria-controls on the search input now points at the listbox
+        // (per the W3C combobox-with-listbox-popup pattern), not the
+        // wrapping scroll container.
         this.$dropdown
-          .prepend('<div class="close notranslate" aria-label="Close">&times;</div>')
-          .prepend('<div class="search"><input type="text" class="exo-form-input-item simple search-input" aria-autocomplete="list" aria-controls="exo-form-select-scroll-' + this.uniqueId + '" tabindex="-1"></input></div>')
+          .prepend('<button type="button" class="close notranslate" aria-label="Close">&times;</button>')
+          .prepend('<div class="search"><input type="text" class="exo-form-input-item simple search-input" aria-autocomplete="list" aria-controls="exo-form-select-list-' + this.uniqueId + '" tabindex="-1"></input></div>')
           .find('.search-input').attr('placeholder', this.placeholder).on('keydown.exo.form.select', e => {
             this.onSearchKeydown(e);
           }).on('keyup.exo.form.select', e => {
@@ -503,8 +613,23 @@
         }
         const checkboxId = 'exo-form-option-' + this.uniqueId + '-' + i;
         const liClass = 'exo-form-option-' + option.text.replace(/\W/g, '-').toLowerCase();
+        // Each option needs a unique id so aria-activedescendant on the
+        // focused trigger / search input can reliably reference it
+        // (W3C ARIA Listbox pattern).
+        const optionId = 'exo-form-select-option-' + this.uniqueId + '-' + i;
 
-        var li = $('<li role="option" class="' + liClass + '" role="listitem" tabindex="-1"></li>');
+        // Optgroup headings are presentational; only true selectable
+        // entries get role="option". Listbox descendants that aren't
+        // role="option" should be role="presentation" so screen readers
+        // don't try to expose them as listbox children.
+        const role = option.group ? 'presentation' : 'option';
+        // Empty/placeholder entries (the "- Select -" no-value option)
+        // are still rendered for non-required fields so the user can
+        // clear their choice, but assistive tech should announce the
+        // intent rather than the literal "- Select -" punctuation.
+        const isPlaceholder = !option.group && (option.value === '' || option.value === '_none');
+        const ariaLabel = isPlaceholder ? ' aria-label="No selection"' : '';
+        var li = $('<li id="' + optionId + '" class="' + liClass + '" role="' + role + '" tabindex="-1"' + ariaLabel + '></li>');
 
         if (option.group) {
           li.addClass('optgroup');
@@ -523,8 +648,14 @@
           li.html('<span>' + option.text + '</span>');
         }
 
+        // Provide an explicit aria-selected baseline on every selectable
+        // option so screen readers can announce the current selection
+        // state of any focused option, not only the active one.
+        if (!option.group) {
+          li.attr('aria-selected', option.selected ? 'true' : 'false');
+        }
         if (option.selected) {
-          li.addClass('active').attr('aria-selected', 'true');
+          li.addClass('active');
           li.find('input').prop('checked', true);
         }
 
@@ -532,12 +663,14 @@
 
         if (option.value && optionsEnabled.length && !optionsEnabled.includes(option.value) && option.value !== '_none' && option.value !== '_all') {
           li.addClass('disabled');
+          li.attr('aria-disabled', 'true');
           $disabled.append(li);
           continue;
         }
 
         if (option.value && optionsDisabled.length && optionsDisabled.includes(option.value)) {
           li.addClass('disabled');
+          li.attr('aria-disabled', 'true');
           $disabled.append(li);
           continue;
         }
@@ -547,7 +680,9 @@
       if ($disabled.children().length) {
         var optionsDisabledLabel = this.$field.data('options-disabled-label');
         if (optionsDisabledLabel) {
-          this.$dropdownList.append($('<li class="selector-disabled" role="listitem" tabindex="-1"><span>' + optionsDisabledLabel + '</span></li>'));
+          // Section heading for the disabled group is presentational, not
+          // an option in the listbox.
+          this.$dropdownList.append($('<li class="selector-disabled" role="presentation"><span>' + optionsDisabledLabel + '</span></li>'));
         }
         this.$dropdownList.append($disabled.children());
       }
@@ -709,6 +844,20 @@
         this.updateSearch();
       }
       this.updateSelect((!found) ? option : null);
+
+      // Announce the change politely to screen readers. Activedescendant
+      // covers the navigation moment, but a confirmation after the
+      // dropdown collapses helps users hear that their action stuck —
+      // especially because the surrounding form often AJAX-rebuilds.
+      if (action === 'add' && option && option.text) {
+        const message = this.multiple
+          ? option.text + ' selected'
+          : option.text + ', selected';
+        announceSelectChange(message);
+      }
+      else if (action === 'remove' && option && option.text) {
+        announceSelectChange(option.text + ' deselected');
+      }
     }
 
     public updateSearch() {
@@ -722,7 +871,11 @@
         $item = this.$dropdownList.find('.selector:eq(0)');
       }
       if ($item.length) {
-        this.$dropdown.find('.selector.selected').removeClass('selected').removeAttr('aria-selected');
+        // Reset previously-highlighted siblings to aria-selected="false"
+        // (rather than removing the attribute outright) so every option
+        // keeps an explicit selection state for assistive tech, which is
+        // what the W3C ARIA Listbox pattern expects.
+        this.$dropdown.find('.selector.selected').removeClass('selected').attr('aria-selected', 'false');
         $item.addClass('selected').attr('aria-selected', 'true');
         this.$dropdown.find('.search-input').attr('aria-activedescendant', $item.attr('id'));
         this.$hidden.attr('aria-activedescendant', $item.attr('id'));
@@ -793,7 +946,11 @@
 
       setTimeout(() => {
         this.$element.addClass('animate');
-        this.$dropdown.addClass('animate').attr('aria-expanded', 'true');
+        this.$dropdown.addClass('animate');
+        // Reflect expanded state on the focusable trigger (the element
+        // assistive tech points at). The dropdown wrapper itself is
+        // presentational, so we no longer mirror aria-expanded onto it.
+        this.$hidden.attr('aria-expanded', 'true');
       }, 50);
       this.windowHideDropdown();
     }
@@ -895,8 +1052,12 @@
       if (this.open === true) {
         this.open = false;
         exoFormSelectCurrent = null;
-        this.$dropdown.attr('aria-expanded', 'false');
-        this.$dropdown.removeClass('animate').find('.search-input').val('');
+        // Reflect collapsed state on the focusable trigger and stop
+        // pointing aria-activedescendant at an option that's no longer
+        // visible (W3C ARIA Listbox pattern). The wrapper div is
+        // presentational so we don't track expanded state on it.
+        this.$hidden.attr('aria-expanded', 'false').removeAttr('aria-activedescendant');
+        this.$dropdown.removeClass('animate').find('.search-input').val('').removeAttr('aria-activedescendant');
         this.$element.removeClass('animate');
         this.$wrapper.removeClass('focused');
         this.updateSearch();
@@ -918,7 +1079,26 @@
           }
         }, 350);
         if (focus) {
+          // Move focus back to the trigger button before the dropdown
+          // tears down so keyboard users can immediately Tab to the next
+          // form field. jQuery's `.trigger('focus')` only fires handlers
+          // and does not call native HTMLElement.focus(), so the search
+          // input would keep focus until the dropdown was hidden 350ms
+          // later, at which point focus would fall to <body>.
+          //
+          // Selecting an option also triggers a Drupal AJAX refresh on
+          // some widgets (e.g. commerce_option) which replaces the form
+          // markup. We record this select's data-drupal-selector so the
+          // freshly-attached widget can restore focus on its replacement
+          // trigger after the AJAX response lands.
+          const selector = this.$field.attr('data-drupal-selector');
+          if (selector) {
+            exoFormSelectPendingFocus = selector;
+          }
           setTimeout(() => {
+            if (this.$hidden[0]) {
+              this.$hidden[0].focus();
+            }
             this.$hidden.trigger('focus', [1]);
           });
         }
@@ -988,3 +1168,4 @@
   }
 
 })(jQuery, Drupal, document, Drupal.displace);
+// recompile trigger
