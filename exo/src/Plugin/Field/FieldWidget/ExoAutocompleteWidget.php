@@ -287,7 +287,14 @@ class ExoAutocompleteWidget extends WidgetBase implements ContainerFactoryPlugin
             $label = '"' . str_replace('"', '""', $label) . '"';
           }
 
-          $typed_entities[] = $label;
+          // Append the entity id in parentheses so that two entities that
+          // share a label can still be disambiguated on reload. This
+          // mirrors the format produced by Drupal core's
+          // EntityAutocompleteMatcher::getMatches() ("Label (id)") that
+          // the autocomplete server already returns when the user picks
+          // an item, and that ExoAutocompleteElement::extractEntityIdFromAutocompleteInput()
+          // reads back during validation.
+          $typed_entities[] = $label . ' (' . $entity->id() . ')';
         }
       }
     }
