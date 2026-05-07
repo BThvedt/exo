@@ -125,7 +125,7 @@ class ExoComponentFiltersForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'layout_builder_fields_form';
+    return 'exo_component_filters_form';
   }
 
   /**
@@ -136,6 +136,8 @@ class ExoComponentFiltersForm extends FormBase {
     $this->delta = $delta;
     $this->region = $region;
     $this->uuid = $uuid;
+
+    $form['#id'] = 'exo-component-filters-form-' . $this->uuid;
 
     $component = $this->sectionStorage->getSection($this->delta)->getComponent($this->uuid);
     /** @var \Drupal\layout_builder\Plugin\Block\InlineBlock $this->block */
