@@ -2,4 +2,4 @@ name: 'eXo'
 type: module
 description: 'Provides a number of UI enhancements and features for the refined site developer and builder.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10 || ^11'
+core_version_requirement: ^10 || ^11

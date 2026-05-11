@@ -88,7 +88,8 @@
    */
   Drupal.behaviors.exoFormCheckbox = {
     attach: function(context) {
-      $(context).find('.exo-form-checkbox-js').once('exo.form.checkbox').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.checkbox', '.exo-form-checkbox-js', context).forEach((element:HTMLElement) => {
         new ExoFormCheckbox($(element));
       });
     },

@@ -159,7 +159,8 @@
    */
   Drupal.behaviors.exoFormInput = {
     attach: function(context) {
-      $(context).find('.form-item.exo-form-input-js').once('exo.form.input').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.input', '.form-item.exo-form-input-js', context).forEach((element:HTMLElement) => {
         new ExoFormInput($(element));
       });
       Drupal.Exo.event('ready').on('exo.form.input', e => {

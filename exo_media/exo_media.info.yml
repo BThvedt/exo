@@ -2,7 +2,7 @@ name: 'eXo Media'
 type: module
 description: 'Provides enhancements to media handling.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10 || ^11'
+core_version_requirement: ^10 || ^11
 dependencies:
   - core:media
   - core:media_library

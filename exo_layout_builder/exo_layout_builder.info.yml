@@ -2,7 +2,7 @@ name: 'eXo Layout Builder'
 type: module
 description: 'Component creation and management.'
 package: 'eXo'
-core_version_requirement: '^9.3 || ^10 || ^11'
+core_version_requirement: ^10 || ^11
 dependencies:
   - exo:exo
   - exo:exo_config_file

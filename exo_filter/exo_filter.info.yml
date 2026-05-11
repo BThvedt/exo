@@ -1,7 +1,7 @@
 name: 'eXo Filter'
 type: module
 description: 'Provides various enhancements, plugins and filters for exposed Views widgets.'
-core_version_requirement: '^9.3 || ^10 || ^11'
+core_version_requirement: ^10 || ^11
 package: 'eXo'
 dependencies:
   - exo:exo

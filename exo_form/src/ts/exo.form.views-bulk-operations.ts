@@ -12,8 +12,9 @@
    */
   Drupal.behaviors.exoFormViewsBulkOperations = {
     attach: function (context, settings) {
-      $('.vbo-view-form').once('exo.form.vbo-init').each(function () {
-        const $vboForm = $(this);
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.vbo-init', '.vbo-view-form').forEach((element:HTMLElement) => {
+        const $vboForm = $(element);
         const $primarySelectAll = $('.vbo-select-all', $vboForm);
         const $tableSelectAll = $('th.select-all > input[type="checkbox"]', $vboForm);
         if ($primarySelectAll.length) {

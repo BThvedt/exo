@@ -17,7 +17,8 @@
   Drupal.behaviors.exoFormTooltip = {
     attach: function (context) {
 
-      $(context).find('.exo-tooltip').once('exo.form.tooltip').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.tooltip', '.exo-tooltip', context).forEach((element:HTMLElement) => {
         const $tooltip = $(element);
         const $trigger = $tooltip.find('.exo-tooltip-trigger');
         const $content = $tooltip.find('.exo-tooltip-content');

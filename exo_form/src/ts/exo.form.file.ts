@@ -31,7 +31,8 @@
    */
   Drupal.behaviors.exoFormFile = {
     attach: function (context) {
-      $(context).find('.exo-form-file-js').once('exo.form.file').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.file', '.exo-form-file-js', context).forEach((element:HTMLElement) => {
         new ExoFormFile($(element));
       });
     }

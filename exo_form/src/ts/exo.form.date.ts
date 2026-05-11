@@ -42,7 +42,8 @@
       if (drupalSettings.exoForm && drupalSettings.exoForm.date && drupalSettings.exoForm.date.items) {
         for (var id in drupalSettings.exoForm.date.items) {
           if (drupalSettings.exoForm.date.items[id]) {
-            $('#' + id, context).once('exo.form.date').each((index, element) => {
+            // core/once replaces the jQuery.once removed in Drupal 11.
+            once('exo.form.date', '#' + id, context).forEach((element:HTMLElement) => {
               new ExoFormDate($(element), drupalSettings.exoForm.date.items[id]);
             });
           }

@@ -3,6 +3,7 @@ base:
   js:
     js/exo.form.js: { minified: true }
   dependencies:
+    - core/once
     - exo/exo
     - exo_form/theme
 
@@ -99,6 +100,7 @@ autogrow:
   js:
     js/exo.form.autogrow.js: { minified: true }
   dependencies:
+    - core/once
     - exo/autosize
     - core/drupal.displace
 

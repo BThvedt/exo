@@ -1134,7 +1134,8 @@
     once: false,
 
     attach: function(context) {
-      $(context).find('.form-item.exo-form-select-js').once('exo.form.select').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.select', '.form-item.exo-form-select-js', context).forEach((element:HTMLElement) => {
         const select = new ExoFormSelect($(element));
         Drupal.behaviors.exoFormSelect.instances[select.uniqueId] = select;
       });

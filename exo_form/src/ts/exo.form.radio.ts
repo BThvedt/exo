@@ -58,7 +58,8 @@
    */
   Drupal.behaviors.exoFormRadio = {
     attach: function(context) {
-      $(context).find('.exo-form-radio-js').once('exo.form.radio').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.radio', '.exo-form-radio-js', context).forEach((element:HTMLElement) => {
         new ExoFormRadio($(element));
       });
     }

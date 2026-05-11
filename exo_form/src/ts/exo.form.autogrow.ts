@@ -5,7 +5,10 @@
    */
   Drupal.behaviors.exoFormAutogrow = {
     attach: function(context) {
-      const $elements = $(context).find('textarea[data-autogrow]').once('exo.form.autogrow');
+      // core/once replaces the jQuery.once removed in Drupal 11. Wrap
+      // the resulting element array back in $() so the existing jQuery
+      // chain (autosize, .each, etc.) continues to work unchanged.
+      const $elements = $(once('exo.form.autogrow', 'textarea[data-autogrow]', context));
       if ($elements.length) {
         Drupal.Exo.event('ready').on('exo.form.autogrow', function () {
           $elements.each(function () {

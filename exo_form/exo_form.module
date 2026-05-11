@@ -908,9 +908,13 @@ function exo_form_library_info_alter(&$libraries, $extension) {
   }
   if ($extension == 'media_library') {
     $libraries['widget']['js']['/' . $module_path . '/js/exo.form.media-library.widget.js'] = [];
+    // Our injected JS uses core/once (the Drupal 11 replacement for the
+    // removed jQuery.once), so make sure the host library brings it in.
+    $libraries['widget']['dependencies'][] = 'core/once';
   }
   if ($extension == 'views_bulk_operations') {
     $libraries['frontUi']['js']['/' . $module_path . '/js/exo.form.views-bulk-operations.js'] = [];
+    $libraries['frontUi']['dependencies'][] = 'core/once';
   }
   if ($extension == 'date_recur_modular') {
     unset($libraries['date_recur_modular_sierra_widget']['css']);

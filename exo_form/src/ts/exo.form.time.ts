@@ -41,7 +41,8 @@
       if (drupalSettings.exoForm && drupalSettings.exoForm.time && drupalSettings.exoForm.time.items) {
         for (var id in drupalSettings.exoForm.time.items) {
           if (drupalSettings.exoForm.time.items[id]) {
-            $('#' + id, context).once('exo.form.time').each((index, element) => {
+            // core/once replaces the jQuery.once removed in Drupal 11.
+            once('exo.form.time', '#' + id, context).forEach((element:HTMLElement) => {
               new ExoFormTime($(element), drupalSettings.exoForm.time.items[id]);
             });
           }

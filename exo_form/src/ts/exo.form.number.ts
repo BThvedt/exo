@@ -87,7 +87,8 @@
    */
   Drupal.behaviors.exoFormNumber = {
     attach: function(context) {
-      $(context).find('.exo-form-number-js').once('exo.form.number').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.number', '.exo-form-number-js', context).forEach((element:HTMLElement) => {
         new ExoFormNumber($(element));
       });
     }

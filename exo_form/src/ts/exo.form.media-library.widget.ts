@@ -2,7 +2,8 @@
   Drupal.behaviors.ExoFormMediaLibraryWidgetSortable = {
     attach: function attach(context) {
       // Media library currently gives no way to alter this element.
-      $('#media-library-wrapper').once('exo.form.media-library').each((index, element) => {
+      // core/once replaces the jQuery.once removed in Drupal 11.
+      once('exo.form.media-library', '#media-library-wrapper').forEach((element:HTMLElement) => {
         const $element = $(element);
         if ($element.find('.media-library-menu').length) {
           $element.addClass('has-media-library-menu')
