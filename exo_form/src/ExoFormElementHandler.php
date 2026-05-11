@@ -33,9 +33,6 @@ class ExoFormElementHandler implements TrustedCallbackInterface {
     if (empty($element['#type']) || !exo_form_access()) {
       return $element;
     }
-    if (exo_is_claro() && in_array($element['#type'], ['container'])) {
-      return $element;
-    }
     $is_admin = exo_is_admin();
     $is_form = !empty($element['#parents']);
     if ($is_form || $is_admin) {
