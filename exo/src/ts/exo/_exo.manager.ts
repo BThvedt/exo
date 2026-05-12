@@ -43,10 +43,11 @@ class ExoManager<T> {
       const promises:Array<Promise<boolean>> = [];
       const settings = this.getSettingsGroup(this.instanceSettingsGroup);
       // If empty, we can resolve right away as there is nothing to do.
+      // jQuery 4 removed isEmptyObject; check own-key count instead.
       if (
         settings === null ||
         (Array.isArray(settings) && !settings.length) ||
-        (typeof settings === 'object' && jQuery.isEmptyObject(settings))
+        (typeof settings === 'object' && Object.keys(settings).length === 0)
       ) {
         this.debug('log', 'Build Instances: Empty');
         resolve(true);
