@@ -2,18 +2,22 @@
  * @file:
  * Converts textfield to a autocomplete deluxe widget.
  */
+/* global once */
 (function ($, drupalSettings) {
   'use strict';
   Drupal.exoAutocomplete = Drupal.exoAutocomplete || {};
   Drupal.behaviors.exoAutocomplete = {
     attach: function (context) {
       var autocomplete_settings = drupalSettings.exoAutocomplete;
-      $('input.exo-autocomplete-form').once('attachExoAutocomplete').each(function () {
-        if (autocomplete_settings[$(this).attr('id')].multiple === true) {
-          new Drupal.exoAutocomplete.MultipleWidget(this, autocomplete_settings[$(this).attr('id')]);
+      // core/once returns Array<HTMLElement>; re-wrap each in $ to keep
+      // the existing per-element jQuery API in place.
+      once('attachExoAutocomplete', 'input.exo-autocomplete-form', context).forEach(function (element) {
+        var $element = $(element);
+        if (autocomplete_settings[$element.attr('id')].multiple === true) {
+          new Drupal.exoAutocomplete.MultipleWidget(element, autocomplete_settings[$element.attr('id')]);
         }
         else {
-          new Drupal.exoAutocomplete.SingleWidget(autocomplete_settings[$(this).attr('id')]);
+          new Drupal.exoAutocomplete.SingleWidget(autocomplete_settings[$element.attr('id')]);
         }
       });
     }
@@ -58,7 +62,9 @@
         }
       };
       testSubject.insertAfter(input);
-      $(this).bind('keyup keydown blur update', check);
+      // jQuery 4 removed .bind/.unbind; use .on which has been the
+      // recommended call since jQuery 1.7.
+      $(this).on('keyup keydown blur update', check);
     });
     return this;
   };
@@ -84,9 +90,6 @@
     return true;
   };
   Drupal.exoAutocomplete.Widget.prototype.init = function (settings) {
-    if (navigator.appVersion.indexOf('MSIE 6.') !== -1) {
-      return;
-    }
     this.id = settings.input_id;
     this.$item = $('#' + this.id);
     var $item = this.$item;
@@ -129,8 +132,10 @@
         }
       }
       // If there are no results and new terms OR not found message can be
-      // displayed, push the result, so the menu can be shown.
-      if ($.isEmptyObject(result) && (self.new_terms || self.not_found_message_allow)) {
+      // displayed, push the result, so the menu can be shown. jQuery 4
+      // removed $.isEmptyObject; result is always an Array here, so a
+      // length check is exact and avoids re-introducing a removed API.
+      if (result.length === 0 && (self.new_terms || self.not_found_message_allow)) {
         if (term !== ' ') {
           result.push({
             label: Drupal.formatString(self.not_found_message, {'@term': term}),
@@ -186,11 +191,11 @@
     });
     var autocompleteDataKey = typeof (this.$item.data('autocomplete')) === 'object' ? 'item.autocomplete' : 'ui-autocomplete';
     var throbber = $('<div class="exo-autocomplete-throbber exo-autocomplete-closed">&nbsp;</div>').insertAfter($item);
-    this.$item.bind('autocompletesearch', function (event, ui) {
+    this.$item.on('autocompletesearch', function (event, ui) {
       throbber.removeClass('exo-autocomplete-closed');
       throbber.addClass('exo-autocomplete-open');
     });
-    this.$item.bind('autocompleteresponse', function (event, ui) {
+    this.$item.on('autocompleteresponse', function (event, ui) {
       throbber.addClass('exo-autocomplete-closed');
       throbber.removeClass('exo-autocomplete-open');
       // If no results found, show a message and prevent selecting it as a tag.
@@ -241,7 +246,7 @@
   Drupal.exoAutocomplete.SingleWidget.prototype.setup = function () {
     var $item = this.$item;
     var parent = $item.parent();
-    parent.mousedown(function () {
+    parent.on('mousedown', function () {
       if (parent.hasClass('exo-autocomplete-single-open')) {
         $item.autocomplete('close');
       }
@@ -278,7 +283,7 @@
     $(
       '<input type="hidden" value=\'' + encodedVal + "'/>"
     ).appendTo(this.element);
-    close.mousedown(function () {
+    close.on('mousedown', function () {
       self.remove(item);
       var value_input = self.widget.$item.parents('.exo-autocomplete-container').next().find('input');
       value_input.trigger('change');
@@ -303,11 +308,9 @@
     // Order values based on the UI. Usually called after a manual sort.
     this.orderValues = function () {
       var items = [];
-      console.log(parent);
       parent.find('.exo-autocomplete-item input').each(function (index, value) {
         items[index] = $(value).val();
       });
-      console.log(items);
       value_input.val('""' + items.join('"" ""') + '""');
       value_input.trigger('change');
     };
@@ -323,8 +326,10 @@
     $item.show();
     value_input.hide();
     // Add the default values to the box.
+    // jQuery 3.5+ removed $.trim; use the native String method which has
+    // been available in every Drupal-supported browser for years.
     var default_values = value_input.val();
-    default_values = $.trim(default_values);
+    default_values = default_values.trim();
     default_values = default_values.substr(2, default_values.length - 4);
     default_values = default_values.split(/"" +""/);
     for (var index in default_values) {
@@ -356,11 +361,11 @@
       value_input.val(values + new_value);
       $item.val('');
     };
-    parent.mouseup(function () {
+    parent.on('mouseup', function () {
       $item.autocomplete('search', '');
       $item.focus();
     });
-    $item.bind('autocompleteselect', function (event, ui) {
+    $item.on('autocompleteselect', function (event, ui) {
       var allow_new_terms = drupalSettings.exoAutocomplete[this.id].new_terms;
       // If new terms are not allowed to be added as per the field widget
       // settings, do not continue to process and add that value.
@@ -373,15 +378,18 @@
       // Return false to prevent setting the last term as value for the $item.
       return false;
     });
-    $item.bind('autocompletechange', function (event, ui) {
+    $item.on('autocompletechange', function (event, ui) {
       $item.val('');
     });
-    $item.blur(function () {
+    // jQuery 4 removed event-name shorthand handlers (.blur(fn),
+    // .keypress(fn), .keyup(fn)); rewrite as .on() to keep working
+    // with the version Drupal 11 now ships.
+    $item.on('blur', function () {
       var last_element = $item.parent().children('.exo-autocomplete-item').last();
       last_element.removeClass('exo-autocomplete-item-focus');
     });
     var clear = false;
-    $item.keypress(function (event) {
+    $item.on('keypress', function (event) {
       var value = $item.val();
       // If a comma was entered and there is none or more then one comma, or the
       // enter key was entered, then enter the new term.
@@ -433,7 +441,7 @@
       minWidth: 10,
       maxWidth: 460
     });
-    $item.keyup(function () {
+    $item.on('keyup', function () {
       if (clear) {
         // Trigger the search, so it display the values for an empty string.
         $item.autocomplete('search', '');
