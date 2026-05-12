@@ -22,12 +22,17 @@ TSinclude('./exo/_exo.event.ts')
   if (typeof hash === 'string' && hash.length) {
     hash = hash.replace('#', '');
     document.addEventListener("DOMContentLoaded", function () {
-      window.scrollTo(0, 0);
-      const $anchor = $('a[name="' + hash + '"]');
+      let $anchor = $('a[name="' + hash + '"]');
+      if (!$anchor.length) {
+        $anchor = $('#' + hash);
+      }
       if ($anchor.length) {
+        window.scrollTo(0, 0);
         Drupal.Exo.event('finished').on('exo.hash', () => {
+          const scrollMarginTop = parseFloat($anchor.css('scroll-margin-top')) || 0;
+          const scrollPaddingTop = parseFloat($(document.scrollingElement || document.documentElement).css('scroll-padding-top')) || 0;
           $('html, body').animate({
-            scrollTop: $anchor.offset().top,
+            scrollTop: $anchor.offset().top - scrollMarginTop - scrollPaddingTop - 20,
           }, 500);
           Drupal.Exo.event('finished').off('exo.hash');
         });
