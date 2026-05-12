@@ -124,6 +124,10 @@ jquery.pickadate:
     component:
       lib/pickadate/themes/default.css: { minified: true }
   js:
+    # Shim must load before pickadate so $.isArray/$.isFunction/etc.
+    # exist by the time picker.js (and date/time variants) run on
+    # jQuery 4 (Drupal 11.3+).
+    lib/pickadate/jquery4-shim.js: { weight: -10 }
     lib/pickadate/picker.js: { minified: true }
   dependencies:
     - core/jquery
