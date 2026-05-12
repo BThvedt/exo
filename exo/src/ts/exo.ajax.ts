@@ -21,22 +21,25 @@
     attach: function (context, settings) {
 
       // Bind Ajax behaviors to all items showing the class.
-      $('.exo-ajax').once('ajax').each(function () {
+      // core/once returns Array<HTMLElement>; re-wrap each element in $()
+      // to preserve the rest of the jQuery API.
+      once('ajax', '.exo-ajax', context).forEach((element:HTMLElement) => {
+        const $element = $(element);
         const element_settings = {} as any;
         // Clicked links look better with the throbber than the progress bar.
         element_settings.progress = {type: 'fullscreen'};
 
         // For anchor tags, these will go to the target of the anchor rather
         // than the usual location.
-        var href = $(this).attr('href');
+        const href = $element.attr('href');
         if (href) {
           element_settings.url = href;
           element_settings.event = 'click';
         }
-        element_settings.dialogType = $(this).data('dialog-type');
-        element_settings.dialog = $(this).data('dialog-options');
-        element_settings.base = $(this).attr('id');
-        element_settings.element = this;
+        element_settings.dialogType = $element.data('dialog-type');
+        element_settings.dialog = $element.data('dialog-options');
+        element_settings.base = $element.attr('id');
+        element_settings.element = element;
         Drupal.ajax(element_settings);
       });
 
