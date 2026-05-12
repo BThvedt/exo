@@ -20,7 +20,9 @@
           if (settings.exo.exoRadiosSlider.hasOwnProperty(id)) {
             const config = settings.exo.exoRadiosSlider[id];
             const options = config.options;
-            $('#exo-radios-slider-' + id).once('exo.element').each((index, element) => {
+            // Search the slider host by ID anywhere in the document since the
+            // server may render it outside the current ajax-update context.
+            once('exo.element', '#exo-radios-slider-' + id).forEach((element:HTMLElement) => {
               const $input = $(element).find('select');
               const inputVal = $input.val();
               $input.hide();
@@ -75,10 +77,16 @@
         for (const id in this.sliders) {
           if (this.sliders.hasOwnProperty(id)) {
             const slider = this.sliders[id];
-            $('#exo-radios-slider-' + id, context).findOnce('exo.element').each((index, element) => {
+            // once.filter is the core/once equivalent of $.fn.findOnce:
+            // return only elements already marked with this id. We then
+            // remove the mark via once.remove so the slot can be re-used
+            // if Drupal re-attaches behaviors after a rebuild.
+            const marked = once.filter('exo.element', $('#exo-radios-slider-' + id, context).get());
+            if (marked.length) {
               slider.destroy();
               delete this.sliders[id];
-            });
+              once.remove('exo.element', marked);
+            }
           }
         }
       }
