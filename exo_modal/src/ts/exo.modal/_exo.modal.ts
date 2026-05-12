@@ -973,7 +973,11 @@ class ExoModal extends ExoData {
       // (Modal) pattern). Captured here, before any code in this flow
       // shifts focus into the dialog.
       const activeBeforeOpen = (typeof document !== 'undefined') ? document.activeElement : null;
-      if (activeBeforeOpen && activeBeforeOpen !== document.body && !this.$element.get(0).contains(activeBeforeOpen)) {
+      // Some modal instances (e.g. ajax-only triggers) have no $element
+      // until content arrives; guard against $element.get(0) being
+      // undefined before calling .contains on it.
+      const modalEl = this.$element && this.$element.length ? this.$element.get(0) : null;
+      if (activeBeforeOpen && activeBeforeOpen !== document.body && (!modalEl || !modalEl.contains(activeBeforeOpen))) {
         this.returnFocusEl = activeBeforeOpen as HTMLElement;
       }
       else if (this.$trigger && this.$trigger.length) {
