@@ -267,20 +267,27 @@ class Exo {
   }
 
   protected bindAnchors(context) {
-    Drupal.Exo.$window.once('exo.hash').on('popstate.exo', e => {
-      let hash = location.hash;
-      if (hash) {
-        hash = hash.substring(1);
-        const $anchor = $('a[name="' + hash + '"]');
-        if ($anchor.length) {
-          $('html, body').animate({
-            scrollTop: $anchor.offset().top,
-          }, 500);
+    // core/once requires Element targets; the previous code marked the
+    // global `window` jQuery wrapper, which jQuery.once allowed but
+    // core/once does not. Mark <html> instead — equally globally unique
+    // since there is exactly one documentElement per page, and the
+    // popstate handler still binds against window via $(window).on.
+    once('exo.hash.window', document.documentElement).forEach(() => {
+      Drupal.Exo.$window.on('popstate.exo', e => {
+        let hash = location.hash;
+        if (hash) {
+          hash = hash.substring(1);
+          const $anchor = $('a[name="' + hash + '"]');
+          if ($anchor.length) {
+            $('html, body').animate({
+              scrollTop: $anchor.offset().top,
+            }, 500);
+          }
         }
-      }
+      });
     });
 
-    $('a[href^="#"]', context).once('exo.hash').each((index, element) => {
+    once('exo.hash', 'a[href^="#"]', context).forEach((element:HTMLElement) => {
       const $link = $(element);
       const hash = $link.attr('href').substring(1);
       if (hash) {
@@ -486,7 +493,10 @@ class Exo {
         $element = $($element);
       }
       this.untrackElementPosition($element);
-      if ($element.once('exo.track.position').length) {
+      // core/once on raw DOM elements: returns only the elements that
+      // weren't already marked. If any were freshly marked, bind the
+      // observers — matches the previous .once(...).length gate.
+      if (once('exo.track.position', $element.get()).length) {
         if (typeof inViewportCallback === 'function' || typeof outViewportCallback === 'function' || typeof observedCallback === 'function') {
           this.observeElement($element, inViewportCallback, outViewportCallback, observedCallback);
         }
@@ -512,10 +522,14 @@ class Exo {
     if ($element instanceof HTMLElement) {
       $element = $($element);
     }
-    if (!$element.findOnce('exo.track.position').length) {
+    // findOnce → once.filter (read marks without modifying them).
+    // removeOnce → once.remove (strip the mark so a later trackElement-
+    // Position call will mark the element again).
+    const elements = $element.get();
+    if (!once.filter('exo.track.position', elements).length) {
       return;
     }
-    $element.removeOnce('exo.track.position');
+    once.remove('exo.track.position', elements);
     if ($element[0].dataset.exoObservableId) {
       this.observer[$element[0].dataset.exoObserverId].unobserve($element[0]);
     }
