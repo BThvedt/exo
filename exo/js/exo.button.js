@@ -1,1 +1,1 @@
-(o=>{Drupal.behaviors.exoButton={attach:function(t){o(".exo-button-trigger",t).once("exo-button").on("click",function(t){t.preventDefault(),o(this).closest(".exo-button").find(".js-form-submit").trigger("mousedown").trigger("mouseup").trigger("click")})}}})(jQuery);
+(o=>{Drupal.behaviors.exoButton={attach:function(t){once("exo-button",".exo-button-trigger",t).forEach(function(t){o(t).on("click",function(t){t.preventDefault(),o(this).closest(".exo-button").find(".js-form-submit").trigger("mousedown").trigger("mouseup").trigger("click")})})}}})(jQuery);
