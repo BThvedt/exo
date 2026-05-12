@@ -87,22 +87,25 @@
         });
       }
 
-      // The change event bubbles so we only need to on it to the outer form.
-      $('form[data-exo-auto-submit-full-form]', context)
+      // The change event bubbles so we only need to bind on the outer form.
+      // core/once requires plain DOM elements as targets, so build the
+      // candidate set first via jQuery's filter chain, then hand the
+      // resulting HTMLElement array to once().
+      const candidates = $('form[data-exo-auto-submit-full-form]', context)
         .add('[data-exo-auto-submit]', context)
         .filter('form, select, input:not(:text, :submit)')
-        .once('exo.auto-submit')
-        .each((index, element) => {
-          let timeoutID: ReturnType<typeof setTimeout> = null;
-          $(element).on('change', e => {
-            // don't trigger on text change for full-form
-            if ($(e.target).is(':not(:text, :submit, [data-exo-auto-submit-exclude])')) {
-              timeoutID = setTimeout(() => {
-                this.submit(e)
-              }, 10);
-            }
-          });
+        .get();
+      once('exo.auto-submit', candidates).forEach((element:HTMLElement) => {
+        let timeoutID: ReturnType<typeof setTimeout> = null;
+        $(element).on('change', e => {
+          // don't trigger on text change for full-form
+          if ($(e.target).is(':not(:text, :submit, [data-exo-auto-submit-exclude])')) {
+            timeoutID = setTimeout(() => {
+              this.submit(e);
+            }, 10);
+          }
         });
+      });
     }
   };
 
