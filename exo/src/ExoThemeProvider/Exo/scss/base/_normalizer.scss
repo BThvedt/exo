@@ -1,122 +1,120 @@
 // Exo CSS Normalize.
-@layer base {
-  .exo-reset {
+.exo-reset {
 
-    // Lists
-    // --------
-    ul {
-
-      &,
-      &.menu {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-      }
-
-      li {
-        // IE and Edge fix that inserts image before the list item itself.
-        list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
-      }
-    }
-
-    // Links
-    // --------
-    a {
-      background-color: transparent; // Remove the grey background on active links in IE 10.
-      border: 0;
-      text-rendering: optimizeLegibility;
-
-      &:hover,
-      &:active,
-      &:focus {
-        text-decoration: none;
-      }
-
-      &:active,
-      &:focus {
-        color: inherit;
-      }
-    }
-
-    // Text
-    // --------
-    // Add correct font size in all browsers.
-    small {
-      font-size: 80%;
-    }
-
-    // Images
-    // --------
-    // Remove border on images in IE 10.
-    img {
-      border-style: none;
-    }
-
-    // Tables
-    // --------
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-    }
-
-    // Forms
-    // --------
-    // 1. Change the font styles in all browsers.
-    // 2. Remove margin in FF and Safari.
-    button,
-    input,
-    optgroup,
-    select,
-    textarea {
-      font-family: inherit; // 1
-      font-size: 100%; // 1
-      margin: 0; // 2
-    }
-
-    // Show the overflow in IE and Edge.
-    button,
-    input {
-      overflow: visible;
-    }
-
-    // Add the ability to style clickable types for iOS and Safari.
-    button,
-    [type='button'],
-    [type='reset'],
-    [type='submit'] {
-      -webkit-appearance: button; // sass-lint:disable-line no-vendor-prefixes
-      border-radius: 0;
-    }
-
-    // Correct padding in Firefox.
-    fieldset {
-      padding: 0.35em 0.75em 0.625em;
-    }
-
-    // 1. Correct the odd appearance in Chrome and Safari.
-    // 2. Correct the outline styling in Safari.
-    [type='search'] {
-      -webkit-appearance: textfield; // sass-lint:disable-line no-vendor-prefixes // 1
-      outline-offset: -2px; // 2
-    }
-
-    // Remove the inner padding in Chrome and Safari.
-    [type='search']::-webkit-search-decoration { // sass-lint:disable-line force-pseudo-nesting
-      -webkit-appearance: none; // sass-lint:disable-line no-vendor-prefixes
-    }
-
-    // Misc.
-    // --------
-    // Add the correct display in IE.
-    [hidden] {
-      display: none;
-    }
-  }
-
-  // Main element
+  // Lists
   // --------
-  // IE doesn't like the section tag.
-  .section.main {
-    display: block;
+  ul {
+
+    &,
+    &.menu {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    li {
+      // IE and Edge fix that inserts image before the list item itself.
+      list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+    }
   }
+
+  // Links
+  // --------
+  a {
+    background-color: transparent; // Remove the grey background on active links in IE 10.
+    border: 0;
+    text-rendering: optimizeLegibility;
+
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: none;
+    }
+
+    &:active,
+    &:focus {
+      color: inherit;
+    }
+  }
+
+  // Text
+  // --------
+  // Add correct font size in all browsers.
+  small {
+    font-size: 80%;
+  }
+
+  // Images
+  // --------
+  // Remove border on images in IE 10.
+  img {
+    border-style: none;
+  }
+
+  // Tables
+  // --------
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  // Forms
+  // --------
+  // 1. Change the font styles in all browsers.
+  // 2. Remove margin in FF and Safari.
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit; // 1
+    font-size: 100%; // 1
+    margin: 0; // 2
+  }
+
+  // Show the overflow in IE and Edge.
+  button,
+  input {
+    overflow: visible;
+  }
+
+  // Add the ability to style clickable types for iOS and Safari.
+  button,
+  [type='button'],
+  [type='reset'],
+  [type='submit'] {
+    -webkit-appearance: button; // sass-lint:disable-line no-vendor-prefixes
+    border-radius: 0;
+  }
+
+  // Correct padding in Firefox.
+  fieldset {
+    padding: 0.35em 0.75em 0.625em;
+  }
+
+  // 1. Correct the odd appearance in Chrome and Safari.
+  // 2. Correct the outline styling in Safari.
+  [type='search'] {
+    -webkit-appearance: textfield; // sass-lint:disable-line no-vendor-prefixes // 1
+    outline-offset: -2px; // 2
+  }
+
+  // Remove the inner padding in Chrome and Safari.
+  [type='search']::-webkit-search-decoration { // sass-lint:disable-line force-pseudo-nesting
+    -webkit-appearance: none; // sass-lint:disable-line no-vendor-prefixes
+  }
+
+  // Misc.
+  // --------
+  // Add the correct display in IE.
+  [hidden] {
+    display: none;
+  }
+}
+
+// Main element
+// --------
+// IE doesn't like the section tag.
+.section.main {
+  display: block;
 }
