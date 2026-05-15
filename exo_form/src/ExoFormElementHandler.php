@@ -33,6 +33,12 @@ class ExoFormElementHandler implements TrustedCallbackInterface {
     if (empty($element['#type']) || !exo_form_access()) {
       return $element;
     }
+    if (exo_is_claro() && in_array($element['#type'], ['container'])) {
+      // Allow field storage config add form to render without interference.
+      if (str_starts_with(\Drupal::routeMatch()->getRouteName(), 'field_ui.field_storage_config_add')) {
+        return $element;
+      }
+    }
     $is_admin = exo_is_admin();
     $is_form = !empty($element['#parents']);
     if ($is_form || $is_admin) {
