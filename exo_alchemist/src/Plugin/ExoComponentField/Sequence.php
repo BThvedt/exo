@@ -366,7 +366,15 @@ class Sequence extends EntityReferenceBase {
           }
         }
         if ($entity instanceof RevisionableInterface) {
-          $entity->setNewRevision();
+          // Only mark for a new revision when the child entity type
+          // participates in ERR's automatic save propagation (i.e. has
+          // entity_revision_parent_id_field, like paragraphs). Otherwise
+          // calling setNewRevision() wipes the in-memory revision_id but
+          // nothing saves the child, so EntityReferenceRevisionsItem::preSave()
+          // later writes NULL into the parent's target_revision_id column.
+          if ($entity->getEntityType()->get('entity_revision_parent_id_field')) {
+            $entity->setNewRevision();
+          }
         }
         $this->exoComponentManager()->getExoComponentFieldManager()->onPreSaveLayoutBuilderEntity($component, $entity, $parent_entity);
       }
