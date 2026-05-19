@@ -433,11 +433,12 @@ class ExoMenu implements ExoMenuInterface {
     $style = $this->getPlugin();
     if ($style) {
       $build = $this->buildMenus();
-      $build['#attributes']['id'] = Html::getId('exo-menu-' . $this->id);
+      $id = Html::getUniqueId('exo-menu-' . $this->id);
+      $build['#attributes']['id'] = $id;
       $build['#attached']['drupalSettings']['exoMenu']['defaults'][$this->style] = $style->prepareSettings($this->exoSettings->getSiteSettingsDiff(), 'site');
-      $build['#attached']['drupalSettings']['exoMenu']['menus'][$this->id] = $style->prepareSettings($this->exoSettings->getLocalSettingsDiff(), 'local') + [
+      $build['#attached']['drupalSettings']['exoMenu']['menus'][$id] = $style->prepareSettings($this->exoSettings->getLocalSettingsDiff(), 'local') + [
         'style' => $style->getPluginId(),
-        'selector' => '#' . $build['#attributes']['id'],
+        'selector' => '#' . $id,
       ];
       $build['#wrap_children'] = $this->exoSettings->getSetting('wrap_children');
       $build['#tag'] = $this->tag;

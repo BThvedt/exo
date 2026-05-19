@@ -381,6 +381,13 @@ abstract class ExoModalBlockBase extends BlockBase implements ExoModalBlockPlugi
     if ($block && $block->access('view')) {
       $this->addCacheableDependency($block);
       $build = $this->entityTypeManager->getViewBuilder('block')->view($block);
+      // Vary the embedded block's render cache by the outer modal so the same
+      // block embedded in multiple modals on one page doesn't reuse cached
+      // output. Without this, render-cache hits replay the first embed's
+      // markup (and any unique IDs in it) for every subsequent embed.
+      if (!empty($build['#cache']['keys']) && !empty($this->configuration['block_id'])) {
+        $build['#cache']['keys'][] = 'exo_modal:' . $this->configuration['block_id'];
+      }
     }
     return $build;
   }
