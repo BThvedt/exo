@@ -28,18 +28,20 @@ class Options extends ExoFilterBase {
   public function exposedElementAlter(&$element, FormStateInterface $form_state, $context) {
     $element_id = $context['id'];
     $user_input = $form_state->getUserInput();
+    unset($element['#options']['All']);
+
     if (empty($element['#multiple'])) {
       $element['#type'] = 'radios';
+      if (($user_input[$element_id] ?? '') === 'All') {
+        $user_input[$element_id] = '';
+        $form_state->setUserInput($user_input);
+      }
     }
     else {
       $element['#type'] = 'checkboxes';
-      $user_input[$element_id] = array_filter(array_combine(array_values($user_input[$element_id]), array_values($user_input[$element_id])));
+      $values = array_values((array) ($user_input[$element_id] ?? []));
+      $user_input[$element_id] = array_filter(array_combine($values, $values));
       $element['#default_value'] = $user_input[$element_id];
-      $form_state->setUserInput($user_input);
-    }
-    unset($element['#options']['All']);
-    if ($user_input[$element_id] == 'All') {
-      $user_input[$element_id] = '';
       $form_state->setUserInput($user_input);
     }
   }
