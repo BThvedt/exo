@@ -39,6 +39,10 @@
 
 .theme-claro {
 
+  .tabledrag-cell .tabledrag-cell-content {
+    display: flex !important;
+  }
+
   a,
   .link,
   .sortable-heading.is-active > a {
@@ -2053,7 +2057,7 @@
       ////////////////////////////////////////////////////////////////////////////
       .entity-meta {
 
-        .exo-body:not(.theme-gin) & {
+        .exo-body:not(.theme-claro) & {
           background-color: theme-val($theme, entity-meta-bg-color, true);
           border-color: theme-val($theme, button-border-color, true);
           border-style: theme-val($theme, border-style);

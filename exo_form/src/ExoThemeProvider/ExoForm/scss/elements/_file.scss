@@ -33,7 +33,7 @@
 
     &:first-child {
 
-      > * {
+      > *:not(.tabledrag-cell-content) {
         display: inline-block !important;
         vertical-align: middle;
       }
