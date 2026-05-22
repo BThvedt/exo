@@ -47,11 +47,13 @@
         margin: 0;
 
         .vertical-tabs__menu-item-title {
+          display: block;
           font-size: $tab-menu-font-size;
           font-weight: $tab-menu-font-weight;
         }
 
-        .vertical-tabs__menu-item-summary {
+        .vertical-tabs__menu-item-summary,
+        .vertical-tabs__menu-link-summary {
           display: block;
           font-size: $tab-menu-font-size * 0.9;
           font-style: italic;
