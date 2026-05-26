@@ -25,6 +25,7 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\layout_builder\SectionComponent;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Class ExoComponentGenerator.
@@ -633,6 +634,22 @@ class ExoComponentGenerator {
    * @return $this
    */
   protected function handleLayoutEntityPostSave(EntityInterface $entity) {
+  
+    // Invalidate block_content cache tags for all inline components used in
+    // this layout entity, so changes (e.g. video swaps) are visible immediately.
+    $block_ids = \Drupal::database()
+      ->select('inline_block_usage', 'ibu')
+      ->fields('ibu', ['block_content_id'])
+      ->condition('layout_entity_type', $entity->getEntityTypeId())
+      ->condition('layout_entity_id', $entity->id())
+      ->execute()
+      ->fetchCol();
+
+    if ($block_ids) {
+      $tags = array_map(fn($id) => 'block_content:' . $id, $block_ids);
+      Cache::invalidateTags($tags);
+    }
+
     if (!empty($entity->exoAlchemistClone)) {
       $to_storage = $this->getSectionStorageForEntity($entity);
       $this->cloneComponentsUsage($entity, $to_storage);
