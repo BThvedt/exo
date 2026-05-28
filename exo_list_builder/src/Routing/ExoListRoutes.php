@@ -34,9 +34,6 @@ class ExoListRoutes {
     foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($exo_list_builder = $entity_type->get('exo_list_builder')) {
         foreach ($exo_list_builder as $link_template => $data) {
-          if (!$exo_entity_list->isPublished()) {
-            continue;
-          }
           if (!is_array($data)) {
             continue;
           }
@@ -48,6 +45,9 @@ class ExoListRoutes {
           $exo_entity_list_id = $data['id'];
           if ($entity_type->hasLinkTemplate($link_template) && isset($exo_entity_lists[$exo_entity_list_id])) {
             $exo_entity_list = $exo_entity_lists[$exo_entity_list_id];
+            if (!$exo_entity_list->isPublished()) {
+              continue;
+            }
             $route = new Route($entity_type->getLinkTemplate($link_template));
             $route
               ->addDefaults([
