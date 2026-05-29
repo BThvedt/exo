@@ -387,9 +387,11 @@ class ExoImagineFormatter extends ImageFormatter {
           });
           $first = array_key_first($valid_breakpoint_settings);
           foreach ($valid_breakpoint_settings as $key => $data) {
-            $image_definition = $this->exoImagineManager->getImageDefinition($file, $data['width'], $data['height'], $data['unique'], TRUE);
+            $source_width = $item->width ?? NULL;
+            $source_height = $item->height ?? NULL;
+            $image_definition = $this->exoImagineManager->getImageDefinition($file, $data['width'], $data['height'], $data['unique'], TRUE, $source_width, $source_height);
             $cache['tags'] = Cache::mergeTags($cache['tags'], $image_definition['cache_tags']);
-            $preview_definition = $this->exoImagineManager->getImagePreviewDefinition($file, $data['width'], $data['height'], $data['unique'], $blur, TRUE);
+            $preview_definition = $this->exoImagineManager->getImagePreviewDefinition($file, $data['width'], $data['height'], $data['unique'], $blur, TRUE, $source_width, $source_height);
             $cache['tags'] = Cache::mergeTags($cache['tags'], $preview_definition['cache_tags']);
 
             if (empty($image_definition['src'])) {
