@@ -91,11 +91,17 @@ class ExoImagineManager {
    *   A unique string that can be provided to make style unique.
    * @param bool $record_usage
    *   Will set usage timestamp.
+   * @param int $source_width
+   *   The known width of the source image. When provided (along with
+   *   $source_height), the missing target dimension is derived from these
+   *   instead of reading the file with getimagesize().
+   * @param int $source_height
+   *   The known height of the source image.
    *
    * @return array
    *   The image definition.
    */
-  public function getImageDefinition(FileInterface $file, $width = NULL, $height = NULL, $unique = '', $record_usage = FALSE) {
+  public function getImageDefinition(FileInterface $file, $width = NULL, $height = NULL, $unique = '', $record_usage = FALSE, $source_width = NULL, $source_height = NULL) {
     $image_uri = $file->getFileUri();
     $image_url = $this->generateUrl($image_uri);
     $definition = [
@@ -129,18 +135,18 @@ class ExoImagineManager {
       }
       $image_style = $imagine_style->getStyle();
       $image_style_uri = $image_style->buildUri($image_uri);
-      $info = @getimagesize($image_uri);
       if (!$width || !$height) {
-        if (empty($info)) {
+        $source = $this->getSourceDimensions($image_uri, $source_width, $source_height);
+        if (empty($source)) {
           return $definition;
         }
         if ($width && !$height) {
-          $ratio = $width / $info[0];
-          $height = $info[1] * $ratio;
+          $ratio = $width / $source[0];
+          $height = $source[1] * $ratio;
         }
         if ($height && !$width) {
-          $ratio = $height / $info[1];
-          $width = $info[0] * $ratio;
+          $ratio = $height / $source[1];
+          $width = $source[0] * $ratio;
         }
       }
       $mime = $file->getMimeType();
@@ -178,12 +184,18 @@ class ExoImagineManager {
    *   If TRUE, preview will be a blurred image instead of an SVG placeholder.
    * @param bool $record_usage
    *   Will set usage timestamp.
+   * @param int $source_width
+   *   The known width of the source image. When provided (along with
+   *   $source_height), the missing target dimension is derived from these
+   *   instead of reading the file with getimagesize().
+   * @param int $source_height
+   *   The known height of the source image.
    *
    * @return array
    *   The image preview definition.
    */
-  public function getImagePreviewDefinition(FileInterface $file, $width = NULL, $height = NULL, $unique = '', $blur = FALSE, $record_usage = FALSE) {
-    $image_definition = $this->getImageDefinition($file, $width, $height, $unique, FALSE);
+  public function getImagePreviewDefinition(FileInterface $file, $width = NULL, $height = NULL, $unique = '', $blur = FALSE, $record_usage = FALSE, $source_width = NULL, $source_height = NULL) {
+    $image_definition = $this->getImageDefinition($file, $width, $height, $unique, FALSE, $source_width, $source_height);
     $definition = [
       'src' => '',
       'width' => '',
@@ -206,17 +218,17 @@ class ExoImagineManager {
         $image_style = $imagine_style->getStyle();
         $image_style_uri = $image_style->buildUri($image_uri);
         if (!$width || !$height) {
-          $info = @getimagesize($image_uri);
-          if (empty($info)) {
+          $source = $this->getSourceDimensions($image_uri, $source_width, $source_height);
+          if (empty($source)) {
             return $definition;
           }
           if ($width && !$height) {
-            $ratio = $width / $info[0];
-            $height = $info[1] * $ratio;
+            $ratio = $width / $source[0];
+            $height = $source[1] * $ratio;
           }
           if ($height && !$width) {
-            $ratio = $height / $info[1];
-            $width = $info[0] * $ratio;
+            $ratio = $height / $source[1];
+            $width = $source[0] * $ratio;
           }
         }
         $mime = $file->getMimeType();
@@ -624,6 +636,36 @@ class ExoImagineManager {
   protected function generateUrl($url) {
     $generator = \Drupal::service('file_url_generator');
     return $generator->transformRelative($generator->generateAbsoluteString($url));
+  }
+
+  /**
+   * Resolves the source image dimensions, avoiding file I/O when possible.
+   *
+   * Drupal stores image dimensions on the image field item at save time, so
+   * callers that have the item (e.g. the field formatter) can pass them in to
+   * skip a getimagesize() read of the source file. Falls back to getimagesize()
+   * when the caller has no stored dimensions (bare-file callers, or legacy
+   * items saved before dimensions were captured).
+   *
+   * @param string $image_uri
+   *   The source image uri.
+   * @param int $source_width
+   *   The known source width, or NULL.
+   * @param int $source_height
+   *   The known source height, or NULL.
+   *
+   * @return array|false
+   *   A [width, height] array, or FALSE if dimensions can't be resolved.
+   */
+  protected function getSourceDimensions($image_uri, $source_width, $source_height) {
+    if ($source_width && $source_height) {
+      return [$source_width, $source_height];
+    }
+    $info = @getimagesize($image_uri);
+    if (empty($info)) {
+      return FALSE;
+    }
+    return [$info[0], $info[1]];
   }
 
 }
