@@ -30,7 +30,7 @@ trait ExoComponentFieldPreviewEntityTrait {
         }
       }
       if ($bundle && $bundle_key) {
-        $query->condition($bundle_key, $bundle);
+        $query->condition($bundle_key, $bundle, is_array($bundle) ? 'IN' : '=');
       }
       if ($key = $entity_definition->getKey('status')) {
         $query->condition($key, TRUE);
