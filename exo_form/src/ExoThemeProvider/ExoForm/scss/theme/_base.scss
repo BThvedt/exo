@@ -81,9 +81,9 @@
     &.exo-form-theme-#{'' + $key} {
       color: theme-val($theme, form-color, true);
 
-      // .messages {
-      //   box-shadow: none;
-      // }
+      .claro-details--accordion-item {
+        border-top: 1px solid theme-val($theme, form-border-color, true);
+      }
 
       &.exo-form-wrap {
         background-color: theme-val($theme, form-bg-color, true);

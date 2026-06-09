@@ -48,3 +48,29 @@ field.widget.settings.micon_link:
       sequence:
         type: boolean
         label: 'Enabled'
+
+field.widget.settings.exo_link:
+  type: field.widget.settings.link_default
+  label: 'eXo link widget settings'
+  mapping:
+    icon:
+      type: boolean
+      label: 'Allow icon selection'
+    packages:
+      type: sequence
+      label: 'Icon packages'
+      sequence:
+        type: string
+        label: 'Package'
+    target:
+      type: boolean
+      label: 'Open link in new window'
+    class:
+      type: boolean
+      label: 'Allow adding CSS class'
+    class_list:
+      type: sequence
+      label: 'CSS class list'
+      sequence:
+        type: string
+        label: 'Class label'

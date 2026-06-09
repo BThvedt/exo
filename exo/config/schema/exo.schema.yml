@@ -12,3 +12,58 @@ exo.loader.settings:
       type: boolean
     throbber_position:
       type: string
+
+field.widget.settings.exo_options_buttons:
+  type: field.widget.settings.options_buttons
+  label: 'eXo check boxes/radio buttons widget settings'
+  mapping:
+    style:
+      type: string
+      label: 'Style'
+    empty_label:
+      type: label
+      label: 'Empty option label'
+    reverse:
+      type: boolean
+      label: 'Reverse'
+    hide_empty:
+      type: boolean
+      label: 'Hide empty option'
+
+field.widget.settings.exo_autocomplete:
+  type: mapping
+  label: 'eXo autocomplete widget settings'
+  mapping:
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    autocomplete_route_name:
+      type: string
+      label: 'Autocomplete route name'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    selection_handler:
+      type: string
+      label: 'Selection handler'
+    limit:
+      type: integer
+      label: 'Number of results'
+    min_length:
+      type: integer
+      label: 'Minimum length'
+    delimiter:
+      type: string
+      label: 'Delimiter'
+    not_found_message_allow:
+      type: boolean
+      label: 'Allow creation of new terms'
+    not_found_message:
+      type: label
+      label: 'New term message'
+    new_terms:
+      type: boolean
+      label: 'Create new terms'
+    no_empty_message:
+      type: label
+      label: 'Empty results message'
