@@ -73,8 +73,11 @@ class ExoListActionExport implements ContainerInjectionInterface {
         $this->t('Missing or not found entity content exported file.')
       );
     }
+    // Do not delete the file after sending. The auto-download behavior
+    // (data-auto-download) triggers one download and the visible "Download"
+    // link may be clicked as well; deleting after the first send would 404 any
+    // subsequent attempt. Temporary managed files are cleaned up by cron.
     return (new BinaryFileResponse($file_uri))
-      ->deleteFileAfterSend(TRUE)
       ->setContentDisposition('attachment', basename($file_uri));
   }
 
