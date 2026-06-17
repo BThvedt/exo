@@ -1,0 +1,71 @@
+field.formatter.settings.exo_imagine:
+  type: field.formatter.settings.image
+  label: 'eXo Imagine format settings'
+  mapping:
+    breakpoints:
+      type: sequence
+      label: 'Breakpoints'
+      sequence:
+        type: mapping
+        label: 'Breakpoint'
+        mapping:
+          style:
+            type: string
+            label: 'Image style'
+          width:
+            type: string
+            label: 'Width'
+          height:
+            type: string
+            label: 'Height'
+          unique:
+            type: string
+            label: 'Unique'
+    display:
+      # eXo display overrides are produced by a pluggable ExoSettings form, so
+      # the contained keys are not fixed.
+      type: ignore
+      label: 'Display overrides'
+    selection_mode:
+      type: string
+      label: 'Selection mode'
+    amount:
+      type: integer
+      label: 'Amount'
+    offset:
+      type: integer
+      label: 'Offset'
+    reverse:
+      type: boolean
+      label: 'Reverse'
+
+field.formatter.settings.exo_imagine_media:
+  type: field.formatter.settings.exo_imagine
+  label: 'eXo Image media format settings'
+
+field.formatter.settings.exo_imagine_media_gallery:
+  type: field.formatter.settings.exo_imagine
+  label: 'eXo Image media gallery format settings'
+  mapping:
+    max_width:
+      type: integer
+      label: 'Maximum width'
+    max_height:
+      type: integer
+      label: 'Maximum height'
+    resolution:
+      type: string
+      label: 'Resolution'
+    type:
+      type: string
+      label: 'Type'
+    text:
+      type: label
+      label: 'Text'
+    icon:
+      type: string
+      label: 'Icon'
+
+field.formatter.settings.exo_imagine_url:
+  type: field.formatter.settings.image_url
+  label: 'eXo Image URL format settings'

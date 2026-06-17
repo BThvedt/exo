@@ -1,0 +1,7 @@
+field.widget.settings.exo_linkit:
+  type: field.widget.settings.exo_link
+  label: 'eXo Linkit widget settings'
+  mapping:
+    linkit_profile:
+      type: string
+      label: 'Linkit profile'

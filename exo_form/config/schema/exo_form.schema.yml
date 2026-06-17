@@ -1,0 +1,24 @@
+field.widget.settings.exo_number:
+  type: field.widget.settings.number
+  label: 'eXo number widget settings'
+  mapping:
+    step:
+      type: string
+      label: 'Step'
+
+field.widget.settings.address_exo:
+  type: field.widget.settings.address_default
+  label: 'eXo address widget settings'
+  mapping:
+    wrapper:
+      type: string
+      label: 'Wrapper'
+    force_address:
+      type: boolean
+      label: 'Force address'
+    hidden:
+      type: sequence
+      label: 'Hidden address fields'
+      sequence:
+        type: string
+        label: 'Field'

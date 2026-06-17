@@ -1,4 +1,4 @@
-.exo-body:not(.theme-claro) .exo-form .entity-meta {
+.exo-body .exo-form .entity-meta {
   margin: 0;
   overflow: hidden;
 
@@ -33,13 +33,13 @@
     }
   }
 
-  .claro-details__summary {
-    padding: $global-padding $global-padding $global-padding $global-padding * 2;
+  // .claro-details__summary {
+  //   padding: $global-padding $global-padding $global-padding $global-padding * 2;
 
-    &:after {
-      display: none !important;
-    }
-  }
+  //   &:after {
+  //     display: none !important;
+  //   }
+  // }
 
   .claro-details__wrapper {
     margin: 0 !important;
