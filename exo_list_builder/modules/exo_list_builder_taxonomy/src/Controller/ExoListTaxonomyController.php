@@ -34,7 +34,14 @@ class ExoListTaxonomyController extends ExoListController {
       $show_default = $term_storage->getVocabularyHierarchyType($vocabulary->id()) !== 0;
     }
     if ($show_default) {
-      $form = $this->formBuilder()->getForm('Drupal\taxonomy\Form\OverviewTerms', $vocabulary);
+      // In Drupal 11 OverviewTerms is an EntityForm, so the form object must
+      // have its entity set before the form is built (FormBuilder::getForm()
+      // does not do this for a class string). The vocabulary is still passed
+      // as a build argument because OverviewTerms::buildForm() reads it from
+      // the argument rather than $this->getEntity().
+      $form_object = $this->entityTypeManager()->getFormObject('taxonomy_vocabulary', 'overview');
+      $form_object->setEntity($vocabulary);
+      $form = $this->formBuilder()->getForm($form_object, $vocabulary);
       $form['#attached']['library'][] = 'exo_list_builder_taxonomy/list';
       return $form;
     }
