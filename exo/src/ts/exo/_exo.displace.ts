@@ -46,8 +46,12 @@ class ExoDisplace {
     const n = displacingElements.length;
     for (let i = 0; i < n; i++) {
       const el = displacingElements[i];
-      // If the element is not visible, do not consider its dimensions.
-      if (el['style'].display === 'none' || el['style'].visibility === 'hidden') {
+      // If the element is not visible, do not consider its dimensions. Use
+      // getClientRects() (empty for any hide — inline, class, media query, or
+      // ancestor) rather than inline el.style.display, which misses stylesheet
+      // hides and leaves a hidden edge measuring 0 → a bogus viewport-sized
+      // offset. Fixed edge bars still report rects when shown.
+      if (el.getClientRects().length === 0 || getComputedStyle(el).visibility === 'hidden') {
         continue;
       }
       // If the offset data attribute contains a displacing value, use it.
