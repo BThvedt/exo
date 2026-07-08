@@ -18,6 +18,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\exo\ExoSettingsInterface;
+use Drupal\image\ImageDerivativeUtilities;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceSelectionTrait;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceLinkTrait;
@@ -91,8 +92,8 @@ class ExoImagineFormatter extends ImageFormatter {
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator, ExoSettingsInterface $exo_imagine_settings, ExoImagineManager $exo_imagine_manager, LoggerChannelFactoryInterface $logger_factory) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage, $file_url_generator);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator, ImageDerivativeUtilities $image_derivative_utilities, ExoSettingsInterface $exo_imagine_settings, ExoImagineManager $exo_imagine_manager, LoggerChannelFactoryInterface $logger_factory) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage, $file_url_generator, $image_derivative_utilities);
     $this->exoImagineSettings = $exo_imagine_settings->createInstance($this->getSetting('display'));
     $this->exoImagineManager = $exo_imagine_manager;
     $this->logger = $logger_factory->get('exo_imagine');
@@ -113,6 +114,7 @@ class ExoImagineFormatter extends ImageFormatter {
       $container->get('current_user'),
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('file_url_generator'),
+      $container->get(ImageDerivativeUtilities::class),
       $container->get('exo_imagine.settings'),
       $container->get('exo_imagine.manager'),
       $container->get('logger.factory')
