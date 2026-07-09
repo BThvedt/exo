@@ -26,10 +26,26 @@ exo_icon.exo_icon_package.*:
       type: integer
       label: 'Weight'
 
-entity.type.*.third_party.exo_icon:
-  type: mapping
-  label: 'eXo Icon entity icon'
-  mapping:
-    icon:
-      type: string
-      label: 'Icon ID'
+# exo_icon stores one icon-id string per config entity it decorates, keyed by
+# entity:<type>:<id> (see exo_icon_entity_icon_key() in exo_icon.module) — a
+# sequence of those dynamic keys, declared per config entity type that
+# exo_icon_entity_support() lists.
+exo_icon.entity_icons:
+  type: sequence
+  label: 'eXo Icon entity icons'
+  sequence:
+    type: string
+    label: 'Icon ID'
+
+media.type.*.third_party.exo_icon:
+  type: exo_icon.entity_icons
+node.type.*.third_party.exo_icon:
+  type: exo_icon.entity_icons
+taxonomy.vocabulary.*.third_party.exo_icon:
+  type: exo_icon.entity_icons
+paragraphs.paragraphs_type.*.third_party.exo_icon:
+  type: exo_icon.entity_icons
+commerce_product.commerce_product_type.*.third_party.exo_icon:
+  type: exo_icon.entity_icons
+profile.type.*.third_party.exo_icon:
+  type: exo_icon.entity_icons
