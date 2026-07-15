@@ -530,6 +530,54 @@ function exo_alchemist_entity_base_field_info(EntityTypeInterface $entity_type) 
 function exo_alchemist_entity_presave(EntityInterface $entity) {
   // Managed generated components.
   \Drupal::service('exo_alchemist.generator')->handlePreSave($entity);
+  // Safety net: never allow an entity_reference_revisions field to write a
+  // NULL target_revision_id. Deep-nested Layout Builder sequence saves can
+  // lose the in-memory child entity/revision, which triggers an integrity
+  // constraint violation when the field table is written. This runs after the
+  // field items' own preSave() (which failed to populate the value) and before
+  // the row is inserted.
+  // @see https://www.drupal.org/project/drupal/issues/2824097
+  if ($entity instanceof ContentEntityInterface) {
+    _exo_alchemist_backfill_revision_ids($entity);
+  }
+}
+
+/**
+ * Backfills missing entity_reference_revisions target_revision_id values.
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity being saved.
+ */
+function _exo_alchemist_backfill_revision_ids(ContentEntityInterface $entity) {
+  foreach ($entity->getFields(FALSE) as $items) {
+    if ($items->getFieldDefinition()->getType() !== 'entity_reference_revisions') {
+      continue;
+    }
+    $target_type = $items->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+    $storage = \Drupal::entityTypeManager()->getStorage($target_type);
+    foreach ($items as $item) {
+      // Only act on items that would write a NULL revision id.
+      if (!empty($item->target_revision_id)) {
+        continue;
+      }
+      $referenced = $item->entity ?? NULL;
+      $has_entity = $referenced instanceof \Drupal\Core\Entity\EntityInterface;
+      $revision_id = ($referenced instanceof \Drupal\Core\Entity\RevisionableInterface) ? $referenced->getRevisionId() : NULL;
+      // The attached entity may be new/unsaved (no revision yet). Fall back to
+      // the stored revision using either the referenced entity's id or the
+      // scalar target_id.
+      if (empty($revision_id)) {
+        $load_id = ($has_entity && $referenced->id()) ? $referenced->id() : $item->target_id;
+        if (!empty($load_id)) {
+          $loaded = $storage->load($load_id);
+          $revision_id = ($loaded instanceof \Drupal\Core\Entity\RevisionableInterface) ? $loaded->getRevisionId() : NULL;
+        }
+      }
+      if (!empty($revision_id)) {
+        $item->set('target_revision_id', $revision_id);
+      }
+    }
+  }
 }
 
 /**

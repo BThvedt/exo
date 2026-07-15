@@ -393,11 +393,17 @@ class Sequence extends EntityReferenceBase {
       $entity = $item->entity;
       if ($entity && $entity->id()) {
         $this->exoComponentManager()->getExoComponentFieldManager()->onPostSaveLayoutBuilderEntity($component, $entity, $parent_entity);
-        // We need to save usage.
+      }
+      // Record inline block usage so non-reusable child blocks can resolve an
+      // access dependency later (e.g. the media library opener). Deep-nested
+      // sequence saves can drop the in-memory child object, so fall back to the
+      // stored target_id rather than skipping the usage write entirely.
+      $child_id = ($entity && $entity->id()) ? $entity->id() : $item->target_id;
+      if ($child_id) {
         /** @var \Drupal\layout_builder\InlineBlockUsage $inline_block_usage */
         $inline_block_usage = \Drupal::service('inline_block.usage');
-        $inline_block_usage->deleteUsage([$entity->id()]);
-        $inline_block_usage->addUsage($entity->id(), $sequence_entity);
+        $inline_block_usage->deleteUsage([$child_id]);
+        $inline_block_usage->addUsage($child_id, $sequence_entity);
       }
     }
   }

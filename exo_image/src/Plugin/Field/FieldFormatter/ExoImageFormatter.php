@@ -7,9 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\exo_image\ExoImageStyleManagerInterface;
 use Drupal\Core\Cache\Cache;
@@ -20,9 +17,7 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Render\Markup;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceSelectionTrait;
 use Drupal\exo\Plugin\Field\FieldFormatter\ExoEntityReferenceLinkTrait;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Plugin implementation of the 'eXo Image' formatter.
@@ -38,20 +33,6 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 class ExoImageFormatter extends ImageFormatter {
   use ExoEntityReferenceSelectionTrait;
   use ExoEntityReferenceLinkTrait;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The image style entity storage.
-   *
-   * @var \Drupal\image\ImageStyleStorageInterface
-   */
-  protected $imageStyleStorage;
 
   /**
    * The exo image style manager.
@@ -82,65 +63,19 @@ class ExoImageFormatter extends ImageFormatter {
   protected $logger;
 
   /**
-   * Constructs an ImageFormatter object.
-   *
-   * @param string $plugin_id
-   *   The plugin_id for the formatter.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the formatter is associated.
-   * @param array $settings
-   *   The formatter settings.
-   * @param string $label
-   *   The formatter label display setting.
-   * @param string $view_mode
-   *   The view mode.
-   * @param array $third_party_settings
-   *   Any third party settings settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
-   *   The image style storage.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
-   *   The file url generator.
-   * @param \Drupal\exo\ExoSettingsInterface $exo_image_settings
-   *   The exo image settings.
-   * @param \Drupal\exo_image\ExoImageStyleManagerInterface $exo_image_style_manager
-   *   The exo image stype manager.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
-   *   The MIME type guesser.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator, ExoSettingsInterface $exo_image_settings, ExoImageStyleManagerInterface $exo_image_style_manager, MimeTypeGuesserInterface $mime_type_guesser, LoggerChannelFactoryInterface $logger_factory) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage);
-    $this->exoImageSettings = $exo_image_settings;
-    $this->exoImageStyleManager = $exo_image_style_manager;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-    $this->logger = $logger_factory->get('exo_image');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('current_user'),
-      $container->get('entity_type.manager')->getStorage('image_style'),
-      $container->get('file_url_generator'),
-      $container->get('exo_image.settings'),
-      $container->get('exo_image.style.manager'),
-      $container->get('file.mime_type.guesser'),
-      $container->get('logger.factory')
-    );
+    // Let the parent (core ImageFormatter) construct the instance so this stays
+    // compatible across core versions that change the constructor signature
+    // (e.g. Drupal 11 added the ImageDerivativeUtilities argument). The
+    // exo-specific services are then attached via property injection.
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->exoImageSettings = $container->get('exo_image.settings');
+    $instance->exoImageStyleManager = $container->get('exo_image.style.manager');
+    $instance->mimeTypeGuesser = $container->get('file.mime_type.guesser');
+    $instance->logger = $container->get('logger.factory')->get('exo_image');
+    return $instance;
   }
 
   /**

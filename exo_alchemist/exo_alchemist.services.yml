@@ -34,11 +34,6 @@ services:
     arguments: ['@plugin.manager.exo_component', '@current_user']
     tags:
       - { name: event_subscriber }
-  exo_alchemist.get_block_dependency_subscriber:
-    class: Drupal\exo_alchemist\EventSubscriber\ExoComponentSetInlineBlockDependency
-    arguments: ['@entity_type.manager', '@database', '@inline_block.usage', '@plugin.manager.layout_builder.section_storage', '@plugin.manager.exo_component']
-    tags:
-      - { name: event_subscriber }
   exo_alchemist.config_import_validator:
     class: Drupal\exo_alchemist\EventSubscriber\ExoComponentConfigImportValidate
     arguments: ['@config.manager', '@entity_type.manager']
