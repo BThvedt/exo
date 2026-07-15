@@ -1,0 +1,12 @@
+# Schema for the third-party settings exo_list_builder_taxonomy writes onto
+# taxonomy vocabularies (see exo_list_builder_taxonomy.module).
+taxonomy.vocabulary.*.third_party.exo_list_builder:
+  type: mapping
+  label: 'eXo List Builder taxonomy controls'
+  mapping:
+    order:
+      type: boolean
+      label: 'Enable ordering'
+    nest:
+      type: boolean
+      label: 'Enable nesting'
