@@ -357,12 +357,28 @@ class Sequence extends EntityReferenceBase {
       $entity = $item->entity;
       if ($entity) {
         if (!$entity->id()) {
-          // Double check to make sure we do not have a duplicate UUID.
-          $query = \Drupal::database()->select('block_content');
-          $query->condition('uuid', $entity->uuid());
-          $result = $query->countQuery()->execute()->fetchField();
-          if ($result) {
-            $entity->set('uuid', \Drupal::service('uuid')->generate());
+          // An existing sequence item can lose its entity id while being
+          // serialized into and out of the layout tempstore (the deep
+          // serialization workaround in deepSerializeEntity() marks nested
+          // children as "new"). When that happens the child arrives here with
+          // no id but still carrying its original uuid. Genuinely new items -
+          // including clones - always receive a fresh uuid via
+          // ContentEntityBase::createDuplicate(), so a uuid that already exists
+          // in storage means this is an existing item that must be updated in
+          // place rather than inserted as a duplicate.
+          $existing = \Drupal::entityTypeManager()
+            ->getStorage(ExoComponentManager::ENTITY_TYPE)
+            ->loadByProperties(['uuid' => $entity->uuid()]);
+          $existing = $existing ? reset($existing) : NULL;
+          if ($existing) {
+            // Restore the identity so the pending save resolves to an update.
+            // isNew() remains enforced (see deepSerializeEntity()), so
+            // ExoComponentGenerator::handleComponentEntityPreSave() will clear
+            // the new flag and set $entity->original for a clean in-place save.
+            $entity->set($entity->getEntityType()->getKey('id'), $existing->id());
+            if ($entity instanceof RevisionableInterface && $existing instanceof RevisionableInterface) {
+              $entity->set($entity->getEntityType()->getKey('revision'), $existing->getRevisionId());
+            }
           }
         }
         if ($entity instanceof RevisionableInterface) {
