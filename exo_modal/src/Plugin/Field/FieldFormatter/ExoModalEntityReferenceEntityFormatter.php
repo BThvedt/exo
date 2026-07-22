@@ -248,14 +248,15 @@ class ExoModalEntityReferenceEntityFormatter extends ExoModalFieldFormatterBase 
     $modal = parent::generateModal($item, $delta, $settings);
     $trigger = $this->getSetting('text');
     $icon = $this->getSetting('icon');
-    if ($this->getSetting('trigger_type') == 'entity') {
-      $field_name = $this->fieldDefinition->getName();
-      $entity = $item->getEntity()->get($field_name)->get($delta)->entity;
+    // The referenced entity may no longer exist, leaving a broken reference.
+    // In that case fall back to the configured trigger text and icon rather
+    // than fataling on a NULL entity.
+    if ($entity && $this->getSetting('trigger_type') == 'entity') {
       $view_builder = $this->entityTypeManager->getViewBuilder($entity->getEntityTypeId());
       $trigger = $view_builder->view($entity, $this->getSetting('view_mode'), $entity->language()->getId());
       $modal->setTriggerUrl($entity->toUrl()->toString());
     }
-    if ($this->getSetting('trigger_type') == 'text') {
+    if ($entity && $this->getSetting('trigger_type') == 'text') {
       if ($this->getSetting('text_auto')) {
         $trigger .= ' ' . $entity->label();
       }
@@ -283,6 +284,11 @@ class ExoModalEntityReferenceEntityFormatter extends ExoModalFieldFormatterBase 
   protected function viewModalElement(ExoModalInterface $modal, FieldItemInterface $item, $delta, $langcode) {
     $field_name = $this->fieldDefinition->getName();
     $entity = $item->getEntity()->get($field_name)->get($delta)->entity;
+    // The referenced entity may no longer exist. There is nothing to render
+    // inside the modal in that case.
+    if (!$entity) {
+      return [];
+    }
     if ($this->getSetting('modal_title_auto')) {
       $modal->setSetting(['modal', 'title'], $entity->label());
     }
