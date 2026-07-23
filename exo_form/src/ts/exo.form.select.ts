@@ -72,6 +72,20 @@
       this.$element = $element;
       this.$field = this.$element.find('select');
       this.multiple = (this.$field.attr('multiple')) ? true : false;
+      // A `size` attribute (e.g. from a #size form property) turns the native
+      // <select> into a multi-row listbox rather than a popup dropdown. On
+      // desktop we hide the native control entirely and on iOS the native
+      // picker opens regardless, so this went unnoticed — but Chrome on
+      // Android renders a sized select as an inline listbox that never opens
+      // a popup. Because we clip it to the trigger height and set opacity:0,
+      // tapping the invisible listbox simply moves the selection through its
+      // rows, which reads to the user as the value "cycling" while the
+      // dropdown never opens. Single-select widgets are always dropdowns, so
+      // strip the attribute. (Multi-selects legitimately use listbox
+      // semantics, so they're left untouched.)
+      if (!this.multiple && this.$field[0]) {
+        this.$field[0].removeAttribute('size');
+      }
       if (this.hasError()) {
         this.$element.addClass('invalid');
       }
