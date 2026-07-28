@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for exo_icon.
+ */
+
+/**
+ * Remove obsolete per-mime-type icon settings from file_icon formatters.
+ */
+function exo_icon_update_8001() {
+  // FileIconFormatter used to store an icon per mime-type group. It now
+  // resolves the icon through exo_icon.mime_manager, so these settings are
+  // dead weight — they linger in config, are ignored at render time, and have
+  // no schema, which makes Drupal 11 report them on every config save.
+  $obsolete = [
+    'icon_default',
+    'icon_image',
+    'icon_document',
+    'icon_spreadsheet',
+    'icon_presentation',
+    'icon_archive',
+    'icon_script',
+    'icon_html',
+    'icon_executable',
+    'icon_pdf',
+  ];
+
+  $updated = 0;
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  foreach ($storage->loadMultiple() as $view_display) {
+    $display_changed = FALSE;
+    foreach ($view_display->getComponents() as $field_name => $component) {
+      if (($component['type'] ?? NULL) !== 'file_icon') {
+        continue;
+      }
+      $field_changed = FALSE;
+      foreach ($obsolete as $key) {
+        if (array_key_exists($key, $component['settings'] ?? [])) {
+          unset($component['settings'][$key]);
+          $field_changed = TRUE;
+        }
+      }
+      if ($field_changed) {
+        $view_display->setComponent($field_name, $component);
+        $display_changed = TRUE;
+      }
+    }
+    if ($display_changed) {
+      $view_display->save();
+      $updated++;
+    }
+  }
+
+  return t('Removed obsolete per-mime-type icon settings from @count display(s).', ['@count' => $updated]);
+}
