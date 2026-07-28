@@ -69,3 +69,73 @@ field.formatter.settings.exo_imagine_media_gallery:
 field.formatter.settings.exo_imagine_url:
   type: field.formatter.settings.image_url
   label: 'eXo Image URL format settings'
+
+# exo_imagine stamps the derivative's dimensions onto each image style it
+# generates, so the style config carries third-party settings.
+image.style.*.third_party.exo_imagine:
+  type: mapping
+  label: 'eXo Imagine image style settings'
+  mapping:
+    data:
+      type: mapping
+      label: 'Derivative data'
+      mapping:
+        width:
+          type: integer
+          label: 'Width'
+          nullable: true
+        height:
+          type: integer
+          label: 'Height'
+          nullable: true
+        unique:
+          type: string
+          label: 'Unique key'
+        quality:
+          type: integer
+          label: 'Quality'
+          nullable: true
+
+
+exo_imagine.settings:
+  type: config_object
+  label: 'eXo Imagine settings'
+  mapping:
+    exo_default:
+      type: boolean
+      label: 'Use eXo defaults'
+    exo_preset:
+      type: string
+      label: 'Preset'
+    webp:
+      type: boolean
+      label: 'Generate WebP derivatives'
+    webp_quality:
+      type: string
+      label: 'WebP quality'
+    animate:
+      type: boolean
+      label: 'Animate on load'
+    blur:
+      type: boolean
+      label: 'Blur placeholder'
+    visible:
+      type: boolean
+      label: 'Only load when visible'
+    usage:
+      type: sequence
+      label: 'Image style usage counts, keyed by style name'
+      sequence:
+        type: integer
+        label: 'Usage count'
+
+# ExoImagineManager adds this effect to the styles it generates. The deprecated
+# exo_image module ships a second plugin claiming the same `image_style_quality`
+# id; the schema lives here because exo_imagine is the supported module.
+image.effect.image_style_quality:
+  type: mapping
+  label: 'Image style quality'
+  mapping:
+    quality:
+      type: integer
+      label: 'JPEG quality percentage'

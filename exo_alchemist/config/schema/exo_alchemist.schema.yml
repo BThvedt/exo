@@ -1,0 +1,37 @@
+field.widget.settings.entity_field_widget:
+  type: mapping
+  label: 'eXo Alchemist entity field widget settings'
+  mapping:
+    entity_type_id:
+      type: string
+      label: 'Entity type ID'
+    bundle:
+      type: string
+      label: 'Bundle'
+    field_name:
+      type: string
+      label: 'Field name'
+    default_formatter:
+      type: string
+      label: 'Default formatter'
+
+# The component definition is the parsed component YAML — its shape is defined
+# by each component, not by a fixed schema, so it is not enumerable here.
+exo_alchemist.component_third_party:
+  type: mapping
+  label: 'eXo Alchemist component settings'
+  mapping:
+    exo_component_definition:
+      type: ignore
+      label: 'Component definition'
+    exo_component_dependents:
+      type: ignore
+      label: 'Component dependents'
+
+block_content.type.*.third_party.exo_alchemist:
+  type: exo_alchemist.component_third_party
+# On entity view displays exo_alchemist also stores per-component state under
+# dynamic `component_<uuid>` keys, so the mapping is not enumerable.
+core.entity_view_display.*.*.*.third_party.exo_alchemist:
+  type: ignore
+  label: 'eXo Alchemist display settings'

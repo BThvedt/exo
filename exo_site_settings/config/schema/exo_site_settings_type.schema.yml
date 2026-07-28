@@ -16,3 +16,42 @@ exo_site_settings.exo_site_settings_type.*:
     aggregate:
       type: boolean
       label: 'Aggregate'
+
+block.settings.exo_site_settings:
+  type: block_settings
+  label: 'Site settings block'
+  mapping:
+    site_settings_type:
+      type: string
+      label: 'Site settings type'
+    site_settings_view_mode:
+      type: string
+      label: 'View mode'
+
+block.settings.exo_site_settings_field:
+  type: block_settings
+  label: 'Site settings field block'
+  mapping:
+    site_settings_fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: string
+        label: 'Field name'
+    site_settings_view_mode:
+      type: string
+      label: 'View mode'
+
+field.field.*.*.*.third_party.exo_site_settings:
+  type: mapping
+  label: 'eXo Site Settings field settings'
+  mapping:
+    config_name:
+      type: string
+      label: 'Config name'
+    config_key:
+      type: string
+      label: 'Config key'
+    config_delimiter:
+      type: string
+      label: 'Config delimiter'

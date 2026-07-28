@@ -76,6 +76,9 @@ exo_list_builder.exo_entity_list.*:
           fields:
             type: sequence
             label: 'Fields'
+            sequence:
+              type: string
+              label: 'Field name'
     fields:
       type: sequence
       label: Fields

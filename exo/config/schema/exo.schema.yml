@@ -67,3 +67,45 @@ field.widget.settings.exo_autocomplete:
     no_empty_message:
       type: label
       label: 'Empty results message'
+
+# ExoEntityReferenceEntityFormatter extends core's EntityReferenceEntityFormatter,
+# so view_mode/link come from the parent type.
+field.formatter.settings.exo_entity_reference_entity_view:
+  type: field.formatter.settings.entity_reference_entity_view
+  label: 'eXo entity reference view settings'
+  mapping:
+    selection_mode:
+      type: string
+      label: 'Selection mode'
+    amount:
+      type: integer
+      label: 'Number of items to show'
+    offset:
+      type: integer
+      label: 'Offset'
+    reverse:
+      type: boolean
+      label: 'Reverse order'
+
+field.formatter.settings.exo_attribute_class:
+  type: mapping
+  label: 'eXo attribute class formatter settings'
+  mapping:
+    as_class:
+      type: boolean
+      label: 'Render as class'
+    as_data:
+      type: boolean
+      label: 'Render as data attribute'
+
+# Extends inline_entity_form's complex widget.
+field.widget.settings.exo_inline_entity_form_complex_clean:
+  type: field.widget.settings.inline_entity_form_complex
+  label: 'eXo inline entity form (clean) settings'
+  mapping:
+    hide_new:
+      type: boolean
+      label: 'Hide the add-new form'
+    removed_reference:
+      type: string
+      label: 'Behaviour when a reference is removed'

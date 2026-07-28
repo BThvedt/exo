@@ -22,3 +22,15 @@ field.widget.settings.address_exo:
       sequence:
         type: string
         label: 'Field'
+
+exo_form.settings:
+  type: config_object
+  label: 'eXo Form settings'
+  mapping:
+    style:
+      type: string
+      label: 'Form style'
+    themes:
+      # Per-theme overrides produced by a pluggable eXo settings form.
+      type: ignore
+      label: 'Theme overrides'

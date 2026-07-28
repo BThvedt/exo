@@ -1,0 +1,36 @@
+# `menu`/`menus` hold per-menu display options produced by a pluggable eXo
+# settings form, so the contained keys are not fixed.
+block.settings.exo_menu:*:
+  type: block_settings
+  label: 'eXo Menu block'
+  mapping:
+    menu:
+      type: ignore
+      label: 'Menu settings'
+    menus:
+      type: ignore
+      label: 'Menus'
+
+block.settings.exo_menu:
+  type: block.settings.exo_menu:*
+
+# Each menu style's options come from a pluggable eXo settings form.
+exo_menu.settings:
+  type: config_object
+  label: 'eXo Menu settings'
+  mapping:
+    dropdown_horizontal:
+      type: ignore
+      label: 'Horizontal dropdown defaults'
+    dropdown_vertical:
+      type: ignore
+      label: 'Vertical dropdown defaults'
+    slide_vertical:
+      type: ignore
+      label: 'Vertical slide defaults'
+    mega_vertical:
+      type: ignore
+      label: 'Vertical mega menu defaults'
+    tree:
+      type: ignore
+      label: 'Tree defaults'
