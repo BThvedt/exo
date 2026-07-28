@@ -52,6 +52,45 @@ exo_toolbar_settings:
         type: string
 
 exo_toolbar_settings.region:
-  type: sequence
-  sequence:
-    type: string
+  type: mapping
+  label: 'Region settings'
+  mapping:
+    id:
+      type: string
+      label: 'Region ID'
+    size:
+      type: string
+      label: 'Size'
+    mark_only:
+      type: boolean
+      label: 'Mark only'
+    theme:
+      type: string
+      label: 'Theme'
+    expanded:
+      type: boolean
+      label: 'Expanded'
+
+# The `exo_toolbar.settings.*` wildcard above does not match the
+# `exo_toolbar.settings` config object itself, so it needs its own definition.
+exo_toolbar.settings:
+  type: config_object
+  label: 'eXo Toolbar settings'
+  mapping:
+    exo_default:
+      type: boolean
+      label: 'Use eXo default'
+    debug:
+      type: boolean
+      label: 'Debug mode enabled'
+    enabled:
+      type: sequence
+      label: 'Enabled regions'
+      sequence:
+        type: string
+        label: 'Region ID'
+    regions:
+      type: sequence
+      label: 'Region settings'
+      sequence:
+        type: exo_toolbar_settings.region

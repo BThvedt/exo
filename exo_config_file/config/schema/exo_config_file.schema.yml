@@ -28,6 +28,9 @@ exo_config_file.exo_config_file.*:
     file:
       type: sequence
       label: 'File'
+      sequence:
+        type: string
+        label: 'Encoded file contents'
     dependency:
       type: string
       label: 'The parent config name'

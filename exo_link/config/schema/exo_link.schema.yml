@@ -56,12 +56,13 @@ field.widget.settings.exo_link:
     icon:
       type: boolean
       label: 'Allow icon selection'
+    # Checkboxes keyed by package id, so the values are booleans not strings.
     packages:
       type: sequence
       label: 'Icon packages'
       sequence:
-        type: string
-        label: 'Package'
+        type: boolean
+        label: 'Package enabled'
     target:
       type: boolean
       label: 'Open link in new window'
@@ -74,3 +75,28 @@ field.widget.settings.exo_link:
       sequence:
         type: string
         label: 'Class label'
+    linkit:
+      type: boolean
+      label: 'Use Linkit for internal links'
+    linkit_profile:
+      type: string
+      label: 'Linkit profile'
+
+# ExoLinkFormatter extends core's LinkFormatter, so trim_length/url_only/
+# url_plain/rel/target come from the parent type.
+field.formatter.settings.exo_link:
+  type: field.formatter.settings.link
+  label: 'eXo link formatter settings'
+  mapping:
+    title:
+      type: label
+      label: 'Link text'
+    icon:
+      type: string
+      label: 'Link icon'
+    position:
+      type: string
+      label: 'Icon position'
+    title_only:
+      type: boolean
+      label: 'Display the title only'

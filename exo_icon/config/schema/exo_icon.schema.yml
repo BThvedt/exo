@@ -49,3 +49,64 @@ commerce_product.commerce_product_type.*.third_party.exo_icon:
   type: exo_icon.entity_icons
 profile.type.*.third_party.exo_icon:
   type: exo_icon.entity_icons
+
+# Formatter settings. entity_reference_icon extends core's
+# EntityReferenceLabelFormatter, so it inherits `link` via the parent type.
+field.formatter.settings.entity_reference_icon:
+  type: field.formatter.settings.entity_reference_label
+  label: 'eXo Label with Icon formatter settings'
+  mapping:
+    icon_only:
+      type: boolean
+      label: 'Display the icon only'
+    page_convert:
+      type: boolean
+      label: 'Convert icon on page display'
+    field_name:
+      type: string
+      label: 'Icon field name'
+      nullable: true
+
+# file_icon extends FileFormatterBase, which declares no settings of its own,
+# so every key is declared here. `target` is a checkbox with
+# '#return_value' => '_blank', so it stores a string, not a boolean.
+field.formatter.settings.file_icon:
+  type: mapping
+  label: 'eXo File Icon formatter settings'
+  mapping:
+    title:
+      type: label
+      label: 'Link title'
+    entity_label:
+      type: boolean
+      label: 'Use the entity label as link text'
+    icon:
+      type: string
+      label: 'Icon'
+    package:
+      type: string
+      label: 'Icon package'
+    position:
+      type: string
+      label: 'Icon position'
+    target:
+      type: string
+      label: 'Link target'
+    text_only:
+      type: boolean
+      label: 'Text only'
+    icon_only:
+      type: boolean
+      label: 'Icon only'
+
+# Checkboxes keyed by package id: the package name when checked, empty when not.
+field.widget.settings.icon:
+  type: mapping
+  label: 'eXo Icon widget settings'
+  mapping:
+    packages:
+      type: sequence
+      label: 'Enabled icon packages'
+      sequence:
+        type: string
+        label: 'Package'

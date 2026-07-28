@@ -65,3 +65,171 @@ exo_toolbar_item_settings:
       label: 'Context assignments'
       sequence:
         type: string
+    # Universal settings from ExoToolbarItemBase::defaultConfiguration() and
+    # baseConfigurationDefaults().
+    title:
+      type: label
+      label: 'Title'
+    icon:
+      type: string
+      label: 'Icon'
+    mark_only_horizontal:
+      type: boolean
+      label: 'Show mark only when horizontal'
+    badge_type:
+      type: string
+      label: 'Badge type'
+    badge_settings:
+      type: exo_toolbar_item_badge_settings
+      label: 'Badge settings'
+    # Injected by ExoToolbarItem::getPluginCollections() and persisted; null
+    # until the item has been saved with an id.
+    toolbar_item_id:
+      type: string
+      label: 'Toolbar item ID'
+      nullable: true
+
+exo_toolbar_item_badge_settings:
+  type: mapping
+  label: 'eXo Toolbar badge settings'
+  mapping:
+    id:
+      type: string
+      label: 'Badge plugin ID'
+    theme:
+      type: string
+      label: 'Theme'
+    view_id:
+      type: string
+      label: 'View ID'
+    view_display_id:
+      type: string
+      label: 'View display ID'
+    view_argument:
+      type: string
+      label: 'View argument'
+
+# Per-plugin settings. `region` is a sequence on the region item but a single
+# string on toggle, so these cannot share one type.
+# ExoToolbarItemPluginLinkTrait — used by the link AND image items.
+exo_toolbar_item_link_settings:
+  type: exo_toolbar_item_settings
+  label: 'Linkable item settings'
+  mapping:
+    url:
+      type: string
+      label: 'URL'
+    # Checkbox with '#return_value' => '_blank', so this stores a string.
+    target:
+      type: string
+      label: 'Link target'
+
+exo_toolbar_item.settings.link:
+  type: exo_toolbar_item_link_settings
+  label: 'Link item settings'
+
+exo_toolbar_item.settings.divider:
+  type: exo_toolbar_item_settings
+  label: 'Divider item settings'
+  mapping:
+    title_show:
+      type: boolean
+      label: 'Show title'
+
+exo_toolbar_item.settings.region:
+  type: exo_toolbar_item_settings
+  label: 'Region item settings'
+  mapping:
+    region:
+      type: mapping
+      label: 'Region'
+      mapping:
+        id:
+          type: string
+          label: 'Region ID'
+        size:
+          type: string
+          label: 'Size'
+        mark_only:
+          type: boolean
+          label: 'Mark only'
+        theme:
+          type: string
+          label: 'Theme'
+    ajax:
+      type: boolean
+      label: 'Load via AJAX'
+    event:
+      type: string
+      label: 'Trigger event'
+
+exo_toolbar_item.settings.toggle:
+  type: exo_toolbar_item_settings
+  label: 'Toggle item settings'
+  mapping:
+    region:
+      type: string
+      label: 'Region'
+    event:
+      type: string
+      label: 'Trigger event'
+
+exo_toolbar_item.settings.image:
+  type: exo_toolbar_item_link_settings
+  label: 'Image item settings'
+  mapping:
+    image:
+      type: string
+      label: 'Image'
+    image_style:
+      type: string
+      label: 'Image style'
+    image_position:
+      type: string
+      label: 'Image position'
+
+# ExoToolbarItemConfigurableEntityBase (node_add, product_add).
+exo_toolbar_item_entity_settings:
+  type: exo_toolbar_item_dialog_settings
+  label: 'Entity item settings'
+  mapping:
+    bundles:
+      type: sequence
+      label: 'Bundles'
+      sequence:
+        type: string
+        label: 'Bundle'
+    type:
+      type: string
+      label: 'Include or exclude the selected bundles'
+
+exo_toolbar_item.settings.node_add:
+  type: exo_toolbar_item_entity_settings
+  label: 'Node add item settings'
+
+exo_toolbar_item.settings.product_add:
+  type: exo_toolbar_item_entity_settings
+  label: 'Product add item settings'
+
+# ExoToolbarItemDialogBase (user, domain_traversal).
+exo_toolbar_item_dialog_settings:
+  type: exo_toolbar_item_settings
+  label: 'Dialog item settings'
+  mapping:
+    dialog_type:
+      type: string
+      label: 'Dialog type'
+    dialog_settings:
+      type: sequence
+      label: 'Dialog settings'
+      sequence:
+        type: string
+        label: 'Setting'
+
+exo_toolbar_item.settings.user:
+  type: exo_toolbar_item_dialog_settings
+  label: 'User item settings'
+
+exo_toolbar_item.settings.domain_traversal:
+  type: exo_toolbar_item_dialog_settings
+  label: 'Domain traversal item settings'

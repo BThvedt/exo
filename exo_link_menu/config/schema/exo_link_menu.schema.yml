@@ -13,3 +13,23 @@ field.widget.settings.exo_link_menu:
       sequence:
         type: boolean
         label: 'Enabled'
+
+exo_link_menu.config:
+  type: config_object
+  label: 'eXo Link Menu settings'
+  mapping:
+    packages:
+      type: sequence
+      label: 'Icon packages'
+      sequence:
+        type: string
+        label: 'Package'
+    target:
+      type: boolean
+      label: 'Allow link target'
+    class:
+      type: boolean
+      label: 'Allow CSS class'
+    spacers:
+      type: boolean
+      label: 'Allow spacers'
