@@ -135,17 +135,45 @@
       });
 
       $(document).on('exoComponentFieldEditActive.exo.alchemist.enhancement.slider.' + this.id, (e, element) => {
-        let $element = $(element);
-        if (this.$wrapper.find($element).length && !$element.hasClass('swiper-slide-active')) {
-          this.swiper.slideTo($element.index());
-          Drupal.ExoAlchemistAdmin.lockTargetPointerEvents();
-          Drupal.ExoAlchemistAdmin.setFieldInactive();
-          this.swiper.once('slideChangeTransitionEnd', (e) => {
-            $element = $(e.clickedSlide);
-            Drupal.ExoAlchemistAdmin.unlockTargetPointerEvents();
-            Drupal.ExoAlchemistAdmin.setFieldActive($element);
-          });
+        const $element = $(element);
+        if (!this.$wrapper.find($element).length || $element.hasClass('swiper-slide-active')) {
+          return;
         }
+        const slide = $element.get(0);
+        if (!slide) {
+          return;
+        }
+        // Loop mode rearranges slides within the DOM, so a DOM index is not a
+        // usable slide index. Resolving against Swiper's own list also rules
+        // out slides belonging to an instance that has been destroyed.
+        const index = this.swiper && this.swiper.slides
+          ? Array.prototype.indexOf.call(this.swiper.slides, slide)
+          : -1;
+        // A slideTo() that cannot move fires no transition, which would leave
+        // the pointer event lock below permanently engaged.
+        if (index < 0 || index === this.swiper.activeIndex) {
+          return;
+        }
+        let finished = false;
+        const finish = () => {
+          if (finished) {
+            return;
+          }
+          finished = true;
+          this.swiper.off('slideChangeTransitionEnd', finish);
+          Drupal.ExoAlchemistAdmin.unlockTargetPointerEvents();
+          // A later Prev/Next can resolve this callback instead of the
+          // transition it was registered for, so only claim the selection while
+          // the requested slide is on screen and nothing else has claimed it.
+          if (slide.classList.contains('swiper-slide-active') && !Drupal.ExoAlchemistAdmin.getActiveField()) {
+            Drupal.ExoAlchemistAdmin.setFieldActive($(slide));
+          }
+        };
+        Drupal.ExoAlchemistAdmin.lockTargetPointerEvents();
+        Drupal.ExoAlchemistAdmin.setFieldInactive();
+        this.swiper.once('slideChangeTransitionEnd', finish);
+        setTimeout(finish, (this.swiper.params.speed || 300) + 500);
+        this.swiper.slideTo(index);
       });
     }
 

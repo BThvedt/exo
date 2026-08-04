@@ -656,6 +656,11 @@ class ExoAlchemistAdmin {
   }
 
   public setFieldActive($element:JQuery, force?:boolean) {
+    // An empty selection remains truthy once cached in $activeField, which
+    // would then block every subsequent activation.
+    if (!$element || !$element.length) {
+      return;
+    }
     if (!this.$activeField || force) {
       this.$activeField = $element;
       $element.addClass('exo-component-field-edit-active');
@@ -675,6 +680,9 @@ class ExoAlchemistAdmin {
     const fieldOps = $.extend({}, drupalSettings.exoAlchemist.fieldOps);
     const componentData = $element.closest('.exo-component-edit').data('exo-component');
     const fieldData = $element.data('exo-field');
+    if (!fieldData) {
+      return;
+    }
     const tokens = $.extend({}, componentData, fieldData);
 
     this.$targetOps.html('');
