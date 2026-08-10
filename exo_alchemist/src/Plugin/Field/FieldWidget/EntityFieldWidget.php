@@ -249,15 +249,22 @@ class EntityFieldWidget extends WidgetBase {
     $settings_form = [];
     // Invoke hook_field_formatter_third_party_settings_form(), keying resulting
     // subforms by module name.
-    foreach ($this->moduleHandler->getImplementations('field_formatter_third_party_settings_form') as $module) {
-      $settings_form[$module] = $this->moduleHandler->invoke($module, 'field_formatter_third_party_settings_form', [
-        $plugin,
-        $field_definition,
-        EntityDisplayBase::CUSTOM_MODE,
-        $form,
-        $form_state,
-      ]);
-    }
+    //
+    // getImplementations() was removed in D11; this mirrors the invokeAllWith()
+    // shape core's own EntityViewDisplayEditForm moved to, including its null
+    // coalesce — an implementation returning nothing must not blank the key.
+    $this->moduleHandler->invokeAllWith(
+      'field_formatter_third_party_settings_form',
+      function (callable $hook, string $module) use (&$settings_form, &$plugin, &$field_definition, &$form, &$form_state) {
+        $settings_form[$module] = ($settings_form[$module] ?? []) + ($hook(
+          $plugin,
+          $field_definition,
+          EntityDisplayBase::CUSTOM_MODE,
+          $form,
+          $form_state,
+        ) ?? []);
+      }
+    );
     return $settings_form;
   }
 
