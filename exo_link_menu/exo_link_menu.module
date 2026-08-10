@@ -12,6 +12,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\exo_icon\ExoIconIconize;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_base_field_info_alter().
@@ -183,6 +184,16 @@ function exo_link_menu_preprocess_menu(&$variables) {
  */
 function _exo_link_menu_preprocess_menu_items($items) {
   foreach ($items as &$item) {
+    // hook_preprocess_menu() fires for every menu that any theme renders, and
+    // not all of them hand back a core Url object — Gin's admin menus pass a
+    // plain string, which fatals here. Nothing below this point is meaningful
+    // without the options bag, so skip the item but still walk its children.
+    if (!isset($item['url']) || !$item['url'] instanceof Url) {
+      if (!empty($item['below'])) {
+        $item['below'] = _exo_link_menu_preprocess_menu_items($item['below']);
+      }
+      continue;
+    }
     $options = $item['url']->getOptions();
     if (!empty($options['attributes']['data-icon']) && !empty($item['title'])) {
       $position = isset($options['attributes']['data-icon-position']) ? $options['attributes']['data-icon-position'] : 'before';
