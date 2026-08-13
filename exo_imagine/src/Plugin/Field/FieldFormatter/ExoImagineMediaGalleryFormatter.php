@@ -4,27 +4,14 @@ namespace Drupal\exo_imagine\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\exo\ExoSettingsInterface;
 use Drupal\exo_icon\ExoIconTranslationTrait;
-use Drupal\exo_imagine\ExoImagineManager;
-use Drupal\exo_modal\ExoModalGeneratorInterface;
-use Drupal\media\IFrameUrlHelper;
 use Drupal\media\OEmbed\Resource;
 use Drupal\media\OEmbed\ResourceException;
-use Drupal\media\OEmbed\ResourceFetcherInterface;
-use Drupal\media\OEmbed\UrlResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -87,41 +74,20 @@ class ExoImagineMediaGalleryFormatter extends ExoImagineMediaFormatter {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator, ExoSettingsInterface $exo_imagine_settings, ExoImagineManager $exo_imagine_manager, LoggerChannelFactoryInterface $logger_factory, ExoModalGeneratorInterface $exo_modal_generator, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, ConfigFactoryInterface $config_factory, IFrameUrlHelper $iframe_url_helper, RendererInterface $renderer) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage, $file_url_generator, $exo_imagine_settings, $exo_imagine_manager, $logger_factory);
-    $this->exoModalGenerator = $exo_modal_generator;
-    $this->resourceFetcher = $resource_fetcher;
-    $this->urlResolver = $url_resolver;
-    $this->mediaSettings = $config_factory->get('media.settings');
-    $this->iFrameUrlHelper = $iframe_url_helper;
-    $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('current_user'),
-      $container->get('entity_type.manager')->getStorage('image_style'),
-      $container->get('file_url_generator'),
-      $container->get('exo_imagine.settings'),
-      $container->get('exo_imagine.manager'),
-      $container->get('logger.factory'),
-      $container->get('exo_modal.generator'),
-      $container->get('media.oembed.resource_fetcher'),
-      $container->get('media.oembed.url_resolver'),
-      $container->get('config.factory'),
-      $container->get('media.oembed.iframe_url_helper'),
-      $container->get('renderer')
-    );
+    // Let the parent chain construct the instance so this stays compatible
+    // across core versions that change the ImageFormatter constructor
+    // signature (e.g. Drupal 11.4 added the ImageDerivativeUtilities
+    // argument). The gallery-specific services are attached via property
+    // injection.
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->exoModalGenerator = $container->get('exo_modal.generator');
+    $instance->resourceFetcher = $container->get('media.oembed.resource_fetcher');
+    $instance->urlResolver = $container->get('media.oembed.url_resolver');
+    $instance->mediaSettings = $container->get('config.factory')->get('media.settings');
+    $instance->iFrameUrlHelper = $container->get('media.oembed.iframe_url_helper');
+    $instance->renderer = $container->get('renderer');
+    return $instance;
   }
 
   /**
