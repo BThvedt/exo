@@ -2,5 +2,6 @@ name: 'eXo Breadcrumbs'
 type: module
 description: 'Provides breadcrumbs enhancements.'
 core_version_requirement: ^10 || ^11
+version: 2.0.21
 package: 'eXo'
 dependencies:
