@@ -3,6 +3,7 @@ type: module
 description: 'An IconMoon-based icon manager.'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
+version: 2.0.21
 dependencies:
   - exo_config_file:exo_config_file
   - exo_modal:exo_modal
