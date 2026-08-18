@@ -44,7 +44,7 @@ class ExoLinkitFormatter extends ExoLinkFormatter {
    */
   public static function defaultSettings() {
     return [
-      'linkit_profile' => 'default',
+      'linkit_profile' => 'exo',
     ] + parent::defaultSettings();
   }
 
