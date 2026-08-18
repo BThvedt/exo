@@ -24,8 +24,25 @@ class ExoLinkitWidget extends ExoLinkWidget {
    */
   public static function defaultSettings() {
     return [
-      'linkit_profile' => 'default',
+      'linkit_profile' => 'exo',
     ] + parent::defaultSettings();
+  }
+
+  /**
+   * Gets the linkit profile the widget should use.
+   *
+   * The configured profile may not exist, either because it was deleted or
+   * because it was never created. Linkit gives no indication when that
+   * happens: the autocomplete route denies access to an unknown profile and
+   * the element silently degrades to a plain textfield. Fall back to the
+   * profile this module provides so the widget keeps working.
+   *
+   * @return \Drupal\linkit\ProfileInterface|null
+   *   The profile to use, or NULL if neither it nor the fallback exists.
+   */
+  protected function getLinkitProfile() {
+    $storage = \Drupal::entityTypeManager()->getStorage('linkit_profile');
+    return $storage->load($this->getSetting('linkit_profile')) ?: $storage->load('exo');
   }
 
   /**
@@ -43,12 +60,20 @@ class ExoLinkitWidget extends ExoLinkWidget {
       $options[$linkit_profile->id()] = $linkit_profile->label();
     }
 
+    $profile = $this->getLinkitProfile();
     $elements['linkit_profile'] = [
       '#type' => 'select',
       '#title' => $this->t('Linkit profile'),
       '#options' => $options,
-      '#default_value' => $this->getSetting('linkit_profile'),
+      '#default_value' => $profile ? $profile->id() : NULL,
+      '#required' => TRUE,
     ];
+
+    if (!$profile || $profile->id() !== $this->getSetting('linkit_profile')) {
+      $elements['linkit_profile']['#description'] = $this->t('The configured profile %profile does not exist. Save this form to store a valid profile.', [
+        '%profile' => $this->getSetting('linkit_profile'),
+      ]);
+    }
 
     return $elements;
   }
@@ -60,10 +85,21 @@ class ExoLinkitWidget extends ExoLinkWidget {
     $summary = parent::settingsSummary();
 
     $linkit_profile_id = $this->getSetting('linkit_profile');
-    $linkit_profile = \Drupal::entityTypeManager()->getStorage('linkit_profile')->load($linkit_profile_id);
+    $linkit_profile = $this->getLinkitProfile();
 
-    if ($linkit_profile) {
+    if ($linkit_profile && $linkit_profile->id() === $linkit_profile_id) {
       $summary[] = $this->t('Linkit profile: @linkit_profile', ['@linkit_profile' => $linkit_profile->label()]);
+    }
+    elseif ($linkit_profile) {
+      $summary[] = $this->t('Linkit profile: @missing is missing, using @fallback', [
+        '@missing' => $linkit_profile_id,
+        '@fallback' => $linkit_profile->label(),
+      ]);
+    }
+    else {
+      $summary[] = $this->t('Linkit profile: @missing is missing, autocomplete is disabled', [
+        '@missing' => $linkit_profile_id,
+      ]);
     }
 
     return $summary;
@@ -89,7 +125,8 @@ class ExoLinkitWidget extends ExoLinkWidget {
       $uri_as_url = !empty($uri) ? Url::fromUri($uri)->toString() : '';
     }
     $uri_as_url = LinkitHelper::getPathByAlias($uri_as_url);
-    $linkit_profile_id = $this->getSetting('linkit_profile');
+    $linkit_profile = $this->getLinkitProfile();
+    $linkit_profile_id = $linkit_profile ? $linkit_profile->id() : $this->getSetting('linkit_profile');
 
     // The current field value could have been entered by a different user.
     // However, if it is inaccessible to the current user, do not display it
