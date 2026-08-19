@@ -3,7 +3,7 @@ type: module
 description: 'Allows the creation of custom configuration entities.'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
-version: 2.0.22
+version: 2.0.23
 dependencies:
   - exo:exo
   - exo_link:exo_link
