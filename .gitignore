@@ -8,3 +8,5 @@
 /.gitrepo
 /exo*/**/*.css.map
 /.vscode
+/composer.lock
+/vendor
