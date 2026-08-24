@@ -3,6 +3,6 @@ type: module
 description: 'Provides support for the AOS library for animations on scroll.'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
-version: 2.0.23
+version: 2.0.24
 dependencies:
   - exo:exo

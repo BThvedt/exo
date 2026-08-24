@@ -3,7 +3,7 @@ type: module
 description: 'A modal framework for building overlays and offcanvas popups.'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
-version: 2.0.23
+version: 2.0.24
 dependencies:
   - exo:exo
   - exo_icon:exo_icon
