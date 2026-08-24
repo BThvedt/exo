@@ -17,6 +17,8 @@
       const $autoplayBar = $wrapper.find('.swiper-autoplay-bar');
       const isLayoutBuilder = this.isLayoutBuilder();
       const defaultSettings:any = {
+        // Needed for `swiper-slide-visible`, which drives hideOffscreenSlides().
+        watchSlidesProgress: true,
         pagination: {},
         navigation: {},
         scrollbar: {},
@@ -100,8 +102,79 @@
         });
       }
 
+      this.watchOffscreenSlides();
+
       if (isLayoutBuilder) {
         this.buildForLayoutBuilder();
+      }
+    }
+
+    /**
+     * Keep slides that are scrolled out of view out of assistive technology.
+     *
+     * A carousel leaves every slide in the DOM, so a screen reader reads the
+     * ones that are off-screen and a keyboard tabs into their links — the
+     * reader has no way to tell it has left what is on screen. Marking the
+     * hidden ones `aria-hidden` and `inert` removes them from both.
+     *
+     * Bound after construction rather than through `defaultSettings.on`, which
+     * a per-slider settings object can replace wholesale.
+     */
+    protected watchOffscreenSlides():void {
+      // Layout Builder needs every slide reachable to be edited, including the
+      // ones currently scrolled out of view.
+      if (this.isLayoutBuilder()) {
+        return;
+      }
+      const update = () => {
+        this.hideOffscreenSlides();
+      };
+      // The settled states. Mid-drag exposure is transient, and updating on
+      // every translate would write to the DOM through the whole gesture.
+      const events = [
+        'slideChangeTransitionEnd',
+        'transitionEnd',
+        'resize',
+        'slidesLengthChange',
+        'observerUpdate',
+      ];
+      events.forEach((event) => {
+        this.swiper.on(event, update);
+      });
+      update();
+    }
+
+    /**
+     * Apply `aria-hidden` and `inert` to every slide that is not on screen.
+     */
+    protected hideOffscreenSlides():void {
+      const slides = this.swiper.slides;
+      if (!slides || !slides.length) {
+        return;
+      }
+      // Fail open. If nothing is marked visible, `watchSlidesProgress` is off
+      // for this slider and we cannot tell what is on screen — hiding every
+      // slide would be far worse than hiding none.
+      let hasVisible = false;
+      for (let i = 0; i < slides.length; i++) {
+        if (slides[i].classList.contains('swiper-slide-visible')) {
+          hasVisible = true;
+          break;
+        }
+      }
+      if (!hasVisible) {
+        return;
+      }
+      for (let i = 0; i < slides.length; i++) {
+        const slide = slides[i];
+        if (slide.classList.contains('swiper-slide-visible')) {
+          slide.removeAttribute('aria-hidden');
+          slide.removeAttribute('inert');
+        }
+        else {
+          slide.setAttribute('aria-hidden', 'true');
+          slide.setAttribute('inert', '');
+        }
       }
     }
 
@@ -150,6 +223,11 @@
     }
 
     public unload() {
+      const slides = this.swiper.slides || [];
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].removeAttribute('aria-hidden');
+        slides[i].removeAttribute('inert');
+      }
       $(document).off('exoComponentOps.exo.alchemist.enhancement.slider.' + this.id);
       $(document).off('exoComponentFieldEditActive.exo.alchemist.enhancement.slider.' + this.id);
       this.swiper.destroy();
