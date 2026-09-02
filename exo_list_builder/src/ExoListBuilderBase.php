@@ -879,6 +879,18 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
         }
         $cid[$option] = is_array($value) ? base64_encode(json_encode($value)) : $value;
       }
+      // Options hold only what the query string asked for. A filter default
+      // resolved from the route — a taxonomy term page filtering itself, say —
+      // never reaches them, so keying on options alone gives every such page
+      // the same cache id, and whichever renders first is served on all of
+      // them. Resolved values are what the query actually ran with.
+      foreach (array_keys($this->getFilters()) as $field_id) {
+        $filter_value = $this->getFilterValue($field_id);
+        if (empty($filter_value)) {
+          continue;
+        }
+        $cid['filter.' . $field_id] = is_array($filter_value) ? base64_encode(json_encode($filter_value)) : $filter_value;
+      }
       $cid = implode(':', $cid);
       if ($cache = \Drupal::cache()->get($cid)) {
         return $cache->data;
@@ -2973,15 +2985,40 @@ abstract class ExoListBuilderBase extends EntityListBuilder implements ExoListBu
    * {@inheritDoc}
    */
   public function getCacheContexts() {
+    $contexts = [
+      'url.query_args:sort',
+      'url.query_args:order',
+      'url.query_args:' . $this->getEntityList()->getKey(),
+    ];
+
+    // A filter taking its default from the route makes the whole list
+    // route-dependent: the same query string yields different results on
+    // /documents/badging than on /documents/permits. Declaring only the query
+    // args lets a build cached under one route be served under another.
+    if ($this->hasRouteDependentFilters()) {
+      $contexts[] = 'route';
+    }
+
     return Cache::mergeContexts(
       $this->getEntityList()->getEntityType()->getListCacheContexts(),
       $this->entityType->getListCacheContexts(),
-      [
-        'url.query_args:sort',
-        'url.query_args:order',
-        'url.query_args:' . $this->getEntityList()->getKey(),
-      ]
+      $contexts
     );
+  }
+
+  /**
+   * Whether any filter resolves its default value from the current route.
+   *
+   * @return bool
+   *   TRUE if the list's results depend on which page it is rendered on.
+   */
+  protected function hasRouteDependentFilters() {
+    foreach ($this->getFilters() as $field) {
+      if (!empty($field['filter']['settings']['default_from_url']['status'])) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**
