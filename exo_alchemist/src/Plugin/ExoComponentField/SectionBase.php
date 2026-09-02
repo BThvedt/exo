@@ -14,7 +14,6 @@ use Drupal\layout_builder\Section;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
@@ -42,6 +41,15 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
    * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
    */
   protected $layoutTempstoreRepository;
+
+  /**
+   * Component UUIDs merged during onPreSaveLayoutBuilderEntity() in the
+   * current request, so onPostSaveLayoutBuilderEntity() can tell it was
+   * already handled and skip reprocessing them.
+   *
+   * @var bool[]
+   */
+  protected static $preSaveMergedUuids = [];
 
   /**
    * The layout id.
@@ -116,15 +124,35 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
    */
   public function onPreSaveLayoutBuilderEntity(ContentEntityInterface $entity, EntityInterface $parent_entity) {
     if ($entity->isNew()) {
-      // Layout builder will duplicate this component giving it a new UUID when
-      // the parent layout is moving from default to override. We need to
-      // preserve this until onPostSaveLayoutBuilderEntity so that we
-      // can pull the pending sections and save them properly. Layout builder
-      // does not like asigning sections to entities that have not yet been
-      // saved.
-      $data = ExoComponentManager::getFieldData($entity);
-      $data['uuid'] = $entity->uuid();
-      ExoComponentManager::setFieldData($entity, $data);
+      // Merge any pending nested-column content (added via the "add
+      // component" route while this section's own component was still
+      // unsaved, sitting in Layout Builder tempstore) directly into this
+      // entity's own field now, before core's own inline-block save
+      // (InlineBlockEntityOperations::handlePreSave(), invoked moments
+      // later in this same presave phase) persists it for the first time.
+      // This lets that single core save capture the complete component in
+      // one pass. Previously this merge happened in
+      // onPostSaveLayoutBuilderEntity() instead (after the parent entity's
+      // own row was already written), which required resaving the parent
+      // entity afterward to persist the updated reference - but that
+      // resave re-triggered core's own block-duplication logic a second
+      // time and collided on UUIDs with the component just saved moments
+      // before.
+      $section_storage = $this->getTemporarySectionStorage($entity, $parent_entity);
+      if ($section_storage) {
+        $entity->set(OverridesSectionStorage::FIELD_NAME, $section_storage->getSections());
+        $this->layoutTempstoreRepository()->delete($section_storage);
+      }
+      // Record that this component's content was merged here, so
+      // onPostSaveLayoutBuilderEntity() below knows to skip it once core's
+      // own save completes. This is intentionally a static, request-scoped
+      // marker rather than a persisted field: a plugin instance is
+      // recreated for each field callback, so a plain instance property
+      // would not survive between this call and the later postSave call,
+      // and a persisted field would incorrectly keep suppressing this
+      // entity's postSave handling on every future, separate edit once
+      // written to the database.
+      static::$preSaveMergedUuids[$entity->uuid()] = TRUE;
     }
   }
 
@@ -132,38 +160,66 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
    * {@inheritdoc}
    */
   public function onPostSaveLayoutBuilderEntity(ContentEntityInterface $entity, EntityInterface $parent_entity) {
-    $data = ExoComponentManager::getFieldData($entity);
-    if (!empty($data['uuid'])) {
-      // If we have a saved UUID, we use it to fetch the proper storage.
-      $temporary_entity = $entity->createDuplicate();
-      $temporary_entity->set('uuid', $data['uuid']);
-      $section_storage = $this->getTemporarySectionStorage($temporary_entity, $parent_entity);
-      unset($data['uuid']);
+    if (!empty(static::$preSaveMergedUuids[$entity->uuid()])) {
+      // Already merged and persisted in onPreSaveLayoutBuilderEntity()
+      // above: core's own presave save already saved the complete entity
+      // and updated $parent_entity's component configuration to reference
+      // it. Nothing further to do.
+      unset(static::$preSaveMergedUuids[$entity->uuid()]);
+      return;
     }
-    else {
-      $section_storage = $this->getTemporarySectionStorage($entity, $parent_entity);
-    }
+    // This entity already existed before this save (it was not new at
+    // presave time). Pull any newly pending nested-column content and save
+    // it onto this same entity/revision. This updates the entity in place,
+    // so $parent_entity's existing reference to it (by revision or UUID)
+    // remains valid and $parent_entity does not need to be resaved.
+    $section_storage = $this->getTemporarySectionStorage($entity, $parent_entity);
     if ($section_storage) {
       $entity->set(OverridesSectionStorage::FIELD_NAME, $section_storage->getSections());
-      ExoComponentManager::setFieldData($entity, $data);
-      if ($entity->isNew() && $entity->uuid() && $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadByProperties(['uuid' => $entity->uuid()])) {
-        // The uuid-preservation lookup above can leave this new entity
-        // carrying a uuid that already belongs to a saved entity, which
-        // trips a unique-key violation on insert. Since this entity has
-        // never been persisted, it is always safe to give it a fresh uuid
-        // immediately before the first save.
-        $entity->set('uuid', \Drupal::service('uuid')->generate());
-      }
       $entity->save();
       $this->layoutTempstoreRepository()->delete($section_storage);
+    }
+  }
 
-      // Since this entity is updated after the layout entity, we need to save
-      // the layout entity again so it is aware of these changes.
-      if ($parent_entity instanceof LayoutBuilderEntityViewDisplay && empty($parent_entity->exoComponentFieldSectionUpdated[$entity->uuid()])) {
-        $parent_entity->exoComponentFieldSectionUpdated[$entity->uuid()] = TRUE;
-        $parent_entity->save();
+  /**
+   * {@inheritdoc}
+   *
+   * A section field's value lives in the entity's own
+   * OverridesSectionStorage::FIELD_NAME field rather than in a fieldable
+   * item, so unlike ExoComponentFieldFieldableBase subclasses, cloning must
+   * walk the nested sections directly and re-clone any exo component
+   * entities they reference. Without this, cloning a saved section
+   * component (e.g. when duplicating a page that already has one) leaves
+   * its nested column components pointing at the original entities instead
+   * of getting their own clones.
+   */
+  public function onClone(ContentEntityInterface $entity, $all = FALSE) {
+    if (!$entity->hasField(OverridesSectionStorage::FIELD_NAME)) {
+      return;
+    }
+    $sections = $entity->get(OverridesSectionStorage::FIELD_NAME)->getSections();
+    foreach ($sections as $section) {
+      foreach ($section->getComponents() as $component) {
+        if (ExoComponentManager::isExoComponent($component)) {
+          $configuration = $component->get('configuration');
+          $component_entity = NULL;
+          if (!empty($configuration['block_revision_id'])) {
+            $component_entity = $this->exoComponentManager()->entityLoadByRevisionId($configuration['block_revision_id']);
+          }
+          if (!empty($configuration['block_uuid'])) {
+            $component_entity = $this->exoComponentManager()->entityLoadByUuid($configuration['block_uuid']);
+          }
+          if ($component_entity) {
+            $definition = $this->exoComponentManager()->getEntityComponentDefinition($component_entity);
+            $component_entity = $this->exoComponentManager()->cloneEntity($definition, $component_entity, $all);
+            $configuration['block_revision_id'] = $configuration['block_uuid'] = NULL;
+            $configuration['block_serialized'] = serialize($component_entity);
+            $component->setConfiguration($configuration);
+          }
+        }
       }
     }
+    $entity->set(OverridesSectionStorage::FIELD_NAME, $sections);
   }
 
   /**
@@ -373,6 +429,16 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
    */
   private function layoutTempstoreRepository() {
     return $this->layoutTempstoreRepository ?: \Drupal::service('layout_builder.tempstore_repository');
+  }
+
+  /**
+   * Gets the exo component manager.
+   *
+   * @return \Drupal\exo_alchemist\ExoComponentManager
+   *   The exo component manager.
+   */
+  private function exoComponentManager() {
+    return \Drupal::service('plugin.manager.exo_component');
   }
 
 }

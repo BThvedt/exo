@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\exo_alchemist\Ajax\ExoComponentFocus;
 use Drupal\exo_alchemist\ExoComponentManager;
+use Drupal\exo_alchemist\Plugin\SectionStorage\ExoComponentSectionStorage;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Section;
@@ -153,7 +154,23 @@ class ExoComponentAddController implements ContainerInjectionInterface {
       }
       if ($entity) {
         if (empty($section_storage->getSections())) {
-          $section_storage->insertSection($delta, new Section($default_layout_plugin_id));
+          if ($section_storage instanceof ExoComponentSectionStorage && !$section_storage->isOverridden()) {
+            // This storage wraps a component (e.g. a two-column section)
+            // that has its own default layout, set up via
+            // ExoComponentField::onFieldInstall() when the field was
+            // installed. That layout (e.g. layout_twocol_section, with
+            // "first"/"second" regions) must be used here instead of a
+            // generic single-column fallback. Falling back to
+            // $default_layout_plugin_id would create a section whose only
+            // region is "content", so a component added into e.g. the
+            // "first" region would be silently dropped on render.
+            foreach ($section_storage->getDefaultSectionStorage()->getSections() as $default_section) {
+              $section_storage->appendSection($default_section);
+            }
+          }
+          if (empty($section_storage->getSections())) {
+            $section_storage->insertSection($delta, new Section($default_layout_plugin_id));
+          }
           $section = $section_storage->getSection($delta);
         }
         else {
