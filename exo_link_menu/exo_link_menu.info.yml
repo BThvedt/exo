@@ -3,7 +3,7 @@ type: module
 description: Provides the ability to set additional data (icons, target, etc) for menu link content.
 package: eXo
 core_version_requirement: ^10 || ^11
-version: 2.0.24
+version: 2.0.25
 dependencies:
   - core:menu_link_content
   - core:menu_ui

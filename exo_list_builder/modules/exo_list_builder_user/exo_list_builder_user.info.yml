@@ -3,6 +3,6 @@ type: module
 description: 'Provides list builder support to user management. (Safe to uninstall.)'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
-version: 2.0.24
+version: 2.0.25
 dependencies:
   - exo:exo_list_builder

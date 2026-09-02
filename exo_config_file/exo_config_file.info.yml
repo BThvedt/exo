@@ -3,4 +3,4 @@ type: module
 description: 'Provdes an API to allow config entities to contain files for import/export.'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
-version: 2.0.24
+version: 2.0.25
