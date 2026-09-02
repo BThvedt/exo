@@ -3,7 +3,7 @@ type: module
 description: 'Provides list builder support to commerce management.'
 package: 'eXo'
 core_version_requirement: ^10 || ^11
-version: 2.0.25
+version: 2.0.26
 dependencies:
   - exo:exo_list_builder
   - commerce:commerce
