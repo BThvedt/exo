@@ -106,6 +106,12 @@ class MediaRemoteVideo extends MediaBase {
       if (!$url) {
         return NULL;
       }
+      // Some legacy/pasted values are missing the URL scheme (e.g.
+      // "www.youtube.com/watch?v=..."), which causes oEmbed provider
+      // matching to fail since provider patterns expect http(s)://.
+      if (!preg_match('#^https?://#i', $url)) {
+        $url = 'https://' . ltrim($url, '/');
+      }
       /** @var \Drupal\media\OEmbed\UrlResolverInterface $url_resolver */
       $url_resolver = \Drupal::service('media.oembed.url_resolver');
       $resource_url = $url_resolver->getResourceUrl($url);

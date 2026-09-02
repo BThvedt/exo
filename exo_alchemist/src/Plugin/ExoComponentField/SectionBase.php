@@ -146,6 +146,14 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
     if ($section_storage) {
       $entity->set(OverridesSectionStorage::FIELD_NAME, $section_storage->getSections());
       ExoComponentManager::setFieldData($entity, $data);
+      if ($entity->isNew() && $entity->uuid() && $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadByProperties(['uuid' => $entity->uuid()])) {
+        // The uuid-preservation lookup above can leave this new entity
+        // carrying a uuid that already belongs to a saved entity, which
+        // trips a unique-key violation on insert. Since this entity has
+        // never been persisted, it is always safe to give it a fresh uuid
+        // immediately before the first save.
+        $entity->set('uuid', \Drupal::service('uuid')->generate());
+      }
       $entity->save();
       $this->layoutTempstoreRepository()->delete($section_storage);
 
@@ -202,7 +210,7 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
    * {@inheritdoc}
    */
   public function viewValue(ContentEntityInterface $entity, array $contexts) {
-    if ($this->isPreview($contexts)) {
+    if ($this->isPreview($contexts) || $entity->isNew()) {
       $section = $this->getSection();
       $layout = $section->getLayout();
       $layout_definition = $layout->getPluginDefinition();
@@ -243,8 +251,29 @@ abstract class SectionBase extends ExoComponentFieldComputedBase implements Cont
       if ($this->isLayoutBuilder($contexts)) {
         return [];
       }
+      // Calling the full entity view builder here would re-enter this
+      // entity's own render pipeline, which asks this same field to render
+      // this same entity again and recurses forever (e.g. when
+      // isLayoutBuilder() above cannot detect that we are already inside
+      // Layout Builder's own rendering for this entity). All we actually
+      // need is this entity's own nested layout output, so build it
+      // directly from its own Section objects instead - the same core API
+      // Layout Builder itself uses to convert a Section into a render
+      // array. This dispatches SECTION_COMPONENT_BUILD_RENDER_ARRAY for
+      // each nested component (the same event
+      // BlockComponentRenderArrayAfterCore already handles safely for
+      // top-level page placements) without ever re-entering the entity's
+      // own view pipeline.
       $entity->exoComponentSection = TRUE;
-      $render = $this->entityTypeManager->getViewBuilder($entity->getEntityTypeId())->view($entity);
+      $render = [];
+      if ($entity->hasField(OverridesSectionStorage::FIELD_NAME)) {
+        foreach ($entity->get(OverridesSectionStorage::FIELD_NAME)->getSections() as $entity_section) {
+          $section_render = $entity_section->toRenderArray($contexts);
+          if (!empty($section_render)) {
+            $render[] = $section_render;
+          }
+        }
+      }
     }
     $value = [
       'render' => $render,
